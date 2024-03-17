@@ -6,7 +6,7 @@
   "scripts": {
     "gulp": "gulp",
     "watch": "gulp & nodemon app.js",
-    "start": "nodemon app.js",
+    "start": "node app.js",
     "dev": "npm run watch"
   },
   "keywords": [],
