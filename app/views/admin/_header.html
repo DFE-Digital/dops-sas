@@ -1,0 +1,30 @@
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Admin</span>
+                <h1 class="govuk-heading-l">{{pageName}}</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='dashboard' %} aria-current="page" {% endif
+                                %} href="/admin">Dashboard</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='assessments' %} aria-current="page" {%
+                                endif %} href="/admin/assessments">Assessments</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='assessors' %} aria-current="page" {% endif
+                                %}href="/admin/assessors">Assessors</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='admins' %} aria-current="page" {% endif
+                                %}href="/admin/admins">Administrators</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

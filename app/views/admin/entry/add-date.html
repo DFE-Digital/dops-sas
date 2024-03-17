@@ -1,0 +1,128 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set view = "request" %}
+{% set pageName = "Add date and time" %}
+
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+
+{% set endDate = assessment.AssessmentDateTime %}
+
+{% set day = endDate.getUTCDate() %}
+{% set month = endDate.getUTCMonth() + 1 %}
+{# Month is 0-indexed, so add 1 #}
+{% set year = endDate.getUTCFullYear() %}
+
+{% block content %}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">{{pageName}}</h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-link--no-visited-state"
+                            href="/admin/overview/{{assessment.AssessmentID}}">Cancel</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+
+                <p>The team have submitted the following weeks for their {{assessment.Type | lower}}.</p>
+
+                {% if assessment.RequestedWeeks %}
+                <ul class="govuk-list govuk-list--bullet">
+                    {% for item in (assessment.RequestedWeeks | split(",")) %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No weeks selected or the end date is within 5 weeks.</p>
+                {% endif %}
+
+
+
+                <form method="post" action="/admin/add-date">
+                    <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}" />
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" role="group" aria-describedby="AssessmentDate-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h3 class="govuk-fieldset__heading">
+                                    {{assessment.Type }} date and time
+                                </h3>
+                            </legend>
+                            <div id="AssessmentDate-hint" class="govuk-hint">
+                                For example, {{x | date('add', '2', 'months')| date('D M YYYY')}}
+                            </div>
+                            <div class="govuk-date-input" id="AssessmentDate">
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="AssessmentDate_day">
+                                            Day
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                            id="AssessmentDate_day" name="AssessmentDate_day" type="text"
+                                            value="{{day}}" inputmode="numeric">
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="AssessmentDate_month">
+                                            Month
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                            id="AssessmentDate_month" name="AssessmentDate_month" type="text"
+                                            value="{{month}}" inputmode="numeric">
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="AssessmentDate_year">
+                                            Year
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                            id="AssessmentDate_year" name="AssessmentDate_year" type="text"
+                                            value="{{year}}" inputmode="numeric">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="AssessmentTime-by-text">
+                            Enter the time, for example, 10am to 4pm
+                        </label>
+                        <input class="govuk-input govuk-!-width-one-third" id="AssessmentTime-by-text" name="CustomTime"
+                            type="text" value="{{assessment.AssessmentTime}}">
+                    </div>
+
+
+                    <div class="govuk-button-group">
+                        <button type="submit" class="govuk-button" data-module="govuk-button">
+                            Save date
+                        </button>
+                        <a class="govuk-link" href="/admin/overview/{{assessment.AssessmentID}}">Cancel and return to
+                            overview</a>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+
+    </div>
+</div>
+
+
+{% endblock %}

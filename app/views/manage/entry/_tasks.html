@@ -1,0 +1,64 @@
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Tasks</h2>
+    </div>
+    <div class="govuk-summary-card__content">
+
+{% if assessment.Status === "Published" %}
+<p>You have no outstanding tasks.</p>
+{% else %}
+
+        <ul class="govuk-task-list govuk-!-margin-bottom-0">
+
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/manage/team/{{assessment.AssessmentID}}"
+                        aria-describedby="task-send-report-status">Add team members</a>
+                </div>
+                <div class="govuk-task-list__status" id="add-assessor-status">
+                    {% if team.length == 0 %} <strong class="govuk-tag govuk-tag--blue">To do</strong> {% else %}<strong
+                        class="govuk-tag govuk-tag--light-blue">In progress</strong> {% endif %}
+                </div>
+            </li>
+
+
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/manage/artefacts/{{assessment.AssessmentID}}"
+                        aria-describedby="task-send-report-status">Add artefacts</a>
+                </div>
+                <div class="govuk-task-list__status" id="add-assessor-status">
+                    {% if artefacts.length == 0 %} <strong class="govuk-tag govuk-tag--blue">To do</strong> {% else
+                    %}<strong class="govuk-tag govuk-tag--light-blue">In progress</strong> {% endif %}
+
+                </div>
+            </li>
+
+            {% if assessment.Status === 'Team Review' %}
+
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/manage/report/{{assessment.AssessmentID}}"
+                        aria-describedby="task-send-report-status">View and accept report</a>
+                </div>
+                <div class="govuk-task-list__status" id="add-assessor-status">
+                    <strong class="govuk-tag govuk-tag--blue">To do</strong>
+                </div>
+            </li>
+            {% else %}
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                   View and accept report
+                </div>
+                <div class="govuk-task-list__status" id="add-assessor-status">
+                    <strong class="govuk-tag govuk-tag--grey">Cannot start yet</strong>
+                </div>
+            </li>
+            {% endif %}
+        </ul>
+
+
+        {% endif %}
+
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<ul class="govuk-task-list govuk-!-margin-bottom-0">
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Accept or reject the booking request
+        </div>
+        <div class="govuk-task-list__status" id="accept-request-status">
+            <div class="govuk-task-list__status" id="accept-request-status">Completed</div>
+        </div>
+    </li>
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Set assessment date and time
+        </div>
+        <div class="govuk-task-list__status" id="add-date-status">
+            <div class="govuk-task-list__status" id="accept-request-status">Completed</div>
+        </div>
+    </li>
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Add assessors to the panel
+        </div>
+        <div class="govuk-task-list__status" id="add-date-status">
+            <div class="govuk-task-list__status" id="accept-request-status">Completed</div>
+        </div>
+    </li>
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Send report to team
+        </div>
+        <div class="govuk-task-list__status" id="add-assessor-status">
+            <div class="govuk-task-list__status" id="accept-request-status">Completed</div>
+        </div>
+    </li>
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Team reviewing report
+        </div>
+        <div class="govuk-task-list__status" id="add-assessor-status">
+            <div class="govuk-task-list__status" id="accept-request-status">Completed</div>
+        </div>
+    </li>
+
+    {% if assessment.Outcome == 'Red' %}
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            <a class="govuk-link govuk-task-list__link" href="/admin/create-reassessment/{{assessment.AssessmentID}}"
+                aria-describedby="task-send-report-status">Create reassessment entry</a>
+        </div>
+        <div class="govuk-task-list__status" id="add-assessor-status">
+            <strong class="govuk-tag govuk-tag--blue">To do</strong>
+        </div>
+    </li>
+    {% endif %}
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            <a class="govuk-link govuk-task-list__link" href="/admin/report/{{assessment.AssessmentID}}"
+                aria-describedby="task-send-report-status">Publish report</a>
+        </div>
+        <div class="govuk-task-list__status" id="add-assessor-status">
+            <strong class="govuk-tag govuk-tag--blue">To do</strong>
+        </div>
+    </li>
+
+</ul>

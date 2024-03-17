@@ -1,0 +1,43 @@
+<h2 class="govuk-heading-l">Service team</h2>
+
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Team members</h2>
+
+  </div>
+  <div class="govuk-summary-card__content">
+
+
+    <table class="govuk-table dfe-table--smaller">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-width-one-half">Role</th>
+          <th scope="col" class="govuk-table__header">Person</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% if entry.fields.ProductManagerName%}
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Product Manager</th>
+          <td class="govuk-table__cell"><a href=""
+              class="govuk-link govuk-link--no-visited-state">{{entry.fields.ProductManagerName}}</a></td>
+        </tr>
+        {% endif %}
+        {% if entry.fields.DeliveryManagerName%}
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Delivery Manager</th>
+          <td class="govuk-table__cell"><a href=""
+              class="govuk-link govuk-link--no-visited-state">{{entry.fields.DeliveryManagerName}}</a></td>
+        </tr>
+        {% endif %}
+        {% for person in team %}
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">{{person.fields.Role}}</th>
+          <td class="govuk-table__cell"><a href=""
+              class="govuk-link govuk-link--no-visited-state">{{person.fields.Name}}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

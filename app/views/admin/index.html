@@ -1,0 +1,81 @@
+{% extends "layouts/auth.html" %}
+
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Your dashboard" %}
+{% set view = "dashboard" %}
+{% set filter = ""%}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+
+        <nav class="dfe-vertical-nav">
+            <ul class="dfe-vertical-nav__section">
+                <li
+                    class="dfe-vertical-nav__section-item {% if filter == '' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{requests | length }}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin">Priority tasks</a>
+                </li>
+                <li
+                    class="dfe-vertical-nav__section-item {% if filter == 'date-not-set' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{noDates | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/date-not-set">Date not set</a>
+                </li>
+                <li
+                    class="dfe-vertical-nav__section-item {% if filter == 'no-assessors' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{noAssessors | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/no-assessors">No assessors</a>
+                </li>
+                <li
+                    class="dfe-vertical-nav__section-item {% if filter == 'send-to-team' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{sendToTeam | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/send-to-team">Send to team</a>
+                </li>
+                <li
+                    class="dfe-vertical-nav__section-item {% if filter == 'to-be-published' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{toBePublished | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/to-be-published">To be published</a>
+                </li>
+            </ul>
+        </nav>
+
+
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--l">Priority tasks</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Task</th>
+                    <th scope="col" class="govuk-table__header">Phase</th>
+                    <th scope="col" class="govuk-table__header">Type</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for record in requests %}
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"><a href="/admin/overview/{{record.AssessmentID}}">New
+                            booking</a>
+                    </th>
+                    <td class="govuk-table__cell">{{record.Phase}}</td>
+                    <td class="govuk-table__cell">{{record.Type}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+
+    </div>
+</div>
+{% endblock %}

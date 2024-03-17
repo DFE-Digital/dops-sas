@@ -1,0 +1,59 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Sign in" %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if errors %}
+        <div class="govuk-error-summary" data-module="govuk-error-summary">
+            <div role="alert">
+                <h2 class="govuk-error-summary__title">There is a problem</h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        {% for error in errors %}
+                        <li>
+                            <a href="#{{error.field}}">{{error.message}}</a>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <h1 class="govuk-heading-l">{{pageName}}</h1>
+        <p class="govuk-body">We only ask for your email address to sign in, we don't need you to remember a password.
+        </p>
+        <p class="govuk-body">We'll send you a link to your email address, called a 'magic link' which will sign you in
+            automatically. So make sure you can access your email.</p>
+
+
+        <form action="/sign-in" method="post" novalidate="novalidate" class="govuk-!-margin-bottom-9">
+
+
+            <div class="govuk-form-group {%if hasEmailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+
+                <label class="govuk-label" for="EmailAddress">Enter your email address</label>
+                {%if hasEmailError%}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address
+                </p>
+                {% endif%}
+                <input class="govuk-input {%if hasEmailError%} govuk-input--error{% endif%}" id="EmailAddress"
+                    name="EmailAddress" type="EmailAddress" spellcheck="false" aria-describedby="email-hint"
+                    autocomplete="EmailAddress" value="{{data['email']}}">
+            </div>
+
+            <button class="govuk-button" data-module="govuk-button">Get magic link</button>
+    </div>
+    </form>
+</div>
+</div>
+
+
+{% endblock %}

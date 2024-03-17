@@ -1,0 +1,22 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Request submitted" %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-!-margin-bottom-5 govuk-panel--confirmation govuk-!-text-align-left">
+                <h1 class="govuk-panel__title">{{pageName}}</h1>
+                <div class="govuk-panel__body">
+                    <p class="govuk-!-margin-bottom-0">We've sent you a confirmation email.</p>
+
+                </div>
+            </div>
+            <p>We've also sent an email confirming details of the booking to the named delivery manager and product manager.</p>
+            <h2 class="govuk-heading-m">What happens next</h2>
+            <p>The service assessment plus team will email you within 3 working days with next steps.</p>
+            <p>You can view the progress of your booking, add members of the delivery team and artefacts for your work in the <a href="/manage/">manage section</a> of the service.</p>
+        </div>
+    </div>
+{% endblock %}

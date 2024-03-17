@@ -1,0 +1,128 @@
+{% extends "layouts/auth.html" %}
+
+{% set pageName = "Create a booking" %}
+{% set selectedNav = "Book"%}
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Book</span>
+                <h1 class="govuk-heading-l">{{pageName}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-three-quarters">
+
+        <p>You can use this service to:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>book a discovery peer review</li>
+            <li>book a service assessment
+            <li>book an alpha or beta peer review</li>
+        </ul>
+
+        <p>You should give at least 5 weeks notice when submitting a booking.</p>
+
+        <h3 class="govuk-heading-m">Reassessments</h3>
+
+        <p>If your service has received a not met or red rating at assessment, a reassessment will be created for your
+            service. You do
+            not need to submit a booking to request a reassessment.</p>
+
+        <h2 class="govuk-heading-l">Start a request</h2>
+
+        <p>You can make a request for your own project or on behalf of a team.</p>
+
+        <a href="/book/request/phase" role="button" draggable="false" class="govuk-button govuk-button--start"
+            data-module="govuk-button">Start now
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
+                viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            </svg>
+        </a>
+
+        {% if drafts.length %}
+
+        <h3 class="govuk-heading-m">Continue with a draft</h3>
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Your drafts</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+                <table class="govuk-table dfe-table--smaller">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">Service</th>
+                            <th scope="col" class="govuk-table__header">Phase</th>
+                            <th scope="col" class="govuk-table__header">Type</th>
+                            <th scope="col" class="govuk-table__header">Started</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in drafts %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/book/draft/{{record.AssessmentID}}" class="govuk-link">
+                                    {%if record.Name !== null %}{{record.Name}}{% else%}Unnamed{% endif %}
+                                </a>
+                            </th>
+                            <td class="govuk-table__cell">{{record.Phase}}</td>
+                            <td class="govuk-table__cell">{{record.Type}}</td>
+                            <td class="govuk-table__cell">{{record.CreatedDate|date('D MMM YYYY')}}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% endif %}
+
+        <h2 class="govuk-heading-l">Before you start</h2>
+
+        <p>You can check the <a href="/assessments" class="govuk-link">assessments section</a> to see if a request has
+            already been submitted for your product or service.</p>
+
+        <p>Read the <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/"
+                target="_blank" class="govuk-link"> step by step guidance</a> to help you understand what service
+            assessments and peer review are,
+            how to prepare and what to expect.</p>
+
+        <h3 class="govuk-heading-m">If you need help using the service</h3>
+
+        <p>Contact the <a href="mailto:serviceassessment.plus@education.gov.uk" class="govuk-link">service assessment
+                plus team</a>.</p>
+
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+        <aside class="dfe-aside">
+            <h2 class="govuk-heading-m">Related guidance</h2>
+
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/"
+                        class="govuk-link" target="_blank">Check what assurance you need for your product or service</a>
+                </li>
+                <li>
+                    <a href="https://apply-the-service-standard.education.gov.uk/service-standard" class="govuk-link"
+                        target="_blank">Apply the Service Standard</a>
+                </li>
+
+            </ul>
+
+        </aside>
+    </div>
+</div>
+
+{% endblock %}

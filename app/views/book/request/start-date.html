@@ -1,0 +1,120 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Enter your" + model.Phase | lower + " phase start date" %}
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book/request/code" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% set dateError = false %}
+
+{% for error in errors %}
+{% if error.path === 'Day' %}
+{% set dateError = true %}
+{% endif %}
+{% if error.path === 'Month' %}
+{% set dateError = true %}
+{% endif %}
+{% if error.path === 'Year' %}
+{% set dateError = true %}
+{% endif %}
+{% endfor %}
+
+{% if not dateError and model.StartDate != null %}
+    {% set startDate = model.StartDate %}
+
+    {% set day = startDate.getUTCDate() %}
+    {% set month = startDate.getUTCMonth() + 1 %}
+    {# Month is 0-indexed, so add 1 #}
+    {% set year = startDate.getUTCFullYear() %}
+
+{% endif %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+        <form action="/book/request/start-date" method="post">
+            <div class="govuk-form-group {%if dateError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" role="group" aria-describedby="disco-start-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            When did your {{data.model.Phase |lower }} start?
+                        </h1>
+                    </legend>
+                    {%if dateError%}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Enter a valid date
+                    </p>
+                    {% endif%}
+                    <div id="disco-start-hint" class="govuk-hint">
+                        For example, 18 6 2023
+                    </div>
+                    <div class="govuk-date-input" id="disco-start">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="Day">
+                                    Day
+                                </label>
+                                <input
+                                    class="govuk-input govuk-date-input__input govuk-input--width-2 {%if dateError%} govuk-input--error{% endif%}"
+                                    id="Day" name="Day" type="text" inputmode="numeric" value="{{day}}">
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label " for="Month">
+                                    Month
+                                </label>
+                                <input
+                                    class="govuk-input govuk-date-input__input govuk-input--width-2{%if dateError%} govuk-input--error{% endif%}"
+                                    id="Month" name="Month" type="text" inputmode="numeric" value="{{month}}">
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="Year">
+                                    Year
+                                </label>
+                                <input
+                                    class="govuk-input govuk-date-input__input govuk-input--width-4 {%if dateError%} govuk-input--error{% endif%}"
+                                    id="Year" name="Year" type="text" inputmode="numeric" value="{{year}}">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Skip and return to
+                    later</a>
+            </div>
+        </form>
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        {# <aside class="dfe-aside">
+            <h2 class="govuk-heading-m">Related guidance</h2>
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance"
+                        target="_blank">Naming your service</a>
+                </li>
+            </ul>
+        </aside> #}
+    </div>
+</div>
+{% endblock %}

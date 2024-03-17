@@ -1,0 +1,84 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = 'Remove panel member' %}
+{% set view = 'panel' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Remove assessor</h2>
+
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-link--no-visited-state"
+                            href="/admin/panel/{{assessment.AssessmentID}}">Cancel</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+
+                <form action="/admin/remove-panel" method="post" novalidate>
+                    <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+                    <input type="hidden" name="AssessmentPanelID" value="{{ assessor.AssessmentPanelID }}">
+                    <input type="hidden" name="UniqueID" value="{{ assessor.UniqueID }}">
+
+                    <h2 class="govuk-heading-m">Are you sure you want to remove {{assessor.FirstName}} from the panel?
+                    </h2>
+
+                    <dl class="govuk-summary-list govuk-!-margin-bottom-5">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Name</dt>
+                            <dd class="govuk-summary-list__value">{{assessor.FirstName}}
+                                {{assessor.LastName}}</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Role</dt>
+                            <dd class="govuk-summary-list__value">{{assessor.Role}}</dd>
+                        </div>
+                    </dl>
+
+                    <div class="govuk-button-group">
+                        <button name="action" class="govuk-button govuk-button--warning"
+                            data-module="govuk-button">Confirm removal</button>
+                        <a href="/admin/panel/{{assessment.AssessmentID}}" class="govuk-link">Cancel and return to
+                            team</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+
+                <h2 class="govuk-summary-card__title">Guidance</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+                <ul class="govuk-list govuk-list--spaced">
+                    <li>
+                        <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com" target="_blank">Who
+                            should be on the panel</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,83 @@
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Admin</span>
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{assessment.Name}}</h1>
+
+                <table class="govuk-table  govuk-!-margin-bottom-3">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Rating</th>
+                            <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Phase</th>
+                            <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Type</th>
+                            <th class="govuk-table__header" scope="col">Assessment date</th>
+                            {% if assessment.Status == 'Published' %}
+                            <th class="govuk-table__header" scope="col">Status</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                {% if assessment.Status == 'Published' or assessment.Status == 'Team Review' or
+                                assessment.Status == 'SA Publish' or assessment.Status == 'SA Review' %}
+                                <strong
+                                    class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">{{assessment.Outcome}}</strong>
+                                {% else %}
+                                <strong class="govuk-tag">Not rated</strong>
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell">{{assessment.Phase}}</td>
+                            <td class="govuk-table__cell">{{assessment.Type}}</td>
+                            <td class="govuk-table__cell">
+                                {% if not assessment.AssessmentTime and not assessment.AssessmentDateTime %}
+                                <a href="/admin/set-date/{{assessment.AssessmentID}}" class="govuk-link">Set date and
+                                    time</a>
+                                {% else %}
+                                {% if assessment.AssessmentTime %} {{assessment.AssessmentTime }} on {% else %}Time not
+                                set{% endif %}
+                                {% if assessment.AssessmentDateTime %} {{assessment.AssessmentDateTime | date('D MMMM
+                                YYYY')}} {% else %}Date not set{% endif %}
+                                {% endif %}
+                            </td>
+                            {% if assessment.Status == 'Published' %}
+                            <td class="govuk-table__cell">Complete - Published</td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='overview' %} aria-current="page" {% endif
+                                %} href="/admin/overview/{{assessment.AssessmentID}}">Overview</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='request' %} aria-current="page" {% endif
+                                %} href="/admin/request/{{assessment.AssessmentID}}">Request</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='artefacts' %} aria-current="page" {% endif
+                                %}href="/admin/artefacts/{{assessment.AssessmentID}}">Artefacts</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='team' %} aria-current="page" {% endif
+                                %}href="/admin/team/{{assessment.AssessmentID}}">Service team</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='panel' %} aria-current="page" {% endif
+                                %}href="/admin/panel/{{assessment.AssessmentID}}">Assessor panel</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='report' %} aria-current="page" {% endif %}
+                                href="/admin/report/{{assessment.AssessmentID}}">Report</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

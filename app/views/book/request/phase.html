@@ -1,0 +1,104 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "What phase are you in?" %}
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Phase' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+{% block content %}
+
+<form method="post" action="/book/request/phase">
+  
+    {% include 'partials/errorSummary.html' %}
+
+    <div class="govuk-form-group {%if hasError %}govuk-form-group--error{% endif%}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h2 class="govuk-fieldset__heading">
+                    {{pageName}}
+                </h2>
+            </legend>
+            {%if hasError%}
+            <p id="event-name-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> Select a phase
+            </p>
+            {% endif%}
+            <div class="govuk-radios" data-module="govuk-radios">
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase" name="Phase" type="radio" value="Discovery" {% if
+                        model.Phase==="Discovery" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase">
+                        Discovery
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-2" name="Phase" type="radio" value="Alpha" {% if
+                        model.Phase==="Alpha" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-2">
+                        Alpha
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-3" name="Phase" type="radio" value="Private Beta" {% if
+                        model.Phase==="Private Beta" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-3">
+                        Private beta
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-4" name="Phase" type="radio" value="Public Beta" {% if
+                        model.Phase==="Public Beta" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-4">
+                        Public beta
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-5" name="Phase" type="radio" value="Live" {% if
+                        model.Phase==="Live" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-5">
+                        Live
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <button class="govuk-button" data-module="govuk-button">Continue</button>
+</form>
+
+{% endblock %}
+
+{% block sideNav %}
+
+<aside class="dfe-aside">
+    <h2 class="govuk-heading-m">Related guidance</h2>
+    <ul class="govuk-list govuk-list--spaced">
+        <li>
+            <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance"
+                target="_blank">Service assurance step by step</a>
+        </li>
+    </ul>
+</aside>
+
+{% endblock %}

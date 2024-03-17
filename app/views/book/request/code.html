@@ -1,0 +1,113 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Project code" %}
+
+{% set codeYNError = false %}
+{% set codeError = false %}
+
+{% for error in errors %}
+{% if error.path === 'ProjectCodeYN' %}
+{% set codeYNError = true %}
+{% endif %}
+{% if error.path === 'ProjectCode' %}
+{% set codeError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book/request/description" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% include 'partials/errorSummary.html' %}
+
+        <h2 class="govuk-heading-l">{{pageName}}</h2>
+        <p class="govuk-body">This code is sometimes called a project ID. It starts with DDaT.</p>
+
+        <p class="govuk-body">For example, DDaT_22/23_001.</p>
+        <p class="govuk-body">Find the code on the <a
+                href="https://educationgovuk.sharepoint.com/sites/efarafdg/c/WorkplaceDocuments/Forms/AllItems.aspx?id=%2Fsites%2Fefarafdg%2Fc%2FWorkplaceDocuments%2F0%20DDaT%20PMO%20Hub%2FDDaT%5FPortfolio%5FTracker%5FCollated%5F2017%20%2D%20present%2Exlsx&parent=%2Fsites%2Fefarafdg%2Fc%2FWorkplaceDocuments%2F0%20DDaT%20PMO%20Hub"
+                class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">DDaT portfolio
+                tracker (opens in new tab)</a>, or speak to your <a
+                href="https://educationgovuk.sharepoint.com/sites/lvewp00038/SitePages/DDaT-Business-Partners.aspx"
+                class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">business
+                partner (opens in new tab)</a>.</p>
+
+        <form action="/book/request/code" method="post">
+
+            <div class="govuk-form-group {%if codeYNError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="ProjectCodeYN-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+
+                        Do you know your project code?
+
+                    </legend>
+                    <div id="ProjectCodeYN-hint" class="govuk-hint">
+                        Select one option.
+                    </div>
+                    {%if codeYNError%}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>Select if you know your project code
+                    </p>
+                    {% endif%}
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ProjectCodeYN" name="ProjectCodeYN" type="radio"
+                                value="Yes" data-aria-controls="conditional-ProjectCodeYN" {% if model.ProjectCodeYN==="Yes"
+                                %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="ProjectCodeYN">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                            id="conditional-ProjectCodeYN">
+                            <div class="govuk-form-group {%if codeError%}govuk-form-group--error{% endif%}">
+                                <label class="govuk-label" for="ProjectCode">
+                                    What is your project code?
+                                </label>
+                                {%if codeError%}
+                                <p id="ProjectCode-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>What is your project code?
+                                </p>
+                                {% endif%}
+                                <input
+                                    class="govuk-input govuk-!-width-one-third {%if codeError%}govuk-input--error{% endif%}"
+                                    id="ProjectCode" name="ProjectCode" type="text" value="{{model.ProjectCode}}">
+                            </div>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="ProjectCodeYN-2" name="ProjectCodeYN" type="radio"
+                                value="No" {% if model.ProjectCodeYN==="No" %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="ProjectCodeYN-2">
+                                No
+                            </label>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Skip and return to
+                    later</a>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+<div class="dfe-timeline">
+    <ol>
+
+        <!-- Discovery Phase -->
+        <li {% if assessment.Phase === 'Discovery'%}class="active"{% else%}class="inactive"{% endif %}>
+            <h3 class="govuk-heading-s">Discovery</h3>
+            <!-- Display Discovery Assessments -->
+            {% for linkedAssessment in linkedAssessments.Discovery %}
+                {% if linkedAssessment.AssessmentID === assessment.AssessmentID %}
+                    <p class="govuk-body govuk-body-s">Current assessment</p>
+                {% else %}
+                    <p class="govuk-body govuk-body-s">
+                        {{ linkedAssessment.Type }} - 
+                        {% if linkedAssessment.Status === 'Published' %}
+                            {{ linkedAssessment.Outcome }} - 
+                            <a href="/reports/report/{{linkedAssessment.AssessmentID}}">View report</a>
+                        {% else %}
+                            No linked entry exists.
+                        {% endif %}
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </li>
+
+        <!-- Alpha Phase -->
+        <li {% if assessment.Phase === 'Alpha'%}class="active"{% else%}class="inactive"{% endif %}>
+            <h3 class="govuk-heading-s">Alpha</h3>
+            <!-- Display Alpha Assessments -->
+            {% for linkedAssessment in linkedAssessments.Alpha %}
+                {% if linkedAssessment.AssessmentID === assessment.AssessmentID %}
+                    <p class="govuk-body govuk-body-s">Current assessment</p>
+                {% else %}
+                <p class="govuk-body govuk-body-s">
+                    {{ linkedAssessment.Type }} - 
+                    {% if linkedAssessment.Status === 'Published' %}
+                        {{ linkedAssessment.Outcome }} - 
+                        <a href="/reports/report/{{linkedAssessment.AssessmentID}}">View report</a>
+                    {% else %}
+                        No linked entry exists.
+                    {% endif %}
+                </p>
+                {% endif %}
+            {% endfor %}
+        </li>
+
+        <!-- Beta Phase -->
+        <li {% if assessment.Phase === 'Private beta' or assessment.Phase === 'Public beta'%}class="active"{% else%}class="inactive"{% endif %}>
+            <h3 class="govuk-heading-s">Beta</h3>
+            <!-- Display Beta Assessments -->
+            {% for linkedAssessment in linkedAssessments.Beta %}
+                {% if linkedAssessment.AssessmentID === assessment.AssessmentID %}
+                    <p class="govuk-body govuk-body-s">Current assessment</p>
+                {% else %}
+                <p class="govuk-body govuk-body-s">
+                    {{ linkedAssessment.Type }} - 
+                    {% if linkedAssessment.Status === 'Published' %}
+                        {{ linkedAssessment.Outcome }} - 
+                        <a href="/reports/report/{{linkedAssessment.AssessmentID}}">View report</a>
+                    {% else %}
+                        No linked entry exists.
+                    {% endif %}
+                </p>
+                {% endif %}
+            {% endfor %}
+        </li>
+    </ol>
+</div>
+
+
+
+{{linkedAssessments | dump}}

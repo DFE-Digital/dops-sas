@@ -1,0 +1,209 @@
+{% extends "layouts/auth_layout.html" %}
+{% set selectedNav = "Manage" %}
+{% set view = "request" %}
+{% set pageName = assessment.Name %}
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h2 class="govuk-heading-l">Request details</h2>
+
+        {% if assessment.Status === "Published" %}
+        <p>The assessment is complete, and the report published. These details cannot be changed.</p>{% endif %}
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Requested assurance type
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Type}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> name</span></a> {% endif
+                    %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phase
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Phase}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> date of birth</span></a>
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Service / project name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Name}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Description
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Description}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Project code
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.ProjectCodeYN === "Yes" %}
+                    {{assessment.ProjectCode}}
+                    {% elseif assessment.ProjectCodeYN === "No" %}
+                    Project code not known
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phase start date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.StartDate %}
+                    {{assessment.StartDate | date('D MMM YYYY')}}
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phase end date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.EndDateYN === "Yes"%}
+                    {{assessment.EndDate | date('D MMM YYYY')}}
+                    {% elseif assessment.EndDateYN === "No"%}End date not known{% endif%}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Requested weeks for {{assessment.Type | lower}}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.RequestedWeeks %}
+                    <ul class="govuk-list">
+                        {% for item in (assessment.RequestedWeeks | split(",")) %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Portfolio
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Portfolio}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Deputy director
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ddDetails.FirstName}}
+                    {{ddDetails.LastName}}<br />
+                    {{ddDetails.EmailAddress}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Product manager
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.PMYN === "Yes" %}
+                    {{pmDetails.FirstName}}
+                    {{pmDetails.LastName}}<br />
+                    {{pmDetails.EmailAddress}}
+                    {%elseif assessment.PMYN === "No" %} No product manager {% else%}
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Delivery manager
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.DMYN === "Yes" %}
+                    {{pmDetails.FirstName}}
+                    {{pmDetails.LastName}}<br />
+                    {{pmDetails.EmailAddress}}
+                    {%elseif assessment.DMYN === "No" %} No delivery manager {% else%}
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if assessment.Status !== "Published" %}
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
+                    endif %}
+                </dd>
+            </div>
+
+        </dl>
+
+
+
+
+    </div>
+
+</div>
+{% endblock %}

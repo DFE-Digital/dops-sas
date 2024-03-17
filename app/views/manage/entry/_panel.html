@@ -1,0 +1,37 @@
+<h2 class="govuk-heading-l">Assessor panel</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Panel members</h2>
+
+    </div>
+    <div class="govuk-summary-card__content">
+        {% if panel.length %}
+        <table class="govuk-table dfe-table--smaller">
+
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header  govuk-!-width-one-half">Role</th>
+                    <th scope="col" class="govuk-table__header">Name</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for person in panel %}
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">
+                        {% for role in person.fields.Role %}{{role}}
+                        {% if not loop.last %}<br />{%endif%}{% endfor%}</th>
+                    <td class="govuk-table__cell">
+                        <a href="mailto:andy.jones@education.gov.uk"
+                            class="govuk-link govuk-link--no-visited-state">{{person.fields.Name}}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <p>No panel members have been added.</p>
+        {% endif %}
+    </div>
+</div>

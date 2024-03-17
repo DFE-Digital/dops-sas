@@ -1,0 +1,36 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Delete your draft" %}
+
+
+{% block hero %}
+    <div class="dfe-page-header">
+        <div class="govuk-width-container dfe-width-container ">
+            <a href="/book/request/tasks" class="govuk-back-link">Back</a>
+            <div class="govuk-grid-row">
+
+                <div class="govuk-grid-column-full">
+                       <h1 class="govuk-heading-l">{{pageName}}</h1>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block content %}
+
+ <h2 class="govuk-heading-m">Confirm deletion</h2>
+    <p>This cannot be undone.</p>
+    <form action="/book/request/confirm-delete/" method="post">
+
+        <div class="govuk-button-group">
+            <button class="govuk-button govuk-button--warning" data-module="govuk-button">Confirm deletion</button>
+            <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Cancel and return to tasks</a>
+        </div>
+
+    </form>
+
+{% endblock %}

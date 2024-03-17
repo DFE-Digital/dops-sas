@@ -1,0 +1,40 @@
+<div class="dfe-timeline">
+    <ol>
+
+        <li {% if assessment.Phase === 'Discovery'%}class="active"{% else%}class="inactive"{% endif %}>
+            <h3 class="govuk-heading-s">Discovery</h3>
+     
+            {% if assessment.Phase === 'Discovery' %}
+            <p class="govuk-body govuk-body-s">Current phase.</p>
+        {% elif assessment.Phase === 'Alpha' %}
+            <p class="govuk-body govuk-body-s">Assessment report not available.</p>
+        {% endif %}
+
+        </li>
+
+        <li {% if assessment.Phase === 'Alpha'%}class="active"{% else%}class="inactive"{% endif %}>
+            <h3 class="govuk-heading-s">Alpha</h3>
+            {% if assessment.Phase === 'Alpha' %}
+                <p class="govuk-body govuk-body-s">Current phase.</p>
+            {% endif %}
+
+        </li>
+
+        <li {% if assessment.Phase === 'Private Beta'%}class="active"{% else%}class="inactive"{% endif %}>
+            <h3 class="govuk-heading-s">Private Beta</h3>
+            {% if assessment.Phase === 'Private Beta' %}
+                <p class="govuk-body govuk-body-s">Current phase.</p>
+            {% endif %}
+
+        </li>
+
+        <li {% if assessment.Phase === 'Public Beta'%}class="active"{% else%}class="inactive"{% endif %}>
+            <h3 class="govuk-heading-s">Public Beta</h3>
+            {% if assessment.Phase === 'Public Beta' %}
+                <p class="govuk-body govuk-body-s">Current phase.</p>
+            {% endif %}
+
+        </li>
+  
+    </ol>
+</div>

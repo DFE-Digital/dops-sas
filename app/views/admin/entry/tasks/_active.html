@@ -1,0 +1,65 @@
+<ul class="govuk-task-list govuk-!-margin-bottom-0">
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Accept or reject the booking request
+        </div>
+        <div class="govuk-task-list__status" id="accept-request-status">
+           Completed
+        </div>
+    </li>
+
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            {% if assessment.AssessmentDateTime == null %}
+            <a class="govuk-link govuk-task-list__link" href="/admin/add-date/{{assessment.AssessmentID}}"
+                aria-describedby="add-date-status">Set assessment date and time</a>
+            {% else%}
+            <a class="govuk-link govuk-task-list__link" href="/admin/add-date/{{assessment.AssessmentID}}"
+                aria-describedby="add-date-status">Change assessment date and time</a>
+            {% endif %}
+        </div>
+        <div class="govuk-task-list__status" id="add-date-status">
+            {% if assessment.AssessmentDateTime == null %}
+            <strong class="govuk-tag govuk-tag--blue">To do</strong>
+            {% else%}
+          Completed
+            {% endif %}
+        </div>
+    </li>
+
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            <a class="govuk-link govuk-task-list__link" href="/admin/panel/{{assessment.AssessmentID}}" aria-describedby="add-date-status">Add assessors to the panel</a>
+        </div>
+        <div class="govuk-task-list__status" id="add-date-status">
+            {% if panel | length == 0 %}
+            <strong class="govuk-tag govuk-tag--blue">To do</strong>
+            {% else%}
+            <strong class="govuk-tag govuk-tag--light-blue">In progress</strong>
+            {% endif %}
+        </div>
+    </li>
+
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Send report to team
+        </div>
+        <div class="govuk-task-list__status" id="add-assessor-status">
+            <strong class="govuk-tag govuk-tag--grey">Cannot start yet</strong>
+        </div>
+    </li>
+
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            Publish report
+        </div>
+        <div class="govuk-task-list__status" id="add-assessor-status">
+            <strong class="govuk-tag govuk-tag--grey">Cannot start yet</strong>
+        </div>
+    </li>
+
+</ul>

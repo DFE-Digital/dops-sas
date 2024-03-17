@@ -1,0 +1,259 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set view = "request" %}
+{% set pageName = assessment.Name %}
+
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'process' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+        {% if assessment.Status == 'New' %}
+
+        <form action="/admin/process" method="post">
+            <input type="hidden" name="assessmentID" value="{{assessment.AssessmentID}}">
+            <div class="govuk-form-group {%if hasError %}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="process-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h2 class="govuk-fieldset__heading">
+                            Accept or reject the request
+                        </h2>
+                    </legend>
+                    {%if hasError%}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select an option
+                    </p>
+                    {% endif%}
+                    <div id="process-hint" class="govuk-hint">
+                        Select one option.
+                    </div>
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        <div class="govuk-radios__item ">
+                            <input class="govuk-radios__input" id="process" name="process" type="radio" value="Accept">
+                            <label class="govuk-label govuk-radios__label" for="process">
+                                Accept
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="process-2" name="process" type="radio" value="Reject"
+                                data-aria-controls="conditional-process-2">
+                            <label class="govuk-label govuk-radios__label" for="process-2">
+                                Reject
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                            id="conditional-process-2">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="more-detail">
+                                    Why are you rejecting the request?
+                                </label>
+                                <div id="more-detail-hint" class="govuk-hint">
+                                    This will be sent to the person who submitted the booking.
+                                </div>
+                                <textarea class="govuk-textarea" id="reason" name="moreDetail" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button type="submit" class="govuk-button" data-module="govuk-button">
+                    Save
+                </button>
+                <a class="govuk-link" href="/admin/overview/{{assessment.AssessmentID}}">Cancel and return to
+                    overview</a>
+            </div>
+        </form>
+        {% endif %}
+
+
+        {% if assessment.Status == 'New' %}
+        <h2 class="govuk-heading-l">Details of the booking request</h2>
+        <p>Check through the details before accepting or rejecting the booking request.</p>
+
+
+
+        {% else %}
+        <h2 class="govuk-heading-l">Request details</h2>
+        <p>You can alter details of the request at any point.</p>
+        {% endif %}
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Requested assurance type
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Type}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> name</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phase
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Phase}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> date of birth</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Service / project name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Name}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Description
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Description}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Project code
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.ProjectCodeYN === "Yes" %}
+                    {{assessment.ProjectCode}}
+                    {% elseif assessment.ProjectCodeYN === "No" %}
+                    Project code not known
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phase start date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.StartDate %}
+                    {{assessment.StartDate | date('D MMM YYYY')}}
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phase end date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.EndDateYN === "Yes"%}
+                    {{assessment.EndDate | date('D MMM YYYY')}}
+                    {% elseif assessment.EndDateYN === "No"%}End date not known{% endif%}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Requested weeks for {{assessment.Type | lower}}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.RequestedWeeks %}
+                    <ul class="govuk-list">
+                        {% for item in (assessment.RequestedWeeks | split(",")) %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Portfolio
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessment.Portfolio}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Deputy director
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ddDetails.FirstName}}
+                    {{ddDetails.LastName}}<br />
+                    {{ddDetails.EmailAddress}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Product manager
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.PMYN === "Yes" %}
+                    {{pmDetails.FirstName}}
+                    {{pmDetails.LastName}}<br />
+                    {{pmDetails.EmailAddress}}
+                    {%elseif assessment.PMYN === "No" %} No product manager {% else%}
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Delivery manager
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if assessment.DMYN === "Yes" %}
+                    {{pmDetails.FirstName}}
+                    {{pmDetails.LastName}}<br />
+                    {{pmDetails.EmailAddress}}
+                    {%elseif assessment.DMYN === "No" %} No delivery manager {% else%}
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                </dd>
+            </div>
+
+        </dl>
+
+
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "layouts/auth_layout.html" %}
+
+{% set selectedNav = "Manage" %}
+{% set pageName = 'Artefacts' %}
+
+{% set titleError = false %}
+{% set descriptionError = false %}
+{% set urlError = false %}
+
+{% for error in errors %}
+    {% if error.field === 'Title' %}
+        {% set titleError = true %}
+    {% endif %}
+    {% if error.field === 'Description' %}
+        {% set descriptionError = true %}
+    {% endif %}
+    {% if error.field === 'URL' %}
+        {% set urlError = true %}
+    {% endif %}
+{% endfor %}
+
+{% block hero %}
+
+    {% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="dfe-panel">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <div class="govuk-summary-card">
+                    <div class="govuk-summary-card__title-wrapper">
+                        <h2 class="govuk-summary-card__title">Add artefact</h2>
+
+                        {% if isUserInTeam === true %}
+                            <ul class="govuk-summary-card__actions">
+                                <li class="govuk-summary-card__action">
+                                    <a class="govuk-link govuk-link--no-visited-state" href="/manage/artefacts/{{assessment.AssessmentID}}">Cancel</a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="govuk-summary-card__content">
+
+                        <form action="/manage/add-artefact" method="post" novalidate>
+                            <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+
+                            {% if errors %}
+                                <div class="govuk-error-summary" data-module="govuk-error-summary">
+                                    <div role="alert">
+                                        <h2 class="govuk-error-summary__title">There is a problem</h2>
+                                        <div class="govuk-error-summary__body">
+                                            <ul class="govuk-list govuk-error-summary__list">
+                                                {% for error in errors %}
+                                                    <li>
+                                                        <a href="#{{error.field}}">{{error.message}}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="govuk-form-group {%if titleError%}govuk-form-group--error{% endif%}">
+                                <label class="govuk-label" for="title">Title of the artefact</label>
+                                {%if titleError%}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Enter a title</p>
+                                    {% endif%}
+                                    <input class="govuk-input {%if titleError%} govuk-input--error{% endif%}" id="Title" name="Title" type="text" value="{{data['Title']}}">
+                                </div>
+
+                                <div class="govuk-form-group {%if descriptionError%}govuk-form-group--error{% endif%}">
+                                    <label class="govuk-label" for="description">Additional information</label>
+                                    <div id="event-name-hint" class="govuk-hint">For example: the password for accessing a prototype</div>
+                                     {%if descriptionError%}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Enter a title</p>
+                                    {% endif%}
+                                    <input class="govuk-input {%if descriptionError%} govuk-input--error{% endif%}" id="Description" name="ArtefaceDescription" type="text" value="{{data['ArtefaceDescription']}}">
+                                </div>
+
+                                <div class="govuk-form-group {%if urlError%}govuk-form-group--error{% endif%}">
+                                    <label class="govuk-label" for="url">URL of the file or artefact</label>
+                                     {%if urlError%}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Enter a URL</p>
+                                    {% endif%}
+                                    <input class="govuk-input  {%if urlError%} govuk-input--error{% endif%}" id="URL" name="URL" type="text"  value="{{data['URL']}}">
+                                </div>
+
+                                <div class="govuk-button-group">
+                                    <button  name="action" class="govuk-button"  data-module="govuk-button">Save and return</button>
+                                    <a href="/manage/artefacts/{{assessment.AssessmentID}}" class="govuk-link">Cancel and return to artefacts</a>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    <div class="govuk-summary-card">
+                        <div class="govuk-summary-card__title-wrapper">
+
+                            <h2 class="govuk-summary-card__title">Guidance</h2>
+
+                        </div>
+                        <div class="govuk-summary-card__content">
+                            <ul class="govuk-list govuk-list--spaced">
+                                <li>
+                                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance" target="_blank">What artefacts you should add</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}

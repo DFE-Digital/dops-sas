@@ -1,0 +1,95 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Dates for your " + model.Type | lower %}
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book/request/end-date" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+        {% if model.EndDateYN === "No" %}
+        <h1 class="govuk-heading-l">End date not known</h1>
+        {% else %}
+        <h2 class="govuk-heading-l">{{pageName}}</h2>
+        {% endif %}
+
+        {% if model.EndDateYN === "Yes" and dates | length !== 0 %}
+        <p class="govuk-body">Based on your anticipated end date of {{model.EndDate | date('D MMM YYYY')}} for your
+            {{model.Type | lower}} phase we suggest the following weeks for your {{model.Type | lower}}:</p>
+        {% elseif model.EndDateYN === "Yes" and dates | length === 0 %}
+        <p class="govuk-body">Your end date is within 5 weeks, you can continue your book request and the service
+            assessment plus team will contact you to arrange a date.</p>
+        {% elseif model.EndDateYN === "No" %}
+        <p class="govuk-body">As you have not provided an estimated end date for your {{model.Phase | lower}}, you can
+            choose date ranges between 5 and 12 weeks from now.</p>
+        {% endif %}
+
+        {% set savedDates = "" %}
+        {% if model.RequestedWeeks %}
+        {% set savedDates = model.RequestedWeeks | split(',')%}
+
+        {% endif %}
+
+        <form action="/book/request/dates" method="post">
+            {% if dates.length %}
+            <div class="govuk-form-group {%if err%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="reviewWeek-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Select weeks
+                    </legend>
+                    <div id="reviewWeek-hint" class="govuk-hint">Select all weeks that are suitable for you.</div>
+                    {%if err%}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>Select all weeks that are suitable for your
+                        {{model.Type | lower}}
+                    </p>
+                    {% endif%}
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        {%for xdate in dates %}
+
+                        <div class="govuk-checkboxes__item" id="ReviewWeek">
+                            <input class="govuk-checkboxes__input" id="date_{{loop.index}}" name="ReviewWeek"
+                                type="checkbox" value="{{xdate.week}}" {% if savedDates !=='' %} {% if xdate.week in
+                                model.RequestedWeeks%}checked{%endif%}{%endif%}>
+                            <label class="govuk-label govuk-checkboxes__label" for="date_{{loop.index}}">Week beginning
+                                {{xdate.week}}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Skip and return to
+                    later</a>
+            </div>
+            {% else %}
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Continue</button>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="govuk-grid-column-one-third"></div>
+</div>
+{% endblock %}

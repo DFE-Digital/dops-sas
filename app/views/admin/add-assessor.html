@@ -1,0 +1,235 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Admin" %}
+{% set pageName = "Add assessor" %}
+{% set view = "assessors" %}
+{% block
+hero %}
+{% include './_header.html'%}
+{% endblock %}
+{% set emailError = false %}
+{% set hasFirstNameError = false %}
+{% set hasLastNameError = false %}
+{% set roleError = false %}
+{% set hasCrossGovError = false %}
+{% set hasLeadError = false %}
+{% set hasExternalError = false %}
+
+{% for error in errors %}
+{% if error.field === 'EmailAddress' %}
+{% set emailError = true %}
+{% endif %}
+{% if error.field === 'FirstName' %}
+{% set hasFirstNameError = true %}
+{% endif %}
+{% if error.field === 'LastName' %}
+{% set hasLastNameError = true %}
+{% endif %}
+{% if error.field === 'Role' %}
+{% set roleError = true %}
+{% endif %}
+{% if error.field === 'leadAssessor' %}
+{% set hasLeadError = true %}
+{% endif %}
+{% if error.field === 'crossGovAssessor' %}
+{% set hasCrossGovError = true %}
+{% endif %}
+
+{% if error.field === 'externalAssessor' %}
+{% set hasExternalError = true %}
+{% endif %}
+
+
+{% endfor %}
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <h2>Assessor details</h2>
+
+        <p>If the person's email address is already registered to use this service, we'll link their existing account to
+            an assessor record.</p>
+
+        <form action="/admin/add-assessor" method="post">
+            {% if errors %}
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">There is a problem</h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            {% for error in errors %}
+                            <li>
+                                <a href="#{{error.field}}">{{error.message}}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
+
+            <div
+                class="govuk-form-group {%if hasFirstNameError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+                <label class="govuk-label" for="firstName">First name</label>
+                {%if hasFirstNameError %}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter their first name
+                </p>
+                {% endif %}
+                <input class="govuk-input {%if hasFirstNameError%} govuk-input--error{% endif%}" id="FirstName"
+                    name="FirstName" type="text" spellcheck="false" aria-describedby="firstName-hint"
+                    autocomplete="firstName" value="" />
+            </div>
+
+            <div class="govuk-form-group {%if hasLastNameError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+                <label class="govuk-label" for="lastName">Last name</label>
+                {%if hasLastNameError %}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter their last name
+                </p>
+                {% endif %}
+                <input class="govuk-input {%if hasLastNameError%} govuk-input--error{% endif%}" id="LastName"
+                    name="LastName" type="text" spellcheck="false" aria-describedby="lastName-hint"
+                    autocomplete="lastName" value="" />
+            </div>
+
+            <div class="govuk-form-group {%if emailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+                <label class="govuk-label" for="EmailAddress">Email address</label>
+                {%if emailError %}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address
+                </p>
+                {% endif %}
+                <input class="govuk-input {%if emailError%} govuk-input--error{% endif%}" id="EmailAddress"
+                    name="EmailAddress" type="email" spellcheck="false" aria-describedby="email-hint"
+                    autocomplete="email" value="" />
+            </div>
+
+
+            <div class="govuk-form-group {%if roleError%}govuk-form-group--error {% endif%}">
+                <legend class="govuk-fieldset__legend">
+                    What is their role?
+                </legend>
+                {%if roleError %}
+                <p id="event-role-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Select a role
+                </p>
+                {% endif %}
+                <select
+                    class="govuk-select govuk-!-width-one-half role {%if roleError%}govuk-select--error govuk-input--error{% endif%} "
+                    id="Role" name="Role">
+                    {% include "./_panelroles.html" %}
+                </select>
+            </div>
+
+            <div class="govuk-form-group {%if hasCrossGovError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="crossGovAssessor-hint">
+                    <legend class="govuk-fieldset__legend">
+                        Can they assess other department services
+                    </legend>
+                    <div id="crossGovAssessor-hint" class="govuk-hint">
+                        They will need to have completed the cross-gov assessor training or demonstrate acceptance from
+                        CDDO
+                    </div>
+                    {%if hasCrossGovError%}
+                    <p id="passport-issued-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select if the person is a cross gov assessor
+                        or not
+                    </p>{% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="crossGovAssessor" name="crossGovAssessor"
+                                type="radio" value="Yes" />
+                            <label class="govuk-label govuk-radios__label" for="crossGovAssessor">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="crossGovAssessor-2" name="crossGovAssessor"
+                                type="radio" value="No" />
+                            <label class="govuk-label govuk-radios__label" for="crossGovAssessor-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-form-group {%if hasLeadError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="leadAssessor-hint">
+                    <legend class="govuk-fieldset__legend">
+                        Can they lead an assessment?
+                    </legend>
+                    <div id="leadAssessor-hint" class="govuk-hint">
+                        You'll also need to set their role even if they are a lead assessor.
+                    </div>{%if hasLeadError%}
+                    <p id="passport-issued-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select if the person is a lead assessor or not
+                    </p>{% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="leadAssessor" name="leadAssessor" type="radio"
+                                value="Yes" />
+                            <label class="govuk-label govuk-radios__label" for="leadAssessor">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="leadAssessor-2" name="leadAssessor" type="radio"
+                                value="No" />
+                            <label class="govuk-label govuk-radios__label" for="leadAssessor-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-form-group {%if hasExternalError %}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="externalAssessor-hint">
+                    <legend class="govuk-fieldset__legend">
+                        Are they from another department?
+                    </legend>
+                    <div id="externalAssessor-hint" class="govuk-hint">
+                        For example, they are taking part in a cross-gov service assessment
+                    </div>{%if hasExternalError%}
+                    <p id="passport-issued-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select if they are from another government department
+                    </p>{% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="externalAssessor" name="externalAssessor"
+                                type="radio" value="Yes" />
+                            <label class="govuk-label govuk-radios__label" for="externalAssessor">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="externalAssessor-2" name="externalAssessor"
+                                type="radio" value="No" />
+                            <label class="govuk-label govuk-radios__label" for="externalAssessor-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+
+
+
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Save and return</button>
+                <a href="/admin/assessors" class="govuk-link">Cancel and return to assessors</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    accessibleAutocomplete.enhanceSelectElement({ defaultValue: "", selectElement: document.querySelector(".role") });
+</script>
+{% endblock %}

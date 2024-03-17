@@ -1,0 +1,135 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Does the team have a product owner or product manager?" %}
+
+{% set pmError = false %}
+{% set hasEmailError = false %}
+{% set hasFirstNameError = false %}
+{% set hasLastNameError = false %}
+
+{% for error in errors %}
+{% if error.path === 'pm' %}
+{% set pmError = true %}
+{% endif %}
+{% if error.path === 'pmemail' %}
+{% set hasEmailError = true %}
+{% endif %}
+{% if error.path === 'pmfirstName' %}
+{% set hasFirstNameError = true %}
+{% endif %}
+{% if error.path === 'pmlastName' %}
+{% set hasLastNameError = true %}
+{% endif %}
+{% endfor %}
+
+
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book/request/dd" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+        <form action="/book/request/product" method="post">
+            <div class="govuk-form-group {%if pmError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="pm-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h2 class="govuk-fieldset__heading">Does the team have a product owner or product manager?</h2>
+                    </legend>
+                    <div id="pm-hint" class="govuk-hint">Select one option.</div>
+                    {%if pmError %}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>Select if the team has a product owner or
+                        product manager
+                    </p>
+                    {% endif%}
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="pm" name="pm" type="radio" value="Yes"
+                                data-aria-controls="conditional-pm" {% if model.PMYN ==="Yes" %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="pm">Yes</label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-pm">
+
+                            <p class="govuk-heading-m">Email address and name of the product owner or product manager
+                            </p>
+                            <div
+                                class="govuk-form-group {%if hasEmailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="pmemail">Enter their email address</label>
+                                {%if hasEmailError%}
+                                <p id="event-name-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address
+                                </p>
+                                {% endif%}
+                                <input class="govuk-input {%if hasEmailError%} govuk-input--error{% endif%}"
+                                    id="pmemail" name="pmemail" type="email" spellcheck="false"
+                                    aria-describedby="email-hint" autocomplete="email"
+                                    value="{{userDetails.EmailAddress}}">
+                            </div>
+
+                            <div
+                                class="govuk-form-group {%if hasFirstNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="pmfirstName">Enter their first name</label>
+                                {%if hasFirstNameError %}
+                                <p id="event-name-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>Enter their first name
+                                </p>
+                                {% endif%}
+                                <input class="govuk-input {%if hasFirstNameError%} govuk-input--error{% endif%}"
+                                    id="pmfirstName" name="pmfirstName" type="text" spellcheck="false"
+                                    aria-describedby="firstName-hint" autocomplete="firstName"
+                                    value="{{userDetails.FirstName}}">
+                            </div>
+
+                            <div
+                                class="govuk-form-group {%if hasLastNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="pmlastName">Enter their last name</label>
+                                {%if hasLastNameError %}
+                                <p id="event-name-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>Enter their last name
+                                </p>
+                                {% endif%}
+                                <input class="govuk-input {%if hasLastNameError%} govuk-input--error{% endif%}"
+                                    id="pmlastName" name="pmlastName" type="text" spellcheck="false"
+                                    aria-describedby="lastName-hint" autocomplete="lastName"
+                                    value="{{userDetails.LastName}}">
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="pm-2" name="pm" type="radio" value="No" {% if
+                                model.PMYN==="No" %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="pm-2">No</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Skip and return to
+                    later</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

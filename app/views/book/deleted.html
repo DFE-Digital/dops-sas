@@ -1,0 +1,15 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Draft deleted" %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-!-margin-bottom-5 govuk-panel--confirmation govuk-!-text-align-left">
+                <h1 class="govuk-panel__title">Draft deleted</h1>
+            </div>
+            <p>If you want to submit a new request, you can do so from the <a href="/book" class="govuk-link govuk-link--no-visited-state">book</a> menu option.</p>
+        </div>
+    </div>
+{% endblock %}

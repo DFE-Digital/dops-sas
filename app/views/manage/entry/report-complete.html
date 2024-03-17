@@ -1,0 +1,219 @@
+{% extends "layouts/auth_layout.html" %}
+
+{% set selectedNav = "Manage" %}
+{% set pageName = 'Team' %}
+{% set view = 'report' %}
+
+{% block head %}
+<script src="https://kit.fontawesome.com/32bb6fdbdb.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% if assessment.Status == 'Team Review' %}
+
+        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+              <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                Important
+              </h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+              <p class="govuk-notification-banner__heading">
+                Accept the report             
+              </p>
+             <p>If you have a query or need clarification on the report, you should <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/get-assessment-report#accept-or-challenge-the-report" class="govuk-link">follow the guidance for challenging the report</a>.</p>
+            
+             <form action="/manage/accept-report" method="post">
+                <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+                <button  name="action" class="govuk-button"  data-module="govuk-button">Accept the report</button>
+             </form>
+            </div>
+          </div>
+
+          {% endif %}
+
+          {% if assessment.Status == 'SA Publish' %}
+
+          <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+              <div class="govuk-notification-banner__header">
+                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                  Important
+                </h2>
+              </div>
+              <div class="govuk-notification-banner__content">
+                <p class="govuk-notification-banner__heading">
+                 Report accepted
+                </p>
+                <p>We've let the Service Assessment Plus team know they can publish the report.</p>
+              </div>
+            </div>
+  
+            {% endif %}
+
+            {% if assessment.Status == 'Published' %}
+
+            <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                  <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Important
+                  </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                  <p class="govuk-notification-banner__heading">
+                   This report is published
+                  </p>
+                 
+                </div>
+              </div>
+    
+              {% endif %}
+
+       
+        <h2 class="govuk-heading-l">Report</h2>
+        {% if assessment.Type === 'Service assessment' %}
+        <p class="govuk-body">A service assessment carried out against the <a
+                href="https://apply-the-service-standard.education.gov.uk/service-standard" target="_blank"
+                class="govuk-link">Government Service Standard</a>
+        </p>
+        {% else %}
+        <p class="govuk-body">An internal peer review carried out to help the team understand what has been done well,
+            and what needs to be improved.</p>
+        {% endif %}
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds"> 
+        <hr class="govuk-section-break govuk-section-break--l  govuk-section-break--visible">
+ 
+
+        {% if assessment.Type == "Peer review" %}
+        <h2 class="govuk-heading-m">What the team has done well</h2>
+        <p class="govuk-body">{{assessment.PanelComments}}</p>
+
+        <h2 class="govuk-heading-m">What the team needs to improve</h2>
+        <p class="govuk-body">{{assessment.PanelCommentsImprove}}</p>
+        {% endif %}
+
+        {% if assessment.Type == "Service assessment" or assessment.Type == "Service reassessment" %}
+        <h2 class="govuk-heading-m">Overall comments from the panel</h2>
+        <p class="govuk-body">{{assessment.PanelComments}}</p>
+        {% endif %}
+
+        {% if assessment.Type === 'Service assessment' %}
+        <h2 class="govuk-heading-m  govuk-!-margin-top-7">Summary of ratings for standards</h2>
+        <ol class="govuk-task-list">
+            {% for standard in serviceStandards %}
+            {% for rating in ratings %}
+            {% if standard.Point == rating.Standard %}
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="#point-{{standard.Point}}"
+                        aria-describedby="standard-{{standard.Point}}-status">{{ standard.Point }}. {{ standard.Title
+                        }}</a>
+
+                </div>
+                <div class="govuk-task-list__status" id="standard-{{standard.Point}}-status">
+                    <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome }}</strong>
+                </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </ol>
+
+        {% for standard in serviceStandards %}
+        {% for rating in ratings %}
+        {% if standard.Point == rating.Standard %}
+        <h2 class="govuk-heading-m govuk-!-margin-top-9" id="point-{{standard.Point}}">{{ standard.Point }}. {{
+            standard.Title }}</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Outcome for standard
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome }}</strong>
+                </dd>
+            </div>
+        </dl>
+
+        {% set hasComments = false %}
+
+        {% for comment in comments %}
+        {% if comment.Point === standard.Point %}
+        {% set hasComments = true %}
+        {% endif %}
+        {% endfor %}
+        <h3 class="govuk-heading-s">Panel observations</h3>
+        {% if hasComments === true %}
+
+        <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+            {% for comment in comments %}
+            {% if comment.Point === standard.Point %}
+            <li>{{comment.Comment}}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>There are no comments for this standard</p>
+        {% endif %}
+        <h3 class="govuk-heading-s">Actions to be resolved</h3>
+        {% if actions | length %}
+
+        <ul class="govuk-list govuk-list--bullet  govuk-list--spaced">
+            {% for action in actions %}
+            {% if action.Point === standard.Point %}
+            <li>{{action.Comments}}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>There are no actions required for this standard</p>
+        {% endif %}
+
+        {% endif %}
+        {% endfor %}
+        <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+        {% endfor %}
+
+        {% endif %}
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <aside class="dfe-aside govuk-!-margin-top-6">
+            <div class="dfe-cta-panel dfe-cta-panel--grey govuk-!-margin-top-7">
+                <h2 class="govuk-heading-m">Download report</h2>
+                <p>Download the report in Microsoft Word format.</p>
+                <div class="dfeuk-action-link">
+                    <i class="fa-solid fa-download"></i> <a class="govuk-link" href="/report/generate-doc/{{assessment.AssessmentID}}">Download <span
+                            class="govuk-visually-hidden">assessment report as a word document</span></a>
+                </div>
+            </div>
+            
+    
+            {% if (actions | length > 0) and assessment.Type == 'Service assessment' %}
+
+            <div class="dfe-cta-panel dfe-cta-panel--grey govuk-!-margin-top-7">
+                <h2 class="govuk-heading-m">Export action items</h2>
+                <p>You can export the list of {{actions | length}} actions to resolve as a spreadsheet.</p>
+                <div class="dfeuk-action-link">
+                    <i class="fa-solid fa-download"></i> <a class="govuk-link" href="/report/generate-excel/{{assessment.AssessmentID}}">Download <span
+                            class="govuk-visually-hidden">actions plan as an excel spreadsheet</span></a>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </aside>
+    </div>
+</div>
+{% endblock %}

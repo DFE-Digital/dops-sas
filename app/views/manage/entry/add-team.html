@@ -1,0 +1,150 @@
+{% extends "layouts/auth_layout.html" %}
+
+{% set selectedNav = "Manage" %}
+{% set pageName = 'Add team member' %}
+{% set view = 'team' %}
+
+{% block hero %}
+    {% include './_header.html' %}
+{% endblock %}
+
+{% set emailError = false %}
+{% set hasFirstNameError = false %}
+{% set hasLastNameError = false %}
+{% set roleError = false %}
+
+{% for error in errors %}
+    {% if error.field === 'Email' %}
+        {% set emailError = true %}
+    {% endif %}
+    {% if error.field === 'FirstName' %}
+        {% set hasFirstNameError = true %}
+    {% endif %}
+        {% if error.field === 'LastName' %}
+        {% set hasLastNameError = true %}
+    {% endif %}
+        {% if error.field === 'Role' %}
+        {% set roleError = true %}
+    {% endif %}
+{% endfor %}
+
+{% block content %}
+
+    <div class="dfe-panel">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <div class="govuk-summary-card">
+                    <div class="govuk-summary-card__title-wrapper">
+                        <h2 class="govuk-summary-card__title">Add team member</h2>
+
+                        {% if isUserInTeam === true %}
+                            <ul class="govuk-summary-card__actions">
+                                <li class="govuk-summary-card__action">
+                                    <a class="govuk-link govuk-link--no-visited-state" href="/manage/team/{{assessment.AssessmentID}}">Cancel</a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="govuk-summary-card__content">
+
+                        <form action="/manage/add-team" method="post" novalidate>
+                            <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+
+                            {% if errors %}
+                                <div class="govuk-error-summary" data-module="govuk-error-summary">
+                                    <div role="alert">
+                                        <h2 class="govuk-error-summary__title">There is a problem</h2>
+                                        <div class="govuk-error-summary__body">
+                                            <ul class="govuk-list govuk-error-summary__list">
+                                                {% for error in errors %}
+                                                    <li>
+                                                        <a href="#{{error.field}}">{{error.message}}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="govuk-form-group {%if emailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="Email">Enter their email address</label>
+                                {%if emailError %}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span>Enter a valid email address</p>
+                                {% endif %}
+                                <input class="govuk-input {%if emailError%} govuk-input--error{% endif%}" id="Email" name="EmailAddress" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email" value="{{data['EmailAddress']}}">
+                            </div>
+
+                            <div class="govuk-form-group {%if hasFirstNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="firstName">Enter their first name</label>
+                                {%if hasFirstNameError %}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span>Enter their first name</p>
+                                {% endif %}
+                                <input class="govuk-input {%if hasFirstNameError%} govuk-input--error{% endif%}" id="FirstName" name="FirstName" type="text" spellcheck="false" aria-describedby="firstName-hint" autocomplete="firstName" value="{{data['FirstName']}}">
+                            </div>
+
+                            <div class="govuk-form-group {%if hasLastNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="lastName">Enter their last name</label>
+                                {%if hasLastNameError %}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span>Enter their last name</p>
+                                {% endif %}
+                                <input class="govuk-input {%if hasLastNameError%} govuk-input--error{% endif%}" id="LastName" name="LastName" type="text" spellcheck="false" aria-describedby="lastName-hint" autocomplete="lastName" value="{{data['LastName']}}">
+                            </div>
+
+                            <div class="govuk-form-group {%if roleError%}govuk-form-group--error{% endif%}">
+                                <legend class="govuk-fieldset__legend">
+      What is their role?
+    </legend>
+{%if roleError %}
+                                    <p id="event-role-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span>Select a role</p>
+                                {% endif %}
+                                <select class="govuk-select   govuk-!-width-one-half auto" id="Role" name="Role">
+                                    {% include "./_roles.html" %}
+                                </select>
+                            </div>
+
+                            <div class="govuk-button-group">
+                                <button  name="action" class="govuk-button"  data-module="govuk-button">Save and return</button>
+                                <a href="/manage/team/{{assessment.AssessmentID}}" class="govuk-link">Cancel and return to team</a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <div class="govuk-summary-card">
+                    <div class="govuk-summary-card__title-wrapper">
+
+                        <h2 class="govuk-summary-card__title">Guidance</h2>
+
+                    </div>
+                    <div class="govuk-summary-card__content">
+                        <ul class="govuk-list govuk-list--spaced">
+                            <li>
+                                <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance" target="_blank">Who you should add to your team</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block scripts %}
+        {{ super() }}
+        <script>
+            accessibleAutocomplete.enhanceSelectElement({defaultValue: '', selectElement: document.querySelector('.auto')})
+        </script>
+    {% endblock %}
+
+{% endblock %}

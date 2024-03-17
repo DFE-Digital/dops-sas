@@ -1,0 +1,62 @@
+{% extends "layouts/auth_layout.html" %}
+
+{% set selectedNav = "Manage" %}
+{% set pageName = 'Action plan' %}
+{% set view = 'actionplan' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="dfe-panel">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+            <h2 class="govuk-heading-l">Actions</h2>
+
+            <p>You can manage the actions from the assessment in the action plans section.</p>
+
+            <table class="govuk-table dfe-table dfe-table--smaller">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header  govuk-!-width-one-third">Action</th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-third">Standard</th>
+                        <th scope="col" class="govuk-table__header">Resolve by</th>
+                        <th scope="col" class="govuk-table__header">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for action in actions %}
+                    <tr class="govuk-table__row row">
+                        <th class="govuk-table__header row-phase">
+                            <a href="/action-plans/plan/action/{{action.ActionID}}"
+                                class="govuk-link">{{action.Comments}}</a>
+                        </th>
+                        <td class="govuk-table__cell">
+                            {% for standard in standards %}
+                            {% if standard.Point == action.Point%}
+                            {{ standard.Point }}. {{standard.Title}}
+                            {% endif %}
+                            {% endfor %} </td>
+                        <td class="govuk-table__cell row-type">{{action.EstimatedResolutionDate | date('D MMM YYYY')}}
+                        </td>
+                        <td class="govuk-table__cell">
+                            <strong
+                                class="govuk-tag {%if action.Status === 'Open'%}govuk-tag--blue{% else %}govuk-tag--green{% endif %}">{{action.Status}}</strong>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

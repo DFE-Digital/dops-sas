@@ -1,0 +1,221 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Manage assessors" %}
+{% set view = "assessors" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Filters</h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="/admin/assessors">Clear</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+                <div class="govuk-form-group">
+                    <label id="filterTableLabel" for="filterTable" class="govuk-label govuk-!-font-weight-bold">Filter
+                        by name</label>
+                    <input type="text" id="filterTable" class="govuk-input" aria-describedby="filterTableLabel" />
+                </div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            Role
+                        </legend>
+                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role1" name="role" type="checkbox"
+                                    value="Accessibility assessor">
+                                <label class="govuk-label govuk-checkboxes__label" for="role1">
+                                    Accessibility
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role2" name="role" type="checkbox"
+                                    value="Delivery assessor">
+                                <label class="govuk-label govuk-checkboxes__label" for="role2">
+                                    Delivery
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role3" name="role" type="checkbox"
+                                    value="Design assessor">
+                                <label class="govuk-label govuk-checkboxes__label" for="role3">
+                                    Design
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role4" name="role" type="checkbox"
+                                    value="Performance analysis assessor">
+                                <label class="govuk-label govuk-checkboxes__label" for="role4">
+                                    Performance analysis
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role5" name="role" type="checkbox"
+                                    value="Product assessor">
+                                <label class="govuk-label govuk-checkboxes__label" for="role5">
+                                    Product
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role6" name="role" type="checkbox"
+                                    value="Technical assessor">
+                                <label class="govuk-label govuk-checkboxes__label" for="role6">
+                                    Technical
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role7" name="role" type="checkbox"
+                                    value="User research assessor">
+                                <label class="govuk-label govuk-checkboxes__label" for="role7">
+                                    User research
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Assessors</h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="/admin/add-assessor">Add new <span class="govuk-visually-hidden">
+                                assessor</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+                <div class="govuk-table-container">
+                    <table class="govuk-table  dfe-table--smaller" id="assessorsTable">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
+                                <th scope="col" class="govuk-table__header">Role</th>
+                                <th scope="col" class="govuk-table__header">Lead</th>
+                                <th scope="col" class="govuk-table__header">Cross GOV</th>
+                                <th scope="col" class="govuk-table__header">External to DfE</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            {% for assessor in assessors%}
+                            <tr class="govuk-table__row" data-role="{{assessor.PrimaryRole}}">
+                                <th scope="row" class="govuk-table__header">
+                                      <a href="/admin/assessor/{{assessor.AssessorID}}"
+                                            class="govuk-link govuk-link--no-visited-state">{{assessor.FirstName}} {{assessor.LastName}}</a><br />
+                                    <span class="govuk-body govuk-body-s lighter-text">
+                                      {{assessor.EmailAddress}}</span>
+                                </th>
+                                <td class="govuk-table__cell">{{assessor.PrimaryRole}}</td>
+                                <td class="govuk-table__cell">{{assessor.LeadAssessor | BoolToYesNo}}</td>
+                                <td class="govuk-table__cell">{{assessor.CrossGovAssessor | BoolToYesNo}}</td>
+                                <td class="govuk-table__cell">{{assessor.ExternalAssessor | BoolToYesNo}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No assessors found.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document
+        .getElementById('filterTable')
+        .addEventListener('keyup', function () {
+            let filter = this
+                .value
+                .toUpperCase();
+            let tableBody = document.querySelector('.govuk-table__body');
+            let rows = tableBody.querySelectorAll('.govuk-table__row');
+            let noMatchingAssessors = document.getElementById('noMatchingAssessors');
+            let table = document.getElementById('assessorsTable');
+
+            let matchingAssessorsExist = false;
+
+            for (let i = 0; i < rows.length; i++) {
+                let person = rows[i].querySelector('.govuk-table__header');
+
+                if (person) {
+                    let txtValue = person.textContent || person.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = "";
+                        rows[i].setAttribute("aria-hidden", "false");
+                        matchingAssessorsExist = true;
+                    } else {
+                        rows[i].style.display = "none";
+                        rows[i].setAttribute("aria-hidden", "true");
+                    }
+                }
+            }
+
+            // Toggle the visibility of the table and paragraph based on matching assessors
+            if (matchingAssessorsExist) {
+                table.style.display = "table"; // Show the table
+                noMatchingAssessors.style.display = "none"; // Hide the paragraph
+            } else {
+                table.style.display = "none"; // Hide the table
+                noMatchingAssessors.style.display = "block"; // Show the paragraph
+            }
+        });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const filters = document.querySelectorAll('.govuk-checkboxes__input');
+        filters.forEach(filter => filter.addEventListener('change', applyFilters));
+
+        function applyFilters() {
+            let activeRole = getActiveFilters('role');
+            let rows = document.querySelectorAll('.govuk-table > tbody > tr');
+
+            let visibleCount = 0;
+            rows.forEach(row => {
+                let role = row.getAttribute('data-role');
+
+                if ((activeRole.includes(role) || activeRole.length === 0)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document
+                .getElementById('noResultsMessage')
+                .style
+                .display = visibleCount > 0
+                    ? 'none'
+                    : '';
+            updateItemCount(visibleCount);
+        }
+
+        function getActiveFilters(filterName) {
+            return Array
+                .from(document.querySelectorAll(`input[name="${filterName}"]:checked`))
+                .map(el => el.value);
+        }
+
+        function updateItemCount(count) {
+            const countElement = document.getElementById('assessorCount');
+            countElement.textContent = count;
+        }
+
+        // Apply filters on initial load
+        applyFilters();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = 'Add panel member' %}
+{% set view = 'panel' %}
+
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+
+{% set assessorError = false %}
+{% set roleError = false %}
+
+{% for error in errors %}
+{% if error.field === 'Assessor' %}
+{% set assessorError = true %}
+{% endif %}
+{% if error.field === 'Role' %}
+{% set roleError = true %}
+{% endif %}
+{% endfor %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+
+
+        {% if assessment.AssessmentDateTime === null %}
+
+        <h2 class="govuk-heading-l">You can't add panel members</h2>
+        <p>You need to <a href="/admin/set-date/{{assessment.AssessmentID}}">add the assessment date and time</a> before
+            you can add panel members.</p>
+
+        {% else%}
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Add panel member</h2>
+
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-link--no-visited-state"
+                            href="/admin/panel/{{assessment.AssessmentID}}">Cancel <span
+                                class="govuk-visually-hidden">and return to panel</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+
+                <form action="/admin/add-panel" method="post" novalidate>
+                    <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+
+
+
+
+
+                    <div class="govuk-form-group {%if assessorError%}govuk-form-group--error{% endif%}">
+                        <legend class="govuk-fieldset__legend">
+                            Select an assessor
+                        </legend>
+                        {%if assessorError %}
+                        <p id="event-role-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span>Select an assessor
+                        </p>
+                        {% endif %}
+                        <select class="govuk-select   govuk-!-width-one-half assessor" id="Assessor" name="Assessor">
+                            <option value=""></option>
+                            {% for assessor in assessors %}
+                            <option value="{{assessor.UserID}}">{{assessor.FirstName}} {{assessor.LastName}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+
+                    <div class="govuk-form-group {%if roleError%}govuk-form-group--error{% endif%}">
+                        <legend class="govuk-fieldset__legend">
+                            What is their role?
+                        </legend>
+                        {%if roleError %}
+                        <p id="event-role-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span>Select a role
+                        </p>
+                        {% endif %}
+                        <select class="govuk-select govuk-!-width-one-half role" id="Role" name="Role">
+                            {% include "./_panelroles.html" %}
+                        </select>
+                    </div>
+
+                    <div class="govuk-button-group">
+                        <button name="action" class="govuk-button" data-module="govuk-button">Save and
+                            return</button>
+                        <a href="/admin/panel/{{assessment.AssessmentID}}" class="govuk-link">Cancel and return to
+                            panel</a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+
+                <h2 class="govuk-summary-card__title">Guidance</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+                <ul class="govuk-list govuk-list--spaced">
+                    <li>
+                        <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance"
+                            target="_blank">Who you should add to your team</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    accessibleAutocomplete.enhanceSelectElement({ defaultValue: '', selectElement: document.querySelector('.assessor') })
+    accessibleAutocomplete.enhanceSelectElement({ defaultValue: '', selectElement: document.querySelector('.role') })
+</script>
+{% endblock %}

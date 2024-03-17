@@ -1,0 +1,273 @@
+{% extends "layouts/auth.html" %}
+
+{% set type = "tasklist"%}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Tasks" %}
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book/request/phase" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+
+        <h2 class="govuk-heading-l">Tasks</h2>
+
+        {% if data['disco-start-month'] and data['disco-start-day'] and data['disco-start-year'] %}
+        {% set dstartDate = (data['disco-start-month'] + "/" + data['disco-start-day'] + "/" + data['disco-start-year'])
+        %}
+        {% endif %}
+
+        {% set count = 0 %}
+        {% set fields = [
+        model.Phase,
+        model.Type,
+        model.Name,
+        model.Description,
+        model.ProjectCodeYN,
+        model.StartDate,
+        model.EndDateYN,
+        model.RequestedWeeks,
+        model.Portfolio,
+        model.DD,
+        model.DMYN,
+        model.PMYN
+        ] %}
+
+        {% for field in fields %}
+        {% if field %}{% set count = count + 1 %}
+        {% endif %}
+        {% endfor %}
+
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+            {% if count !== 12 %}Request incomplete{% else %}All sections have been completed, you can now submit this
+            booking.{% endif %}
+        </h2>
+        <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{ count }} of 12 sections.</p>
+
+        <ul class="govuk-task-list">
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/phase"
+                        aria-describedby="phase-status">Phase</a>
+                </div>
+             
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.Phase %}
+                 Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/type"
+                        aria-describedby="type-status">Type</a>
+                </div>
+               
+                <div class="govuk-task-list__status" id="type-status">
+                    {% if model.Type %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/name"
+                        aria-describedby="phase-status">Name</a>
+                </div>
+               
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.Name %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/description"
+                        aria-describedby="phase-status">Summary</a>
+                </div>
+               
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.Description %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/code"
+                        aria-describedby="phase-status">Project code</a>
+                </div>
+               
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.ProjectCodeYN %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/start-date"
+                        aria-describedby="phase-status">Start date</a>
+                </div>
+                
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.StartDate %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/end-date"
+                        aria-describedby="phase-status">End date</a>
+                </div>
+               
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.EndDateYN %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/dates"
+                        aria-describedby="phase-status">Requested weeks</a>
+                </div>
+               
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.RequestedWeeks %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/portfolio"
+                        aria-describedby="phase-status">Portfolio</a>
+                </div>
+                
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.Portfolio %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/dd"
+                        aria-describedby="phase-status">Deputy director</a>
+                </div>
+              
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.DD %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/product"
+                        aria-describedby="phase-status">Product manager</a>
+                </div>
+                
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.PMYN %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/book/request/delivery"
+                        aria-describedby="phase-status">Delivery manager</a>
+                </div>
+               
+                <div class="govuk-task-list__status" id="phase-status">
+                    {% if model.DMYN %}
+                    Complete
+                    {% else %}
+                    <strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="list-convictions-status">Not
+                        started</strong>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">Submit request</h2>
+
+        {% if count !== 12 %}
+        <p>You can't submit your booking yet as there are incomplete sections.</p>
+        {% else %}
+        <p>You've completed all the information needed to submit your request.</p>
+        <p>If any of these details change before your {{model.Type | lower}}, you can update them from the <a
+                href="/manage" class="govuk-link">manage section</a> once you've submitted your request.</p>
+
+        <p>Once you submit your request, the service assessment plus team will be in touch to confirm your booking and
+            agree a date.</p>
+        <form action="/book/request/submit" method="post">
+            <button class="govuk-button" data-module="govuk-button">Submit request</button>
+        </form>
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Delete draft</h2>
+        <p>If you no longer want to proceed with this request, you can delete it.</p>
+        <form action="/book/request/delete" method="get">
+            <button class="govuk-button govuk-button--warning" data-module="govuk-button">Delete draft</button>
+        </form>
+
+    </div>
+    <div class="govuk-grid-column-one-third"></div>
+</div>
+{% endblock %}

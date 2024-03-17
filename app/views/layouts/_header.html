@@ -1,0 +1,44 @@
+{% set primaryLinks = [
+  { "url": "/manage", "label": "Manage" },
+  { "url": "/assess", "label": "Assess" },
+  { "url": "/book", "label": "Book" },
+  { "url": "/reports", "label": "Reports" },
+  { "url": "/assessments", "label": "Assessments" },
+  { "url": "/action-plans", "label": "Action plans" },
+  { "url": "/admin", "label": "Admin" }
+] %}
+
+
+
+{% if data.user.isLeadAdmin %}
+ {% set primaryLinks = [
+  { "url": "/manage", "label": "Manage" },
+  { "url": "/assess", "label": "Assess" },
+  { "url": "/book", "label": "Book" },
+  { "url": "/reports", "label": "Reports" },
+  { "url": "/assessments", "label": "Assessments" },
+  { "url": "/action-plans", "label": "Action plans" },
+  { "url": "/admin", "label": "Admin" }
+] %}
+{% endif %}
+
+
+
+
+{{ header({
+  "showNav": "true",
+  "showSearch": "false",
+  "showUserName": "false",
+  "showHeaderActionLinks": "true",
+  "userName": "",
+  "userNameURL": "",
+  "selectedNav": selectedNav,
+  "logoPath": "assets/images",
+  "searchInputName": "searchterm",
+  "service": { "name": "Service assessment service" },
+  "headerActionLinks": [
+    { "url": "/profile", "label": data.userDetails.FirstName + " " + data.userDetails.LastName },
+    { "url": "/auth/sign-out", "label": "Sign out" }
+  ],
+  "primaryLinks": primaryLinks
+}) }}

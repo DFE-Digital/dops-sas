@@ -1,0 +1,143 @@
+{% extends "layouts/auth.html" %}
+
+{% set dateError = false %}
+
+{% for error in errors %}
+{% if error.path === 'EndDateYN' %}
+{% set dateError = true %}
+{% endif %}
+{% endfor %}
+
+{% if not dateError and model.EndDate and model.EndDate != null %}
+{% set endDate = model.EndDate %}
+
+{% set day = endDate.getUTCDate() %}
+{% set month = endDate.getUTCMonth() + 1 %}
+{# Month is 0-indexed, so add 1 #}
+{% set year = endDate.getUTCFullYear() %}
+
+{% endif %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Do you have an end date for your " + model.Phase | lower + "?" %}
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book/request/start-date" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+ 
+        {% include 'partials/errorSummary.html' %}
+
+        <form action="/book/request/end-date" method="post">
+            <div class="govuk-form-group {%if err%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="end-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            {{pageName}}
+                        </h1>
+                    </legend>
+                    <div id="end-hint" class="govuk-hint">
+                        Select one option.
+                    </div>
+                    {%if err%}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select if you have an end date
+                    </p>
+                    {% endif%}
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="EndDateYN" name="EndDateYN" type="radio" value="Yes"
+                                data-aria-controls="conditional-EndDateYN" {% if data.EndDateYN==="Yes" %}checked{%
+                                endif%}>
+                            <label class="govuk-label govuk-radios__label" for="EndDateYN">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                            id="conditional-EndDateYN">
+                            <div class="govuk-form-group {%if errcode%}govuk-form-group--error{% endif%}">
+                                <fieldset class="govuk-fieldset" role="group" aria-describedby="end-hint">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                        End date
+                                    </legend>
+                                    <div id="end-hint" class="govuk-hint">
+                                        For example, {{x | date("add", 4, "months") | date("D M YYYY") }}
+                                    </div>
+                                    {%if errcode%}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Enter your discovery end date
+                                    </p>
+                                    {% endif%}
+                                    <div class="govuk-date-input" id="EndDateYN">
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label govuk-date-input__label" for="EndDay">
+                                                    Day
+                                                </label>
+                                                <input
+                                                    class="govuk-input govuk-date-input__input govuk-input--width-2 {%if errcode%} govuk-input--error{% endif%}"
+                                                    id="EndDay" name="EndDay" type="text" inputmode="numeric"
+                                                    value="{{day}}">
+                                            </div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label govuk-date-input__label" for="EndMonth">
+                                                    Month
+                                                </label>
+                                                <input
+                                                    class="govuk-input govuk-date-input__input govuk-input--width-2 {%if errcode%} govuk-input--error{% endif%}"
+                                                    id="EndMonth" name="EndMonth" type="text" inputmode="numeric"
+                                                    value="{{month}}">
+                                            </div>
+                                        </div>
+                                        <div class="govuk-date-input__item">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label govuk-date-input__label" for="EndYear">
+                                                    Year
+                                                </label>
+                                                <input
+                                                    class="govuk-input govuk-date-input__input govuk-input--width-4 {%if errcode%} govuk-input--error{% endif%}"
+                                                    id="EndYear" name="EndYear" type="text" inputmode="numeric"
+                                                    value="{{year}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="EndDateYN2" name="EndDateYN" type="radio" value="No"
+                                {% if model.EndDateYN==="No" %}checked{% endif%}>
+                            <label class="govuk-label govuk-radios__label" for="EndDateYN2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Skip and return to
+                    later</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

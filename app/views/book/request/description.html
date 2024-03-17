@@ -1,0 +1,68 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Book" %}
+{% set pageName = "Describe your product or service" %}
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <a href="/book/request/name" class="govuk-back-link">Back</a>
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Book</h1>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Description' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+        <form action="/book/request/description" method="post">
+            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="750">
+                <div class="govuk-form-group  {%if hasError%}govuk-form-group--error{% endif%}">
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--l" for="Description">{{pageName}}</label>
+                    </h1>
+                    <div id="Description-hint" class="govuk-hint">Tell us what your product or service is or the overall
+                        purpose of your {{model.Phase | lower}}. For example, if it's part of a wider service or based
+                        on policy intent. This description will help us to arrange a review panel with the most relevant
+                        experience.</div>
+                    {%if hasError%}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Enter a description
+                    </p>
+                    {% endif%}
+                    <textarea
+                        class="govuk-textarea govuk-js-character-count  {%if hasError%} govuk-input--error{% endif%}"
+                        id="Description" name="Description" rows="10"
+                        aria-describedby="purpose-info purpose-hint">{{model.Description}}</textarea>
+                </div>
+                <div id="Description-info" class="govuk-hint govuk-character-count__message">You can enter up to 750
+                    characters</div>
+            </div>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Skip and return to
+                    later</a>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

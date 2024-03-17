@@ -1,0 +1,41 @@
+{% set primaryLinks = [
+{ "url": "/manage", "label": "Manage" },
+{ "url": "/assess", "label": "Assess" },
+{ "url": "/book", "label": "Book" },
+{ "url": "/reports", "label": "Reports" },
+{ "url": "/analysis", "label": "Analysis" },
+{ "url": "/action-plans", "label": "Action plans" },
+{ "url": "/admin", "label": "Admin" }
+] %}
+
+{# {% if 'Administrator' in data.userRoles or 'Service Administrator' in data.userRoles %}
+
+{% set primaryLinks = [
+{ "url": "/manage", "label": "Manage" },
+{ "url": "/assess", "label": "Assess" },
+{ "url": "/book", "label": "Book" },
+{ "url": "/reports", "label": "Reports" },
+{ "url": "/admin", "label": "Admin" },
+{ "url": "/analysis", "label": "Analysis" },
+{ "url": "/action-plans", "label": "Action plans" }
+] %} #}
+
+{# {% endif %} #}
+
+{{ header({
+"showNav": "true",
+"showSearch": "false",
+"showUserName": "false",
+"showHeaderActionLinks": "true",
+"userName": "",
+"userNameURL": "",
+"selectedNav": selectedNav,
+"logoPath": "assets/images",
+"searchInputName": "searchterm",
+"service": { "name": "Service assessment service" },
+"headerActionLinks": [
+{ "url": "/profile", "label": data.User.FirstName + " " + data.User.LastName },
+{ "url": "/sign-out", "label": "Sign out" }
+],
+"primaryLinks": primaryLinks
+}) }}

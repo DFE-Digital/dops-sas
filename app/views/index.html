@@ -1,0 +1,31 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Book, manage and assess products and service" %}
+{% set pageDescription = "Use this service if you need to have a service assessment or peer review in the Department for
+Education." %}
+{% set selectedNav = "Features"%}
+
+{% block hero %}
+<section class="dfe-page-hero">
+    <div class="dfe-width-container">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-xl">{{pageName}}</h1>
+                <p class="govuk-body-l">{{pageDescription}}</p>
+
+                <p class="govuk-body"> <a href="/sign-in" class="govuk-link govuk-link--inverse">Sign in</a> to start
+                    using the service</p>
+            </div>
+        </div>
+</section>
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Features</h2>
+
+    </div>
+</div>
+{% endblock %}
