@@ -7,7 +7,6 @@ const nunjucks = require('nunjucks');
 const expressWinston = require('express-winston');
 const dateFilter = require('nunjucks-date-filter');
 const logger = require('./config/winston');
-const browserSync = require('browser-sync');
 const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
