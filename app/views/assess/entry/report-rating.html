@@ -1,0 +1,156 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Assess" %}
+{% set pageName = 'Overall rating' %}
+{% set view = 'report' %}
+
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasRed = false %}
+{% set hasAmber = false %}
+
+{% set hasRedCount = 0 %}
+{% set hasAmberCount = 0 %}
+
+{% for rating in ratings %}
+{% if rating.Outcome === 'Red' %}
+{% set hasRed = true %}
+{% set hasRedCount = (hasRedCount + 1) %}
+{% endif %}
+{% endfor %}
+
+{% for rating in ratings %}
+{% if rating.Outcome === 'Amber' %}
+{% set hasAmber = true %}
+{% set hasAmberCount = (hasAmberCount + 1) %}
+{% endif %}
+{% endfor %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-quarter">
+
+        <nav class="dfe-vertical-nav">
+
+            <a href="/assess/report/{{assessment.AssessmentID}}" class="govuk-back-link"
+                style="margin-top:-20px; margin-bottom: 30px;">Return to tasks</a>
+
+            <h2 class="dfe-vertical-nav--section-header">Outcome</h2>
+            <ul class="dfe-vertical-nav__section">
+                <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+                    <a class="dfe-vertical-nav__link"
+                        href="/assess/report-rating/{{assessment.AssessmentID}}/{{standard}}">Rating</a>
+                </li>
+                <li class="dfe-vertical-nav__section-item">
+                    <a class="dfe-vertical-nav__link"
+                        href="/assess/report-panel-comments/{{assessment.AssessmentID}}">Done well</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Overall rating</h2>
+
+        {% if ratings | length === 14 %}
+
+        {% if hasRed == true and hasAmber == false %}
+        <p>The service has received {{hasRedCount}} red ratings across the 14 Service Standards, and no amber ratings.
+        </p>
+        <p>The overall rating has been set to red.</p>
+        {% endif %}
+
+        {% if hasRed == true and hasAmber == true %}
+        <p>The service has received {{hasRedCount}} red ratings and {{hasAmberCount}} amber ratings across the 14
+            Service Standards.</p>
+        <p>The overall rating has been set to red.</p>
+        {% endif %}
+
+        {% if hasRed == false and hasAmber == true %}
+        <p>The service has received {{hasAmberCount}} amber ratings and no red ratings and across the 14 Service
+            Standards.</p>
+        <p>The overall rating has been set to amber.</p>
+        {% endif %}
+
+        {% if hasRed == false and hasAmber == false %}
+        <p> The service has received green ratings across the 14 Service Standards.</p>
+        <p>The overall rating has been set to green.</p>
+        {% endif %}
+
+        {% endif %}
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Rating
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if ratings | length === 0 %}
+                    <strong class="govuk-tag">Not rated</strong>
+                    {% else %}
+                    {% if hasRed == true %}
+                    <strong class="govuk-tag govuk-tag--red">Red</strong>
+                    {% elseif hasRed == false and hasAmber == true %}
+                    <strong class="govuk-tag govuk-tag--amber">Amber</strong>
+                    {% elseif hasRed == false and hasAmber == false %}
+                    <strong class="govuk-tag govuk-tag--green">Green</strong>
+                    {% endif %}
+                    {% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions"></dd>
+            </div>
+        </dl>
+
+        {% if ratings | length !== 14 %}
+
+        <p>{{ratings | length}} of 14 standards have been rated. </p>
+
+        <p>The overall rating is determined by the outcomes of the individual standards and cannot be overridden.</p>
+
+        <table class="govuk-table dfe-table--smaller">
+            <caption class="govuk-table__caption govuk-table__caption--m">Overall rating determination</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Any red ratings</th>
+                    <th scope="col" class="govuk-table__header">Any amber ratings</th>
+                    <th scope="col" class="govuk-table__header">Overall rating</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Yes</td>
+                    <td class="govuk-table__cell">No</td>
+                    <td class="govuk-table__cell">Red</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Yes</td>
+                    <td class="govuk-table__cell">Yes</td>
+                    <td class="govuk-table__cell">Red</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">No</td>
+                    <td class="govuk-table__cell">Yes</td>
+                    <td class="govuk-table__cell">Amber</td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">No</td>
+                    <td class="govuk-table__cell">No</td>
+                    <td class="govuk-table__cell">Green</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

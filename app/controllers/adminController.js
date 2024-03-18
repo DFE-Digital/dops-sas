@@ -3,15 +3,18 @@ const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, 
 const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
 const { getAllAssessors, createAssessor } = require('../models/assessors');
 const { validateRequest, validateAddPanel } = require('../validation/admin');
-const { UpsertUserNoToken } = require('../models/user');
+const { UpsertUserNoToken, getBasicUserDetails } = require('../models/user');
 const { getServiceStandards, getServiceStandardOutcomesByAssessmentID } = require('../models/standards');
 const { getActionsForAssessmentID } = require('../models/actions');
-
+const { getArtefactsForAssessment } = require('../models/artefacts');
+const { getTeamForAssessmentExtended } = require('../models/team');
+const { sendNotifyEmail } = require('../middleware/notify');
 
 exports.g_index = async function (req, res) {
     const department = req.session.data.User.Department;
-    const newRequests = await getRequestsByStatus('New', department);
-    return res.render('admin/index', { requests: newRequests });
+    const statuses = ['New', 'SA Review', 'SA Publish'];
+    const requests = await getRequestsByMixedStatus(statuses, department);
+    return res.render('admin/index', { requests });
 }
 
 exports.g_overview = async function (req, res) {
@@ -68,6 +71,8 @@ exports.g_assessments = async function (req, res) {
 exports.g_assessors = async function (req, res) {
     const department = req.session.data.User.Department;
     const assessors = await getAllAssessors(department);
+    console.log(assessors)
+
     return res.render('admin/assessors', { assessors });
 };
 
@@ -88,7 +93,20 @@ exports.g_report = async function (req, res) {
 }
 
 
+exports.g_artefacts = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    const artefacts = await getArtefactsForAssessment(assessmentID);
+    return res.render('admin/entry/artefacts', { assessment, artefacts });
+}
 
+
+exports.g_team = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    const team = await getTeamForAssessmentExtended(assessmentID);
+    return res.render('admin/entry/team', { assessment, team });
+}
 
 
 
@@ -253,3 +271,71 @@ exports.p_addassessor = async function (req, res) {
     return res.redirect('/admin/assessors')
 };
 
+
+
+
+exports.p_sendReport = async function (req, res) {
+
+    const { AssessmentID } = req.body;
+
+    const assessment = await getAssessmentById(AssessmentID);
+
+    console.log(assessment)
+
+    const userID = req.session.data.User.UserID;
+
+    const submittor = await getBasicUserDetails(assessment.CreatedBy);
+
+    const dm = await getBasicUserDetails(assessment.DM);
+
+    console.log(submittor)
+
+    assessment.Status = 'Team Review';
+
+    await updateAssessment(AssessmentID, assessment, userID);
+
+    // Send email 
+
+    const templateParams = {
+        phase: assessment.Phase,
+        type: assessment.Type,
+        name: assessment.Name,
+        serviceURL: process.env.serviceURL,
+        id: AssessmentID
+    };
+
+    sendNotifyEmail(process.env.email_ReportReady, submittor.EmailAddress, templateParams)
+
+
+    if (assessment.PM) {
+        const pm = await getBasicUserDetails(assessment.PM);
+        if (pm.EmailAddress) {
+            sendNotifyEmail(process.env.email_ReportReady, pm.EmailAddress, templateParams)
+        }
+    }
+
+    if (assessment.DM) {
+        const dm = await getBasicUserDetails(assessment.DM);
+        if (dm.EmailAddress) {
+            sendNotifyEmail(process.env.email_ReportReady, dm.EmailAddress, templateParams)
+        }
+    }
+
+    return res.redirect('/admin/report/' + AssessmentID)
+}
+
+
+exports.p_publishReport = async function (req, res) {
+
+    const { AssessmentID } = req.body;
+    const user = req.session.data.User;
+
+    const assessment = await getAssessmentById(AssessmentID);
+    assessment.Status = 'Published'
+
+    await updateAssessment(AssessmentID, assessment, user.UserID);
+
+    return res.redirect('/admin/report/' + AssessmentID);
+
+
+};

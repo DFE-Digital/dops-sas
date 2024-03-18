@@ -163,27 +163,8 @@
       </div>
     </dl>
 
-    {% set hasComments = false %}
 
-    {% for comment in comments %}
-    {% if comment.Point === standard.Point %}
-    {% set hasComments = true %}
-    {% endif %}
-    {% endfor %}
-    <h3 class="govuk-heading-s">Panel observations</h3>
-    {% if hasComments === true %}
-
-    <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
-      {% for comment in comments %}
-      {% if comment.Point === standard.Point %}
-      <li>{{comment.Comment}}</li>
-      {% endif %}
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>There are no comments for this standard</p>
-    {% endif %}
-    <h3 class="govuk-heading-s">Actions to be resolved</h3>
+    <h3 class="govuk-heading-s">Actions for the team</h3>
     {% if actions | length %}
 
     <ul class="govuk-list govuk-list--bullet  govuk-list--spaced">

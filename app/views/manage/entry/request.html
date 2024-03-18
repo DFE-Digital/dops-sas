@@ -1,7 +1,7 @@
-{% extends "layouts/auth_layout.html" %}
+{% extends "layouts/auth.html" %}
 {% set selectedNav = "Manage" %}
 {% set view = "request" %}
-{% set pageName = assessment.Name %}
+{% set pageName = "Request" %}
 {% block hero %}
 {% include './_header.html' %}
 {% endblock %}
@@ -17,7 +17,7 @@
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Requested assurance type
+                    Type
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {{assessment.Type}}
@@ -43,7 +43,7 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Service / project name
+                    Service
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {{assessment.Name}}
@@ -116,7 +116,7 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    Requested weeks for {{assessment.Type | lower}}
+                    Requested weeks
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {% if assessment.RequestedWeeks %}

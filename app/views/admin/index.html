@@ -51,7 +51,7 @@
 
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--l">Priority tasks</caption>
+            <caption class="govuk-table__caption govuk-table__caption--m">Priority tasks</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">Task</th>
@@ -62,8 +62,11 @@
             <tbody class="govuk-table__body">
                 {% for record in requests %}
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header"><a href="/admin/overview/{{record.AssessmentID}}">New
-                            booking</a>
+                    <th scope="row" class="govuk-table__header"><a href="/admin/overview/{{record.AssessmentID}}">
+                        {% if record.Status == "New" %}New request{% endif %}
+                        {% if record.Status == "SA Review" %}Report submitted{% endif %}
+                        {% if record.Status == "SA Publish" %}Publish report{% endif %}
+                    </a>
                     </th>
                     <td class="govuk-table__cell">{{record.Phase}}</td>
                     <td class="govuk-table__cell">{{record.Type}}</td>

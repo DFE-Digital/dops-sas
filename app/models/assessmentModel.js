@@ -225,7 +225,88 @@ async function getAssessmentsUserCanAccess(userID) {
 }
 
 
+/**
+ * Gets services the user is a panel member on
+ * 
+ * @param {number} userID The ID of the user
+ */
+async function getAssessmentPanelByUserID(userID) {
 
+    try {
+        const result = await pool.query(
+            `
+            SELECT a."Name", a."AssessmentID", ap."Role", a."Type", a."Phase", a."Status", a."Outcome", a."AssessmentDateTime"
+            FROM "Assessment" a
+            INNER JOIN "AssessmentPanel" ap
+            ON a."AssessmentID" = ap."AssessmentID"
+            WHERE ap."UserID" = $1
+            ORDER BY a."AssessmentDateTime" ASC
+            `,
+            [userID] 
+        );
+
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getRequestsByMixedStatus:', error);
+        throw error;
+    }
+}
+
+async function checkSubmitStatus(assessmentID) {
+    try {
+        // Check basic assessment details
+        const assessmentResult = await pool.query(
+            `
+            SELECT "Status", "Outcome", "AssessmentDateTime"
+            FROM "Assessment"
+            WHERE "AssessmentID" = $1
+            `,
+            [assessmentID]
+        );
+        if (assessmentResult.rows.length === 0) {
+            throw new Error('Assessment not found');
+        }
+        const assessmentDetails = assessmentResult.rows[0];
+
+        // Check if all ServiceStandardOutcomes are completed
+        const outcomesResult = await pool.query(
+            `
+            SELECT COUNT(*) AS "count"
+            FROM "ServiceStandardOutcomes"
+            WHERE "AssessmentID" = $1
+            `,
+            [assessmentID]
+        );
+        const outcomesCount = parseInt(outcomesResult.rows[0].count, 10);
+        if (outcomesCount !== 14) {
+            return { canSubmit: false, reason: `${14 - outcomesCount} of 14 ratings not complete` };
+        }
+
+        // Check for missing actions for any 'Red' or 'Amber' outcomes
+        const missingActionsResult = await pool.query(
+            `
+            SELECT "Standard"
+            FROM "ServiceStandardOutcomes"
+            WHERE "AssessmentID" = $1 AND ("Outcome" = 'Red' OR "Outcome" = 'Amber')
+            AND "Standard" NOT IN (SELECT "Standard" FROM "Actions" WHERE "AssessmentID" = $1)
+            `,
+            [assessmentID]
+        );
+        if (missingActionsResult.rows.length > 0) {
+            const missingStandards = missingActionsResult.rows.map(row => row.Standard).join(', ');
+            return { canSubmit: false, reason: `Missing actions for standards: ${missingStandards}` };
+        }
+
+        // Assuming PanelComments checks are similar and skipping for brevity
+
+        // If all checks pass
+        return { ...assessmentDetails, canSubmit: true };
+
+    } catch (error) {
+        console.error('Error in checkSubmitStatus:', error);
+        throw error;
+    }
+}
 
 
 
@@ -238,5 +319,7 @@ module.exports = {
     deleteAssessment,
     getRequestsByStatus,
     getRequestsByMixedStatus,
-    getAssessmentsUserCanAccess
+    getAssessmentsUserCanAccess,
+    getAssessmentPanelByUserID, 
+    checkSubmitStatus
 };

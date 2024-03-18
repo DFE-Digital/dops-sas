@@ -1,0 +1,395 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Analysis" %}
+{% set pageName = "Analysis of service assessment and peer review data." %}
+{% set view = "current" %}
+
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://kit.fontawesome.com/32bb6fdbdb.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Analysis</span>
+                <h1 class="govuk-heading-l">Assessment data analysis</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if year==currentYear %} aria-current="page" {% endif
+                                %} href="/analysis">Current year</a>
+                        </li>
+
+
+
+                        {% for i in range(1, 6) %}
+
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if year==(currentYear -i) %} aria-current="page" {%
+                                endif %}href="/analysis/{{ currentYear -i}}">{{ currentYear -i}}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+
+<h2 class="govuk-heading-l">Analysis</h2>
+<p>Analysis of assessments completed in {{year}} and the rating of each Service Standard.</p>
+
+<div class="grid">
+    {# <div class="header-row">
+        <div class="header-cell assessment-name" style="width:60px;"></div>
+        <div class="header-cell-full">Standards</div>
+    </div> #}
+    <div class="header-row">
+        <div class="header-cell assessment-name ">Service name</div>
+        {% for i in range(1, 15) %}
+        <div class="header-cell">{{ i }}</div>
+        {% endfor %}
+    </div>
+
+    {% for item, group in heatmap %}
+    <div class="row">
+        <div class="assessment-name"><a href="/reports/report/{{ item }}" class="govuk-link govuk-link--inverse"
+                title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a></div>
+
+        {% for item in group %}
+        <a href="/reports/report/{{ item.AssessmentID }}/#point-{{ item.Standard }}"
+            class="cell {{ item.Outcome | lower }}"
+            aria-label="{{ group[0].Name}} outcome:{{ item.Outcome }} for standard {{ item.Standard }}" tabindex="0">{{
+            item.Outcome[0] }}</a>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="govuk-heading-l govuk-!-margin-top-5">Portfolio analysis</h2>
+<p>Analysis of assessments and peer reviews completed by portfolio.</p>
+
+<table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Portfolio</th>
+        <th scope="col" class="govuk-table__header">DD</th>
+        <th scope="col" class="govuk-table__header">Service assessments</th>
+        <th scope="col" class="govuk-table__header">Peer reviews</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header"><a href="/analysis/portfolio/cxd">Customer Experience and Design</a></th>
+        <td class="govuk-table__cell">Sam Barton</td>
+        <td class="govuk-table__cell">2</td>
+        <td class="govuk-table__cell">0</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header"><a href="">Data</a></th>
+        <td class="govuk-table__cell">Corrine Richardson</td>
+        <td class="govuk-table__cell">0</td>
+        <td class="govuk-table__cell">0</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header"><a href="">Funding</a></th>
+        <td class="govuk-table__cell">Cathy Dutton</td>
+        <td class="govuk-table__cell">0</td>
+        <td class="govuk-table__cell">0</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header"><a href="">Regions</a></th>
+        <td class="govuk-table__cell">Shaf Dawood</td>
+        <td class="govuk-table__cell">1</td>
+        <td class="govuk-table__cell">4</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header"><a href="">Schools</a></th>
+        <td class="govuk-table__cell">Shaf Dawood</td>
+        <td class="govuk-table__cell">1</td>
+        <td class="govuk-table__cell">1</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header"><a href="">Skills</a></th>
+        <td class="govuk-table__cell">Gary Tucker</td>
+        <td class="govuk-table__cell">0</td>
+        <td class="govuk-table__cell">0</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header"><a href="">Vulnerable Children and Families</a></th>
+        <td class="govuk-table__cell">Rachel Shooter</td>
+        <td class="govuk-table__cell">5</td>
+        <td class="govuk-table__cell">3</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+{#
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-l">Overall rating outcomes</h2>
+        <canvas id="outcomeChart" width="400" height="400"></canvas>
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Spread of standard rating outcomes</h2>
+        <canvas id="outcomeChart2" width="800" height="400"></canvas>
+    </div>
+
+</div> #}
+
+<style>
+    .grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header-row,
+    .row {
+        display: flex;
+        margin-bottom: 5px;
+        /* Adds gap between rows */
+    }
+
+    .header-cell,
+    .assessment-name,
+    .cell {
+        background-color: #505a5f;
+        /* or any color of your choice */
+        min-width: 42px;
+        width: 50px;
+        height: 46px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        margin-right: 5px;
+        /* Adds gap between cells */
+
+    }
+
+    .header-cell {
+        font-weight: 700;
+    }
+
+    .header-cell-full {
+        background-color: #505a5f;
+        /* or any color of your choice */
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: calc(70px * 14 + 5px * 13);
+        /* Width to span 14 cells */
+        margin-right: 0;
+        /* No margin on the right */
+    }
+
+    .header-cell:last-child,
+    .cell:last-child {
+        margin-right: 0;
+        /* Removes margin for the last cell in a row */
+    }
+
+    .assessment-name {
+        background-color: #505a5f;
+        /* or any color of your choice */
+        color: ffffff;
+        /* Adjust text color as needed */
+        margin-right: 5px;
+        /* Maintain gap between name and first cell */
+        flex: auto !important;
+        justify-content: left;
+        padding-left: 15px;
+        font-weight: 600;
+
+    }
+
+
+
+    .green {
+        background-color: #00703c;
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+
+    .amber {
+        background-color: #f47738;
+        color: #ffffff !important;
+        font-weight: 600;
+        /* Amber color */
+    }
+
+    .red {
+        background-color: #d4351c;
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+</style>
+
+<script>
+
+    const data = {{ results | dump | safe}};
+
+    const ctx = document
+        .getElementById('outcomeChart')
+        .getContext('2d');
+
+    // Extract counts for each outcome
+    const redCount = data.find(item => item.Outcome === 'Red')
+        ?.OutcomeCount || 0;
+    const amberCount = data.find(item => item.Outcome === 'Amber')
+        ?.OutcomeCount || 0;
+    const greenCount = data.find(item => item.Outcome === 'Green')
+        ?.OutcomeCount || 0;
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [
+                'Red', 'Amber', 'Green'
+            ], // X-axis labels
+            datasets: [
+                {
+                    label: 'Red',
+                    data: [
+                        redCount, 0, 0
+                    ], // Only Red count
+                    backgroundColor: 'rgba(255, 99, 132, 0.4)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Amber',
+                    data: [
+                        0, amberCount, 0
+                    ], // Only Amber count
+                    backgroundColor: 'rgba(255, 206, 86, 0.4)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Green',
+                    data: [
+                        0, 0, greenCount
+                    ], // Only Green count
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true, // You can set this to false if you prefer non-stacked bars
+                    title: {
+                        display: true,
+                        text: 'Outcome'
+                    }
+                },
+                y: {
+                    stacked: true, // You can set this to false if you prefer non-stacked bars
+                    title: {
+                        display: true,
+                        text: 'Number for each outcome'
+                    }
+                }
+            }
+        }
+    });
+
+    // Example data format (replace this with your actual data)
+    const data2 = {{ standards | dump | safe}};
+
+    const ctx2 = document
+        .getElementById('outcomeChart2')
+        .getContext('2d');
+    const chart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: data2.map(item => `${item.Standard}`),
+            datasets: [
+                {
+                    label: 'Red',
+                    data: data2.map(item => item.RedCount),
+                    backgroundColor: 'rgba(255, 99, 132, 0.4)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Amber',
+                    data: data2.map(item => item.AmberCount),
+                    backgroundColor: 'rgba(255, 206, 86, 0.4)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Green',
+                    data: data2.map(item => item.GreenCount),
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true,
+                    title: {
+                        display: true,
+                        text: 'Service Standard Point'
+                    }
+                },
+                y: {
+                    stacked: true,
+                    title: {
+                        display: true,
+                        text: 'Count of assessments'
+                    }
+                }
+            }
+        }
+    });
+
+    function getColorForOutcome(outcome) {
+        switch (outcome) {
+            case 'Red':
+                return 'rgba(255, 99, 132, 0.4)';
+            case 'Amber':
+                return 'rgba(255, 206, 86, 0.4)';
+            case 'Green':
+                return 'rgba(75, 192, 192, 0.4)';
+            default:
+                return 'grey';
+        }
+    }
+    function getBGColorForOutcome(outcome) {
+        switch (outcome) {
+            case 'Red':
+                return 'rgba(255, 99, 132, 1)';
+            case 'Amber':
+                return 'rgba(255, 206, 86, 1)';
+            case 'Green':
+                return 'rgba(75, 192, 192, 1)';
+            default:
+                return 'grey';
+        }
+    }
+</script>
+
+{% endblock %}

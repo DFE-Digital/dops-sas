@@ -1,0 +1,62 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Reports" %}
+{% set pageName = assessment.Type + " report" %}
+
+
+
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-breadcrumbs govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/reports">Reports</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    Report
+                </li>
+            </ol>
+        </div>
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Report</span>
+                <h1 class="govuk-heading-l">{{assessment.Name}}</h1>
+
+                <table class="govuk-table dfe-table--smaller govuk-!-margin-bottom-3">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Rating</th>
+                            <th class="govuk-table__header" scope="col">Phase</th>
+                            <th class="govuk-table__header" scope="col">Type</th>
+                            <th class="govuk-table__header" scope="col">Assessment date</th>
+                            <th class="govuk-table__header" scope="col">Portfolio</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                <strong
+                                    class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">{{assessment.Outcome}}</strong>
+                            </td>
+                            <td class="govuk-table__cell">{{assessment.Phase}}</td>
+                            <td class="govuk-table__cell">{{assessment.Type}}</td>
+                            <td class="govuk-table__cell">{{assessment.AssessmentDateTime | date('D MMMM YYYY')}}</td>
+                            <td class="govuk-table__cell">{{assessment.Portfolio}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+{% include '../partials/_reporttemplate.html' %}
+
+{% endblock %}

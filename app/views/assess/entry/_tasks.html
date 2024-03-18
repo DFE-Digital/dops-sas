@@ -1,0 +1,23 @@
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Tasks</h2>
+    </div>
+    <div class="govuk-summary-card__content">
+        <ul class="govuk-task-list govuk-!-margin-bottom-0">
+
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/assess/report/{{assessment.AssessmentID}}"
+                        aria-describedby="company-details-1-status">Complete report</a>
+                </div>
+                <div class="govuk-task-list__status" id="company-details-2-status">
+                    {% if assessment.Status == "Active" %}
+                    <strong class="govuk-tag govuk-tag--blue">To do</strong>
+                    {%else %}
+                    Complete
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

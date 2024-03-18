@@ -1,0 +1,94 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Manage" %}
+{% set pageName = "Previous assessments" %}
+{% set view = "previous"%}
+
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Manage</span>
+                <h1 class="govuk-heading-l">Your dashboard</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='dashboard' %} aria-current="page" {% endif
+                                %} href="/manage">Dashboard</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='previous' %} aria-current="page" {% endif
+                                %} href="/manage/previous">Previous</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+
+
+
+
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Your previous assessments</h2>
+            </div>
+            <div class="govuk-summary-card__content"> {% if assessments.length%}
+                <table class="govuk-table dfe-table--smaller">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">Service</th>
+                            <th scope="col" class="govuk-table__header">Phase</th>
+                            <th scope="col" class="govuk-table__header">Type</th>
+                            <th scope="col" class="govuk-table__header">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in assessments %}
+                        {% if record.Status === 'Published' %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/manage/overview/{{record.AssessmentID}}"
+                                    class="govuk-link govuk-link--no-visited-state">
+                                    {{record.Name}}
+                                </a>
+                            </th>
+                            <td class="govuk-table__cell">{{record.Phase}}</td>
+                            <td class="govuk-table__cell">{{record.Type}}</td>
+                            <td class="govuk-table__cell">
+                                {% if record.AssessmentDateTime %}{{record.AssessmentDateTime | date('D MMMM YYYY')}}
+                                {% else %}Date not set{% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+
+                    </tbody>
+                </table> {% else %}
+                <p>You don't have any completed assessments.</p>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+
+        {% include '../partials/_cta_assidfe.html'%}
+    </div>
+</div>
+
+{% endblock %}

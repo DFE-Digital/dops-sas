@@ -17,7 +17,7 @@ async function getAllAssessors(departmentID) {
             SELECT a.*, u."FirstName", u."LastName", u."EmailAddress"
             FROM public."Assessor" a
             INNER JOIN public."User" u ON a."UserID" = u."UserID"
-            WHERE a."DepartmentID" = $1
+            WHERE u."Department" = $1
         `, [departmentID]);
 
         return result.rows;

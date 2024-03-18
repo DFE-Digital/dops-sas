@@ -1,0 +1,87 @@
+{% extends "layouts/auth.html" %}
+{% block head %}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+{% endblock %}
+{% set selectedNav = "Assess" %}
+{% set pageName = 'Add an action' %}
+{% set view = 'report' %}
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+{% set standardFromStandards = {} %}
+{% for standardx in serviceStandards %}
+{% if standardx.Point == standard %}
+{% set standardFromStandards = standardx %}
+{% endif %}
+{% endfor %}
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-quarter">
+    <nav class="dfe-vertical-nav">
+      <a href="/assess/report/{{assessment.AssessmentID}}"
+        class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-9">Back to tasks</a>
+      <h2 class="dfe-vertical-nav--section-header">Standard point</h2>
+      <ul class="dfe-vertical-nav__section">
+        <li class="dfe-vertical-nav__section-item ">
+          <a class="dfe-vertical-nav__link"
+            href="/assess/report-section/{{assessment.AssessmentID}}/{{standard}}">Rating</a>
+        </li>
+        <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+          <a class="dfe-vertical-nav__link"
+            href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{standard}}">Actions</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="govuk-grid-column-three-quarters">
+
+    <div class="govuk-notification-banner govuk-notification-banner--warning" role="alert"
+      aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+         Confirm deletion
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+          Confirm you want to delete this action item.
+        </h3>
+        <form action="/assess/report-section-actions-manage" method="post">
+          <button class="govuk-button govuk-button--warning" name="action" value="delete"
+          data-module="govuk-button">Delete action</button>
+        </form>
+      </div>
+    </div>
+
+    <form action="/assess/report-section-actions-manage" method="post">
+      <input type="hidden" name="Standard" value="{{ standardFromStandards.Point}}">
+      <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+      <input type="hidden" name="UniqueID" value="{{ action.UniqueID }}">
+      <span class="govuk-caption-l">Point {{standardFromStandards.Point}}</span>
+      <h2 class="govuk-heading-l">{{standardFromStandards.Title}}</h2>
+      <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="200">
+        <div class="govuk-form-group">
+          <label class="govuk-label  govuk-label--m" for="actionPlanItem">
+            What action does the team need to take?
+          </label>
+          <div id="with-hint-hint" class="govuk-hint">
+            You should add an entry for each action the team needs to take.
+          </div>
+          <textarea class="govuk-textarea govuk-js-character-count" id="actionPlanItem" name="actionPlanItem" rows="5"
+            aria-describedby="actionPlanItem-info">{{action.Comments}}</textarea>
+        </div>
+        <div id="actionPlanItem-info" class="govuk-hint govuk-character-count__message">
+          You can enter up to 200 characters
+        </div>
+      </div>
+      <div class="govuk-button-group">
+        <button class="govuk-button" name="action" value="save" data-module="govuk-button">Save changes</button>
+       
+        <a class="govuk-link govuk-link--no-visited-state"
+          href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{ standardFromStandards.Point}}">Cancel and
+          return to actions</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

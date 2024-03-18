@@ -1,0 +1,145 @@
+{% extends "layouts/auth.html" %}
+
+{% block head %}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">{% endblock %}
+{% set selectedNav = "Assess" %}
+{% set pageName = 'Team' %}
+{% set view = 'report' %}
+
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+
+{% set standardFromStandards = {} %}
+
+{% for standardx in serviceStandards %}
+{% if standardx.Point == standard %}
+{% set standardFromStandards = standardx %}
+{% endif %}
+{% endfor %}
+
+{% set ratingFromStandards = {} %}
+
+{% for rating in ratings %}
+{% if rating.Standard == standard %}
+{% set ratingFromStandards = rating %}
+{% endif %}
+{% endfor %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'outcomerag' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+
+  <div class="govuk-grid-column-one-quarter">
+
+    <nav class="dfe-vertical-nav">
+
+      <a href="/assess/report/{{assessment.AssessmentID}}"
+        class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-9">Back to tasks</a>
+
+      <h2 class="dfe-vertical-nav--section-header">Standard point</h2>
+      <ul class="dfe-vertical-nav__section">
+        <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+          <a class="dfe-vertical-nav__link"
+            href="/assess/report-section/{{assessment.AssessmentID}}/{{standard}}">Rating</a>
+        </li>
+        <li class="dfe-vertical-nav__section-item">
+          <a class="dfe-vertical-nav__link"
+            href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{standard}}">Actions</a>
+        </li>
+
+      </ul>
+
+    </nav>
+
+  </div>
+
+  <div class="govuk-grid-column-three-quarters">
+
+    {% include 'partials/errorSummary.html' %}
+
+
+    <form method="post" action="/assess/report-section">
+      <input type="hidden" name="Standard" value="{{ standardFromStandards.Point}}">
+      <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+
+      <span class="govuk-caption-l">Point {{standardFromStandards.Point}}</span>
+      <h2 class="govuk-heading-l">{{standardFromStandards.Title}}</h2>
+
+      <div class="govuk-form-group {%if hasError %}govuk-form-group--error{% endif%}">
+        <fieldset class="govuk-fieldset" aria-describedby="outcomerag-hint">
+          <h2 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--m" for="improve">
+              What outcome are you giving this standard?
+            </label>
+          </h2>
+          <div id="outcomerag-hint" class="govuk-hint">
+            This isn't shared with the team until the service assessment plus team check and send it on to them.
+          </div>
+          {%if hasError%}
+          <p id="event-name-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> Select an option
+          </p>
+          {% endif%}
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="outcomerag" name="outcomerag" type="radio" value="Red"
+                aria-describedby="outcomerag-item-hint" {% if ratingFromStandards.Outcome==="Red" %}checked{% endif %}>
+              <label class="govuk-label govuk-radios__label" for="outcomerag">
+                Red
+              </label>
+              <div id="outcomerag-item-hint" class="govuk-hint govuk-radios__hint">
+                <p>There are serious concerns and actions the team must address before continuing. The team may want to
+                  consider escalating issues or problems to their senior responsible officer or senior leadership team.
+                </p>
+                <p>You will need to add actions.</p>
+              </div>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="outcomerag-2" name="outcomerag" type="radio" value="Amber"
+                aria-describedby="outcomerag-2-item-hint" {% if ratingFromStandards.Outcome==="Amber" %}checked{% endif
+                %}>
+              <label class="govuk-label govuk-radios__label" for="outcomerag-2">
+                Amber
+              </label>
+              <div id="outcomerag-2-item-hint" class="govuk-hint govuk-radios__hint">
+                <p>There are some actions and the team will need to evidence they've resolved these actions in their
+                  next assessment.</p>
+                <p>You will need to add actions.</p>
+              </div>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="outcomerag-3" name="outcomerag" type="radio" value="Green"
+                aria-describedby="outcomerag-3-item-hint" {% if ratingFromStandards.Outcome==="Green" %}checked{% endif
+                %}>
+              <label class="govuk-label govuk-radios__label" for="outcomerag-3">
+                Green
+              </label>
+              <div id="outcomerag-3-item-hint" class="govuk-hint govuk-radios__hint">
+                <p>There are no recommendations or actions for the team.</p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-button-group">
+        <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+        <a class="govuk-link govuk-link--no-visited-state" href="/assess/report/{{assessment.AssessmentID}}">Cancel and
+          return to tasks</a>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

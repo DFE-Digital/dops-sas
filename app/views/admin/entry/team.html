@@ -1,0 +1,72 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = 'Team' %}
+
+{% set view = 'team' %}
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Team</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+
+                {% if team.length %}
+
+                <dl class="govuk-summary-list">
+                    {% for member in team %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{member.Role}}
+                        </dt>
+                        <dd class="govuk-summary-list__value">{{member.FirstName}}
+                            {{member.LastName}}<br /><span class="govuk-body govuk-body-s lighter-text"><a
+                                    href="mailto:{{member.EmailAddress}}?subject={{assessment.Name}}"
+                                    class="govuk-link govuk-link--no-visited-state">{{member.EmailAddress}}</a></span>
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+
+                        </dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No team members have been added.</p>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+
+                <h2 class="govuk-summary-card__title">Guidance</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+                <ul class="govuk-list govuk-list--spaced">
+                    <li>
+                        <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance"
+                            target="_blank">Who you should add to your team</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

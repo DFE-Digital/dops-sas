@@ -1,78 +1,85 @@
-{% extends "layouts/auth_layout.html" %}
+{% extends "layouts/auth.html" %}
 
 {% set selectedNav = "Manage" %}
 {% set pageName = 'Team' %}
 
+{% set view = 'team' %}
 {% block hero %}
 
-    {% include './_header.html' %}
+{% include './_header.html' %}
 {% endblock %}
 
 {% block content %}
 
-    <div class="dfe-panel">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
 
-                <div class="govuk-summary-card">
-                    <div class="govuk-summary-card__title-wrapper">
-                        <h2 class="govuk-summary-card__title">Team</h2>
-                        {% if assessment.Status !== "Published" and isUserInTeam === true %}
-                            <ul class="govuk-summary-card__actions">
-                                <li class="govuk-summary-card__action">
-                                    <a class="govuk-link govuk-link--no-visited-state" href="/manage/add-team/{{assessment.AssessmentID}}">Add team member</a>
-                                </li>
-                            </ul>
-                        {% endif %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Team</h2>
+                {% if assessment.Status === "Active" %}
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-link--no-visited-state"
+                            href="/manage/add-team/{{assessment.AssessmentID}}">Add team member</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+            <div class="govuk-summary-card__content">
+
+                {% if team.length %}
+
+                <dl class="govuk-summary-list">
+                    {% for member in team %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{member.Role}}
+                        </dt>
+                        <dd class="govuk-summary-list__value">{{member.FirstName}}
+                            {{member.LastName}}<br /><span class="govuk-body govuk-body-s lighter-text"><a
+                                    href="mailto:{{member.EmailAddress}}?subject={{assessment.Name}}"
+                                    class="govuk-link govuk-link--no-visited-state">{{member.EmailAddress}}</a></span>
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            {% if assessment.Status !== "Published" %}
+                            <a class="govuk-link"
+                                href="/manage/remove-team/{{member.ID}}/{{member.UniqueID}}">Remove<span
+                                    class="govuk-visually-hidden">
+                                    {{member.FirstName}}
+                                    {{member.LastName}}</span></a>
+                            {% endif %}
+                        </dd>
                     </div>
-                    <div class="govuk-summary-card__content">
-
-                        {% if team.length %}
-
-                            <dl class="govuk-summary-list">
-                                {% for member in team %}
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
-                                            {{member.Role}}
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">{{member.FirstName}}
-                                            {{member.LastName}}<br/><span class="govuk-body govuk-body-s lighter-text"><a href="mailto:{{member.EmailAddress}}?subject={{assessment.Name}}" class="govuk-link govuk-link--no-visited-state">{{member.EmailAddress}}</a></span></dd>
-                                        <dd class="govuk-summary-list__actions">
-                                            {% if assessment.Status !== "Published" %}
-                                            <a class="govuk-link" href="/manage/remove-team/{{member.ID}}/{{member.UniqueID}}">Remove<span class="govuk-visually-hidden">
-                                                    {{member.FirstName}}
-                                                    {{member.LastName}}</span></a>
-                                                    {% endif %}
-                                        </dd>
-                                    </div>
-                                {% endfor %}
-                            </dl>
-                        {% else %}
-                            <p>No team members have been added.</p>
-                        {% endif %}
-
-                    </div>
-                </div>
+                    {% endfor %}
+                </dl>
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No team members have been added.</p>
+                {% endif %}
 
             </div>
-            <div class="govuk-grid-column-one-third">
-                <div class="govuk-summary-card">
-                    <div class="govuk-summary-card__title-wrapper">
+        </div>
 
-                        <h2 class="govuk-summary-card__title">Guidance</h2>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
 
-                    </div>
-                    <div class="govuk-summary-card__content">
-                        <ul class="govuk-list govuk-list--spaced">
-                            <li>
-                                <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance" target="_blank">Who you should add to your team</a>
-                            </li>
+                <h2 class="govuk-summary-card__title">Guidance</h2>
 
-                        </ul>
-                    </div>
-                </div>
+            </div>
+            <div class="govuk-summary-card__content">
+                <ul class="govuk-list govuk-list--spaced">
+                    <li>
+                        <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance"
+                            target="_blank">Who you should add to your team</a>
+                    </li>
+
+                </ul>
             </div>
         </div>
     </div>
+</div>
 
 {% endblock %}

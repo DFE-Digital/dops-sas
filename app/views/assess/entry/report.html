@@ -1,0 +1,203 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Assess" %}
+{% set pageName = 'Team' %}
+{% set view = 'report' %}
+
+{% block hero %}
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasRed = false %}
+{% set hasAmber = false %}
+{% set hasRequiredActions = false %}
+
+{% set hasRedCount = 0 %}
+{% set hasAmberCount = 0 %}
+
+{% for rating in ratings %}
+{% if rating.Outcome === 'Red' %}
+{% set hasRed = true %}
+{% set hasRedCount = (hasRedCount + 1) %}
+
+{% endif %}
+{% endfor %}
+
+{% for rating in ratings %}
+{% if rating.Outcome === 'Amber' %}
+{% set hasAmber = true %}
+{% set hasAmberCount = (hasAmberCount + 1) %}
+{% endif %}
+{% endfor %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Assessment report</h2>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m">Outcome</h3>
+        <ul class="govuk-task-list">
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="/assess/report-rating/{{assessment.AssessmentID}}"
+                        aria-describedby="overall-details-rating-status">Rating</a>
+                    <div id="company-details-3-hint" class="govuk-task-list__hint">
+                        {{ ratings | length }} of 14 standards rated
+                    </div>
+                </div>
+                <div class="govuk-task-list__status" id="overall-details-rating-status">
+                    {% if ratings | length === 0 %}
+                    <strong class="govuk-tag">Not rated</strong>
+                    {% else %}
+                    {% if hasRed == true %}
+                    <strong class="govuk-tag govuk-tag--red">Red</strong>
+                    {% elseif hasRed == false and hasAmber == true %}
+                    <strong class="govuk-tag govuk-tag--amber">Amber</strong>
+                    {% elseif hasRed == false and hasAmber == false %}
+                    <strong class="govuk-tag govuk-tag--green">Green</strong>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </li>
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link"
+                        href="/assess/report-panel-comments/{{assessment.AssessmentID}}"
+                        aria-describedby="overall-details-comments-status">Things the team have done well</a>
+                </div>
+                <div class="govuk-task-list__status" id="overall-details-comments-status">
+                    {% if assessment.PanelCommentsComplete === null %}
+                    <strong class="govuk-tag  govuk-tag-blue">Not started</strong>
+                    {% elseif assessment.PanelCommentsComplete == false %}
+                    <strong class="govuk-tag  govuk-tag--light-blue">In progress</strong>
+                    {% elseif assessment.PanelCommentsComplete == true %}
+                    <strong class="govuk-tag  govuk-tag--green">Complete</strong>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+        <h3 class="govuk-heading-m">Standards</h3>
+        <ul class="govuk-task-list">
+            {% for standard in serviceStandards %}
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link"
+                        href="/assess/report-section/{{assessment.AssessmentID}}/{{standard.Point}}"
+                        aria-describedby="standard-details-{{standard.point}}-status">{{standard.Point}}.
+                        {{standard.Title}}</a>
+                    {% for rating in ratings %}
+                    {% if (rating.Standard === standard.Point) and rating.Outcome != 'Green' %}
+
+
+
+                    <div id="standard-details-{{standard.point}}-hint" class="govuk-task-list__hint">
+
+                        {% set actionForStandardCount = 0 %}
+
+                        {% for action in actions %}
+                        {% if action.Point == standard.Point%}
+                        {% set actionForStandardCount = (actionForStandardCount+1) %}
+                        {% endif %}
+                        {% endfor %}
+
+                        {%-if actionForStandardCount == 0 -%}No actions added{% else %}{{actionForStandardCount}}
+                        action{%-if actionForStandardCount !== 1 -%}s{%-endif %} added{% endif %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="govuk-task-list__status" id="standard-details-{{standard.point}}-status">
+                    {% set rated = false %}
+                    {% for rating in ratings %}
+                    {% if rating.Standard === standard.Point %}
+                    {% set rated = true %}
+                    <strong class="govuk-tag govuk-tag--{{rating.Outcome | lower}}">{{rating.Outcome}}</strong>
+                    {% endif %}
+                    {% endfor %}
+                    {% if rated == false%}
+                    <strong class="govuk-tag">Not rated</strong>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
+        {% set missingActions = false %}
+
+        {% if assessment.Status == "Active" %}
+
+        <h3 class="govuk-heading-l">Submit report</h3>
+
+        {% for standard in ratings %}
+        {% if standard.Outcome == "Red" or standard.Outcome == "Amber" %}
+        {% set actionExists = false %}
+
+        {% for action in actions %}
+        {% if action.Point == standard.Standard %}
+        {% set actionExists = true %}
+        {% endif %}
+        {% endfor %}
+
+        {% if not actionExists %}
+        {% if loop.first %}
+        {% set missingActions = true %}
+        <p>You can't submit the report for the following reasons:</p>
+        {% endif %}
+        <p>Standard {{ standard.Standard }} with outcome {{ standard.Outcome }} does not have any corresponding
+            actions.</p>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
+
+        {% if ratings | length == 14 and missingActions == false %}
+
+        <p>You can submit the report to the Service Assessment Team to send on to the service team.</p>
+
+        <form action="/assess/submit-report" method="post">
+
+            <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Submit report</button>
+            </div>
+        </form>
+
+        {% else %}
+
+        <p>You can't submit the report as not all the standard points have a rating.</p>
+
+        {% endif %}
+
+        {% endif %}
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <aside class="dfe-aside">
+            <h2 class="govuk-heading-m">Guidance</h2>
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    {% if assessment.Type == 'Peer review' %}
+                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/assess-discovery-peer-review"
+                        target="_blank" class="govuk-link">Assess a peer review</a>
+                    {% else %}
+                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/assess-service"
+                        target="_blank" class="govuk-link">Assess a service assessment</a>
+
+                    {% endif %}
+                </li>
+
+                <li>
+                    {% if assessment.Type == 'Peer review' %}
+                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/complete-discovery-peer-review-report"
+                        target="_blank" class="govuk-link">Complete a discovery peer review report</a>
+                    {% else %}
+                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/complete-assessment-report"
+                        target="_blank" class="govuk-link">Complete a service assessment report</a>
+
+                    {% endif %}
+                </li>
+            </ul>
+        </aside>
+    </div>
+</div>
+{% endblock %}

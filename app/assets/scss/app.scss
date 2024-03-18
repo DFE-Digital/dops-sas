@@ -2523,3 +2523,54 @@ ol {
     line-height: 1.2;
   }
 }
+
+
+ul.dfe-items-list {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+ul.dfe-items-list > li {
+  border-bottom: 1px solid #888888;
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+ul.dfe-items-list > li > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+ul.dfe-items-list > li > div > h2 {
+  margin: 10px 0 5px;
+}
+
+ul.dfe-items-list > li > ul.meta {
+  display: flex;
+  padding: 0;
+  list-style-type: none;
+  margin-top: 10px;
+  /* Optional: adds space between the div and ul */
+  align-items: flex-start;
+  /* Aligns items to the start (left) */
+}
+
+ul.dfe-items-list > li > ul.meta > li {
+  text-align: left;
+  margin-right: 20px;
+  font-size: 16px;
+  color: #505a5f;
+}
+
+ul.dfe-items-list > li > ul.meta > li > span {
+  font-weight: bold;
+}
+
+
+.govuk-tag--amber {
+  background: #ffe599;
+  color: #4c3900;
+}

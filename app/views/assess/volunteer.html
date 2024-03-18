@@ -1,0 +1,181 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Assess" %}
+{% set pageName = "Upcoming assessments and peer reviews" %}
+{% set view = "volunteer"%}
+{% set selectedNav = "Assess" %}
+
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Assess</span>
+                <h1 class="govuk-heading-l">Volunteer to be an assessor</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='upcoming' %} aria-current="page" {% endif
+                                %} href="/assess">Upcoming</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='previous' %} aria-current="page" {% endif
+                                %}href="/assess/previous">Previous</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='volunteer' %} aria-current="page" {% endif
+                                %}href="/volunteer">Volunteer</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<p>Select an upcoming assessment to view details, see assessors and volunteer to assess the service.</p>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Filters</h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="/assessments">Clear</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+                <div class="govuk-form-group">
+                    <label for="phaseFilter" class="govuk-label">Filter by phase</label>
+                    <select id="phaseFilter" class="govuk-select govuk-!-width-full">
+                        <option value="">All phases</option>
+                        <option value="Discovery">Discovery</option>
+                        <option value="Alpha">Alpha</option>
+                        <option value="Private Beta">Private Beta</option>
+                        <option value="Public Beta">Public Beta</option>
+                        <option value="Live">Live</option>
+                    </select>
+                </div>
+                <div class="govuk-form-group">
+                    <label for="typeFilter" class="govuk-label">Filter by type</label>
+                    <select id="typeFilter" class="govuk-select  govuk-!-width-full">
+                        <option value="">All types</option>
+                        <option value="Service assessment">Service assessment</option>
+                        <option value="Peer review">Peer review</option>
+                    </select>
+                </div>
+                <div class="govuk-form-group">
+                    <label for="monthFilter" class="govuk-label">Filter by month</label>
+                    <select id="monthFilter" class="govuk-select  govuk-!-width-full">
+                        <option value="">All months</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+        <div id="count-of-items" class="govuk-heading-m govuk-!-padding-top-4 govuk-!-margin-bottom-3"
+            aria-live="polite">{{assessments | length}}</div>
+        <hr class="govuk-section-break  govuk-section-break--visible ">
+        <ul class="dfe-items-list govuk-!-margin-top-2">
+            {% for assessment in assessments %}
+            <li class="row dfe-items-list--{{assessment.Outcome | lower}}" data-phase="{{assessment.Phase}}"
+                data-type="{{assessment.Type}}" data-month="{{assessment.AssessmentDateTime | date('MMMM')}}">
+                <div>
+                    <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+                        <a class="govuk-link govuk-link--no-visited-state "
+                            href="/volunteer/detail/{{assessment.AssessmentID}}">{{assessment.Name}}</a>
+                    </h2>
+                </div>
+                <div class="govuk-grid-row ">
+                    <div class="govuk-grid-column-one-half">
+                        <ul class="govuk-list govuk-!-font-size-16">
+                            <li><span class="govuk-!-font-weight-bold ">Type:</span>
+                                {{assessment.Type}}</li>
+                            <li><span class="govuk-!-font-weight-bold">Phase:</span>
+                                {{assessment.Phase}}</li>
+
+                        </ul>
+                    </div>
+                    <div class="govuk-grid-column-one-half">
+                        <ul class="govuk-list govuk-!-font-size-16">
+                            <li><span class="govuk-!-font-weight-bold">Portfolio:</span>
+                                {{assessment.Portfolio}}</li>
+                            <li><span class="govuk-!-font-weight-bold">Assessment date:</span>
+                                {% if assessment.AssessmentDateTime %}
+                                {{assessment.AssessmentDateTime|date('D MMMM YYYY')}}{% else %}No date{% endif %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <div id="noResultsMessage" style="display: none;">
+            <p class="govuk-heading-m">No results for the filter.</p>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add event listeners to select elements for filtering
+        const phaseFilter = document.getElementById('phaseFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        const monthFilter = document.getElementById('monthFilter');
+
+        phaseFilter.addEventListener('change', applyFilters);
+        typeFilter.addEventListener('change', applyFilters);
+        monthFilter.addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            let activePhase = phaseFilter.value;
+            let activeType = typeFilter.value;
+            let activeMonth = monthFilter.value;
+            let rows = document.querySelectorAll('.dfe-items-list > li');
+
+            let visibleCount = 0;
+            rows.forEach(row => {
+                let phase = row.getAttribute('data-phase');
+                let type = row.getAttribute('data-type');
+                let month = row.getAttribute('data-month');
+
+                if ((phase === activePhase || activePhase === '') && (type === activeType || activeType === '') && (month === activeMonth || activeMonth === '')) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document
+                .getElementById('noResultsMessage')
+                .style
+                .display = visibleCount > 0
+                    ? 'none'
+                    : '';
+            updateItemCount(visibleCount);
+        }
+
+        function updateItemCount(count) {
+            const countElement = document.getElementById('count-of-items');
+            countElement.textContent = count + ' services';
+        }
+
+        // Apply filters on initial load
+        applyFilters();
+    });
+</script>
+{% endblock %}

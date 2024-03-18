@@ -1,20 +1,17 @@
-{% extends "layouts/auth_layout.html" %}
+{% extends "layouts/auth.html" %}
 
 {% set selectedNav = "Manage" %}
-{% set pageName = 'Artefacts' %}
+{% set pageName = 'Add artefact' %}
 
 {% set titleError = false %}
 {% set descriptionError = false %}
 {% set urlError = false %}
 
 {% for error in errors %}
-    {% if error.field === 'Title' %}
+    {% if error.path === 'Title' %}
         {% set titleError = true %}
     {% endif %}
-    {% if error.field === 'Description' %}
-        {% set descriptionError = true %}
-    {% endif %}
-    {% if error.field === 'URL' %}
+    {% if error.path === 'URL' %}
         {% set urlError = true %}
     {% endif %}
 {% endfor %}
@@ -26,43 +23,25 @@
 
 {% block content %}
 
-    <div class="dfe-panel">
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
+
+                {% include 'partials/errorSummary.html' %}
 
                 <div class="govuk-summary-card">
                     <div class="govuk-summary-card__title-wrapper">
                         <h2 class="govuk-summary-card__title">Add artefact</h2>
-
-                        {% if isUserInTeam === true %}
                             <ul class="govuk-summary-card__actions">
                                 <li class="govuk-summary-card__action">
                                     <a class="govuk-link govuk-link--no-visited-state" href="/manage/artefacts/{{assessment.AssessmentID}}">Cancel</a>
                                 </li>
                             </ul>
-                        {% endif %}
                     </div>
                     <div class="govuk-summary-card__content">
 
                         <form action="/manage/add-artefact" method="post" novalidate>
                             <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
-
-                            {% if errors %}
-                                <div class="govuk-error-summary" data-module="govuk-error-summary">
-                                    <div role="alert">
-                                        <h2 class="govuk-error-summary__title">There is a problem</h2>
-                                        <div class="govuk-error-summary__body">
-                                            <ul class="govuk-list govuk-error-summary__list">
-                                                {% for error in errors %}
-                                                    <li>
-                                                        <a href="#{{error.field}}">{{error.message}}</a>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
 
                             <div class="govuk-form-group {%if titleError%}govuk-form-group--error{% endif%}">
                                 <label class="govuk-label" for="title">Title of the artefact</label>
@@ -80,7 +59,7 @@
                                     <p id="event-name-error" class="govuk-error-message">
                                         <span class="govuk-visually-hidden">Error:</span> Enter a title</p>
                                     {% endif%}
-                                    <input class="govuk-input {%if descriptionError%} govuk-input--error{% endif%}" id="Description" name="ArtefaceDescription" type="text" value="{{data['ArtefaceDescription']}}">
+                                    <input class="govuk-input {%if descriptionError%} govuk-input--error{% endif%}" id="Description" name="Description" type="text" value="{{data['Description']}}">
                                 </div>
 
                                 <div class="govuk-form-group {%if urlError%}govuk-form-group--error{% endif%}">
@@ -120,6 +99,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+    
 
     {% endblock %}

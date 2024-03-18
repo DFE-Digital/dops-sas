@@ -9,6 +9,9 @@ const adminController = require('./controllers/adminController');
 const bookController = require('./controllers/bookController');
 const manageController = require('./controllers/manageController');
 const serviceAdminController = require('./controllers/serviceAdminController');
+const analysisController = require('./controllers/analysisController');
+const reportsController = require('./controllers/reportsController');
+const assessController = require('./controllers/assessController');
 
 const rolesToCheck = ['Department Lead', 'Administrator', 'Service Administrator'];
 
@@ -99,7 +102,26 @@ router.post("/book/request/confirm-delete", isAuthenticated, bookController.p_co
 
 // Manage routes
 router.get('/manage', isAuthenticated, manageController.g_manage);
+router.get("/manage/previous", isAuthenticated, manageController.g_previous);
 router.get("/manage/overview/:assessmentID", isAuthenticated, manageController.g_overview);
+router.get("/manage/panel/:assessmentID", isAuthenticated, manageController.g_panel);
+router.get("/manage/request/:assessmentID", isAuthenticated, manageController.g_request);
+router.get("/manage/report/:assessmentID", isAuthenticated, manageController.g_report);
+router.get("/manage/artefacts/:assessmentID", isAuthenticated, manageController.g_artefacts);
+router.get("/manage/team/:assessmentID", isAuthenticated, manageController.g_team);
+router.get("/manage/add-artefact/:assessmentID", isAuthenticated, manageController.g_addartefact);
+router.get("/manage/remove-artefact/:artefactID/:uniqueID", isAuthenticated, manageController.g_removeartefact);
+router.get("/manage/add-team/:assessmentID", isAuthenticated, manageController.g_addteam);
+router.get("/manage/remove-team/:teamID/:uniqueID", isAuthenticated, manageController.g_removeteam);
+
+
+
+router.post("/manage/add-artefact", isAuthenticated, manageController.p_addartefact);
+router.post("/manage/remove-artefact", isAuthenticated, manageController.p_removeartefact);
+router.post("/manage/add-team", isAuthenticated, manageController.p_addteam);
+router.post("/manage/remove-team", isAuthenticated, manageController.p_removeteam);
+router.post("/manage/accept-report", isAuthenticated, manageController.p_acceptReport);
+
 
 
 
@@ -116,6 +138,8 @@ router.get("/admin/assessments", isAuthenticated, isAdmin, adminController.g_ass
 router.get("/admin/assessors", isAuthenticated, isAdmin, adminController.g_assessors);
 router.get("/admin/add-assessor", isAuthenticated, isAdmin, adminController.g_addassessor);
 router.get("/admin/report/:assessmentID", isAuthenticated, isAdmin, adminController.g_report);
+router.get("/admin/artefacts/:assessmentID", isAuthenticated, isAdmin, adminController.g_artefacts);
+router.get("/admin/team/:assessmentID", isAuthenticated, isAdmin, adminController.g_team);
 
 
 
@@ -124,11 +148,63 @@ router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_add
 router.post("/admin/remove-panel/", isAuthenticated, isAdmin, adminController.p_removepanel);
 router.post("/admin/add-date", isAuthenticated, isAdmin, adminController.p_adddate);
 router.post("/admin/add-assessor", isAuthenticated, isAdmin, adminController.p_addassessor);
+router.post("/admin/send-report", isAuthenticated, isAdmin, adminController.p_sendReport);
+router.post("/admin/publish-report", isAuthenticated, isAdmin, adminController.p_publishReport);
+
+
+
+
+// ANALYSIS ROUTES
+router.get('/analysis', isAuthenticated, analysisController.g_index);
+router.get('/analysis/portfolio/:name', isAuthenticated, analysisController.g_portfolio);
+
+
+
+
+// ASSESS ROUTES
+router.get('/assess', isAuthenticated, assessController.g_index);
+router.get("/assess/overview/:assessmentID", isAuthenticated, assessController.g_overview);
+router.get("/assess/report/:assessmentID", isAuthenticated, assessController.g_report);
+router.get("/assess/panel/:assessmentID", isAuthenticated, assessController.g_panel);
+router.get("/assess/artefacts/:assessmentID", isAuthenticated, assessController.g_artefacts);
+router.get("/assess/team/:assessmentID", isAuthenticated, assessController.g_team);
+router.get("/assess/report-rating/:assessmentID", isAuthenticated, assessController.g_reportRating);
+router.get("/assess/report-panel-comments/:assessmentID", isAuthenticated, assessController.g_reportPanelComments);
+router.get("/assess/report-section/:assessmentID/:standard", isAuthenticated, assessController.g_reportSection);
+router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthenticated, assessController.g_reportSectionActions);
+router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, assessController.g_reportSectionActionsAdd);
+router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, assessController.g_reportSectionActionsManage);
+
+
+router.post("/assess/report-section", isAuthenticated, assessController.p_reportSection);
+router.post("/assess/report-section-actions-add", isAuthenticated, assessController.p_reportSectionActionsAdd);
+router.post("/assess/report-section-actions-manage", isAuthenticated, assessController.p_reportSectionActionsManage);
+router.post("/assess/report-panel-comments", isAuthenticated, assessController.p_reportPanelComments);
+router.post("/assess/submit-report", isAuthenticated, assessController.p_submitReport);
+
+
+// REPORTS ROUTES
+router.get('/reports', isAuthenticated, reportsController.g_index);
+router.get('/reports/report/:assessmentID', isAuthenticated, reportsController.g_report);
+router.get("/report/generate-doc/:assessmentID", isAuthenticated, reportsController.g_doc);
+router.get("/report/generate-excel/:assessmentID", isAuthenticated, reportsController.g_excel);
 
 
 
 // Service Admin routes
 router.get('/service-admin/create-department', isAuthenticated, serviceAdminController.g_createDepartment);
 router.post('/service-admin/create-department', isAuthenticated, serviceAdminController.p_createDepartment);
+
+
+// Volunteer
+router.get('/volunteer', isAuthenticated, assessController.g_volunteer);
+router.get("/volunteer/get-data/:id", isAuthenticated, assessController.g_data);
+router.get("/volunteer/volunteer/:id/:role", isAuthenticated, assessController.g_volunteerA);
+router.get("/volunteer/detail/:id/", isAuthenticated, assessController.g_detail);
+router.get("/volunteer/submitted/:id/", isAuthenticated, assessController.g_submitted);
+
+// Posts
+router.post("/volunteer", isAuthenticated, assessController.p_volunteer);
+
 
 module.exports = router;

@@ -1,4 +1,4 @@
-{% extends "layouts/auth_layout.html" %}
+{% extends "layouts/auth.html" %}
 
 {% set selectedNav = "Manage" %}
 {% set pageName = 'Panel' %}
@@ -6,50 +6,62 @@
 
 {% block hero %}
 
-    {% include './_header.html' %}
+{% include './_header.html' %}
 {% endblock %}
 
 {% block content %}
 
-    <div class="dfe-panel">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-
-                <div class="govuk-summary-card">
-                    <div class="govuk-summary-card__title-wrapper">
-                        <h2 class="govuk-summary-card__title">Assessment panel</h2>
-                    </div>
-                    <div class="govuk-summary-card__content">
-
-                        {% if panel.length %}
-
-                            <dl class="govuk-summary-list">
-                                {% for member in panel %}
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
-                                            {{member.Role}}
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">{{member.FirstName}}
-                                            {{member.LastName}} {% if member.ExternalAssessor %}(External){% endif %}<br/><span class="govuk-body govuk-body-s lighter-text"><a href="mailto:{{member.EmailAddress}}?subject={{assessment.Name}}" class="govuk-link govuk-link--no-visited-state">{{member.EmailAddress}}</a></span></dd>
-                                        <dd class="govuk-summary-list__actions">
-                                          
-                                        </dd>
-                                    </div>
-                                {% endfor %}
-                            </dl>
-                        {% else %}
-                            <p>No panel members have been added.</p>
-                            <p>The panel is managed by the Service Assessment + team</p>
-                        {% endif %}
-
-                    </div>
-                </div>
-
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Assessment panel</h2>
             </div>
-            <div class="govuk-grid-column-one-third">
-                
+            <div class="govuk-summary-card__content">
+                {% if panel.length %}
+                <dl class="govuk-summary-list">
+                    {% for member in panel %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{member.Role}}
+                        </dt>
+                        <dd class="govuk-summary-list__value">{{member.FirstName}}
+                            {{member.LastName}} {% if member.ExternalAssessor %}(External){% endif %}<br /><span
+                                class="govuk-body govuk-body-s lighter-text"><a
+                                    href="mailto:{{member.EmailAddress}}?subject={{assessment.Name}}"
+                                    class="govuk-link govuk-link--no-visited-state">{{member.EmailAddress}}</a></span>
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                        </dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+                {% else %}
+                <p>No panel members have been added.</p>
+                <p>The panel is managed by the Service assessment team</p>
+                {% endif %}
             </div>
         </div>
     </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+
+                <h2 class="govuk-summary-card__title">Guidance</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+                <ul class="govuk-list govuk-list--spaced govuk-!-margin-bottom-0">
+                    <li>
+                        <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com" target="_blank">Who
+                            should be on the panel</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}

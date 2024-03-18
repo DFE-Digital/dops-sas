@@ -1,0 +1,80 @@
+{% extends "layouts/auth.html" %}
+{% set view = "upcoming"%}
+{% set selectedNav = "Assess" %}
+{% set pageName = "Services you're assessing" %}
+
+{% set hasActive = false%}
+{% for record in userOnPanels %}
+{% if record.Status === 'Active' or record.Status === 'SA Review' or record.Status === 'Team Review' %}
+{% set hasActive = true%}
+{% endif %}
+{% endfor %}
+
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Assess</span>
+                <h1 class="govuk-heading-l">{{pageName}}</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='upcoming' %} aria-current="page" {% endif
+                                %} href="/assess">Upcoming</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='previous' %} aria-current="page" {% endif
+                                %}href="/assess/previous">Previous</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='volunteer' %} aria-current="page" {% endif
+                                %}href="/volunteer">Volunteer</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% if hasActive == true %}
+<table class="govuk-table">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Service</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Type</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Assessment date</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        {% for record in userOnPanels %}
+        {% if record.Status === 'Active' or record.Status === 'SA Review' or record.Status === 'Team Review' %}
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header">
+                <a class="govuk-link govuk-link--no-visited-state "
+                    href="/assess/overview/{{record.AssessmentID}}">{{record.Name}}</a>
+            </th>
+            <td class="govuk-table__cell">{{record.Phase}}</td>
+            <td class="govuk-table__cell">{{record.Type}}</td>
+            <td class="govuk-table__cell">{{record.AssessmentDateTime|date('D MMM YYYY')}}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>You're not listed on any active assessments.</p>
+<p><a href="/assessments">Volunteer for an upcoming assessment or peer review</a>.</p>
+{% endif %}
+
+
+
+{% endblock %}

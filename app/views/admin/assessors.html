@@ -100,7 +100,7 @@
             </div>
             <div class="govuk-summary-card__content">
                 <div class="govuk-table-container">
-                    <table class="govuk-table  dfe-table--smaller" id="assessorsTable">
+                    <table class="govuk-table  " id="assessorsTable">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
@@ -114,10 +114,11 @@
                             {% for assessor in assessors%}
                             <tr class="govuk-table__row" data-role="{{assessor.PrimaryRole}}">
                                 <th scope="row" class="govuk-table__header">
-                                      <a href="/admin/assessor/{{assessor.AssessorID}}"
-                                            class="govuk-link govuk-link--no-visited-state">{{assessor.FirstName}} {{assessor.LastName}}</a><br />
+                                    <a href="/admin/assessor/{{assessor.AssessorID}}"
+                                        class="govuk-link govuk-link--no-visited-state">{{assessor.FirstName}}
+                                        {{assessor.LastName}}</a><br />
                                     <span class="govuk-body govuk-body-s lighter-text">
-                                      {{assessor.EmailAddress}}</span>
+                                        {{assessor.EmailAddress}}</span>
                                 </th>
                                 <td class="govuk-table__cell">{{assessor.PrimaryRole}}</td>
                                 <td class="govuk-table__cell">{{assessor.LeadAssessor | BoolToYesNo}}</td>

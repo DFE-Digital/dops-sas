@@ -8,12 +8,16 @@
 {% include './_header.html' %}
 {% endblock %}
 
+
 {% set endDate = assessment.AssessmentDateTime %}
+
+{% if endDate !== null%}
 
 {% set day = endDate.getUTCDate() %}
 {% set month = endDate.getUTCMonth() + 1 %}
 {# Month is 0-indexed, so add 1 #}
 {% set year = endDate.getUTCFullYear() %}
+{% endif %}
 
 {% block content %}
 

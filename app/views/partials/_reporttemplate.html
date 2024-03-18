@@ -1,0 +1,115 @@
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h2 class="govuk-heading-l">Report</h2>
+        {% if assessment.Type === 'Service assessment' %}
+        <p class="govuk-body">A service assessment carried out against the <a
+                href="https://apply-the-service-standard.education.gov.uk/service-standard" target="_blank"
+                class="govuk-link">Government Service Standard</a>
+        </p>
+        {% else %}
+        <p class="govuk-body">An internal peer review carried out to help the team understand what has been done well,
+            and what needs to be improved.</p>
+        {% endif %}
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <hr class="govuk-section-break govuk-section-break--l  govuk-section-break--visible">
+
+        {% if assessment.Type == "Peer review" %}
+        <h2 class="govuk-heading-m">What the team has done well</h2>
+        <p class="govuk-body">{{assessment.PanelComments}}</p>
+
+        <h2 class="govuk-heading-m">What the team needs to improve</h2>
+        <p class="govuk-body">{{assessment.PanelCommentsImprove}}</p>
+        {% endif %}
+
+        {% if assessment.Type == "Service assessment" or assessment.Type == "Service reassessment" %}
+        <h2 class="govuk-heading-m">Overall comments from the panel</h2>
+        <p class="govuk-body">{{assessment.PanelComments}}</p>
+        {% endif %}
+
+        {% if assessment.Type === 'Service assessment' %}
+        <h2 class="govuk-heading-m  govuk-!-margin-top-7">Summary of ratings for standards</h2>
+        <ol class="govuk-task-list">
+            {% for standard in serviceStandards %}
+            {% for rating in ratings %}
+            {% if standard.Point == rating.Standard %}
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="#point-{{standard.Point}}"
+                        aria-describedby="standard-{{standard.Point}}-status">{{ standard.Point }}. {{ standard.Title
+                        }}</a>
+
+                </div>
+                <div class="govuk-task-list__status" id="standard-{{standard.Point}}-status">
+                    <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome }}</strong>
+                </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </ol>
+
+        {% for standard in serviceStandards %}
+        {% for rating in ratings %}
+        {% if standard.Point == rating.Standard %}
+        <h2 class="govuk-heading-m govuk-!-margin-top-9" id="point-{{standard.Point}}">{{ standard.Point }}. {{
+            standard.Title }}</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Outcome for standard
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome }}</strong>
+                </dd>
+            </div>
+        </dl>
+
+        {% if rating.Outcome !== 'Green' %}
+        {% set hasComments = false %}
+
+        {% for comment in comments %}
+        {% if comment.Point === standard.Point %}
+        {% set hasComments = true %}
+        {% endif %}
+        {% endfor %}
+
+
+
+        <h3 class="govuk-heading-s">Actions to be resolved</h3>
+        {% if actions | length %}
+
+        <ul class="govuk-list govuk-list--bullet  govuk-list--spaced">
+            {% for action in actions %}
+            {% if action.Point === standard.Point %}
+            <li>{{action.Comments}}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>There are no actions required for this standard</p>
+        {% endif %}
+
+        {% endif %}
+
+        {% endif %}
+        {% endfor %}
+
+        {% endfor %}
+
+        {% endif %}
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <aside class="dfe-aside govuk-!-margin-top-6">
+            <h2 class="govuk-heading-m govuk-!-margin-top-5">Information</h2>
+            <p>If this is your team's assessment report, you can download a copy in Word format, and a spreadsheet of
+                any actions, from the <a href="/manage" class="govuk-link govuk-link--no-visited-state">previous
+                    assessments</a> tab in the manage section.</p>
+        </aside>
+    </div>
+</div>

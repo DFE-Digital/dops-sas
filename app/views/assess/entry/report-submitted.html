@@ -1,0 +1,51 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Assess" %}
+{% set pageName = "Report submitted"%}
+{% set view = "overview" %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+              <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                Report submitted
+              </h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+              <p class="govuk-notification-banner__heading">
+                The report has been submitted. The Service Assessment Team has been notified.
+              </p>
+            </div>
+          </div>
+
+        {% include "./_tasks.html" %}
+        {% include "./_description.html" %}
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Assessment history</h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                <p>We can't show this at the moment.</p>
+
+                <p class="govuk-!-margin-bottom-0">Speak to the Service Assessment
+                    team for any previous reports.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

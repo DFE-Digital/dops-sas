@@ -5,7 +5,7 @@
     <div class="govuk-summary-card__content">
 
 {% if assessment.Status === "Published" %}
-<p>You have no outstanding tasks.</p>
+<p>You have no outstanding tasks. <a href="/manage/report/{{assessment.AssessmentID}}">View the report.</a></p>
 {% else %}
 
         <ul class="govuk-task-list govuk-!-margin-bottom-0">

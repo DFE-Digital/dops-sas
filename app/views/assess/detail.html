@@ -1,0 +1,197 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Assess" %}
+{% set pageName = "Details of assessment" %}
+{% set view = "volunteer"%}
+{% set selectedNav = "Assess" %}
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+
+
+        <div class="govuk-breadcrumbs govuk-!-margin-top-0 govuk-!-margin-bottom-5">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/">Home</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/assess/">Assess</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/volunteer/">Volunteer</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    Assessment
+                </li>
+            </ol>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Assessment details</span>
+                <h1 class="govuk-heading-l">{{assessment.Name}}</h1>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Type</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Date</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Portfolio</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">{{assessment.Type}}</td>
+                            <td class="govuk-table__cell">{{assessment.Phase}}</td>
+                            <td class="govuk-table__cell">{{ assessment.AssessmentTime }} on
+                                {{assessment.AssessmentDateTime | date('D MMMM YYYY')}}</td>
+                            <td class="govuk-table__cell">{{assessment.Portfolio}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">{{assessment.Type}} description</h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                <p>
+                    {{assessment.Description}}
+                </p>
+            </div>
+        </div>
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Panel members</h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Lead assessor</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set exists = false %}
+                            {% for assessor in assessmentPanel %}
+                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role == "Lead assessor"
+                            %}
+                            {{ assessor.FirstName }}
+                            {{ assessor.LastName }}
+                            {% set exists = true %}
+                            {% set exists = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if not exists %}
+                            <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/lead"
+                                class="govuk-link">Volunteer</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Accessibility</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set exists = false %}
+                            {% for assessor in assessmentPanel %}
+                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role === "Accessibility assessor" %}
+                            {{ assessor.FirstName }}
+                            {{ assessor.LastName }}
+                            {% set exists = true %}
+                            {% set exists = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if not exists %}
+                            <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/accessibility"
+                                class="govuk-link">Volunteer</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Design</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set exists = false %}
+                            {% for assessor in assessmentPanel %}
+                            {% if (assessor.AssessmentID == assessment.AssessmentID) and assessor.Role === "Design assessor" %}
+                            {{ assessor.FirstName }}
+                            {{ assessor.LastName }}
+                            {% set exists = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if not exists %}
+                            <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/design"
+                                class="govuk-link">Volunteer</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Performance</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set exists = false %}
+                            {% for assessor in assessmentPanel %}
+                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role === "Performance assessor" %}
+                            {{ assessor.FirstName }}
+                            {{ assessor.LastName }}
+                            {% set exists = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if not exists %}
+                            <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/performance"
+                                class="govuk-link">Volunteer</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Research</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set exists = false %}
+                            {% for assessor in assessmentPanel %}
+                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role === "Research assessor" %}
+                            {{ assessor.FirstName }}
+                            {{ assessor.LastName }}
+                            {% set exists = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if not exists %}
+                            <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/research"
+                                class="govuk-link">Volunteer</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Technology</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set exists = false %}
+                            {% for assessor in assessmentPanel %}
+                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role == "Technology
+                            assessor" %}
+                            {{ assessor.FirstName }}
+                            {{ assessor.LastName }}
+                            {% set exists = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if not exists %}
+                            <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/technology"
+                                class="govuk-link">Volunteer</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+        <aside class="dfe-aside">
+            <h2 class="govuk-heading-m">Related guidance</h2>
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/"
+                        target="_blank">Guidance for volunteering to be an assessor</a>
+                </li>
+            </ul>
+        </aside>
+    </div>
+</div>
+{% endblock %}

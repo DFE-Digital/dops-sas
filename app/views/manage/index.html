@@ -31,7 +31,7 @@
 {% endblock %}
 
 {% set hasTasks = false %}
-{% for record in assessmentsForUser %}
+{% for record in assessments %}
 {% if record.Status === 'Team Review' %}
 {% set hasTasks = true %}
 {% endif %}
@@ -54,7 +54,7 @@
                 <ul class="govuk-task-list govuk-!-margin-bottom-0">
 
 
-                    {% for assessment in assessmentsForUser %}
+                    {% for assessment in assessments %}
                     {% if assessment.Status === 'Team Review' %}
                     <li class="govuk-task-list__item govuk-task-list__item--with-link">
                         <div class="govuk-task-list__name-and-hint">

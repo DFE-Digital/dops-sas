@@ -1,0 +1,70 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Assess" %}
+{% set pageName = 'Artefacts' %}
+
+{% set view = 'artefacts' %}
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Artefacts</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+
+                {% if artefacts.length %}
+
+                <dl class="govuk-summary-list">
+                    {% for artefact in artefacts %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            <a href="{{artefact.URL}}" target="_blank"
+                                class="govuk-link govuk-link--no-visited-state">{{artefact.Title}}</a>
+                        </dt>
+                        <dd class="govuk-summary-list__value">{{artefact.Description}}</dd>
+                        <dd class="govuk-summary-list__actions">
+                          
+                        </dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No artefacts have been added.</p>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+
+                <h2 class="govuk-summary-card__title">Guidance</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+                <ul class="govuk-list govuk-list--spaced">
+                    <li>
+                        <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance"
+                            target="_blank">What artefacts you should add</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

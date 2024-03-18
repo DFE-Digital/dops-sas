@@ -1,0 +1,80 @@
+{% extends "layouts/auth.html" %}
+{% set pageName = "Confirm your volunteer request" %}
+{% set selectedNav = "Assess" %}
+{% set view = "volunteer"%}
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-breadcrumbs govuk-!-margin-top-0 govuk-!-margin-bottom-5">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/">Home</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/assess/">Assess</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link" href="/volunteer/">Volunteer</a>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    Assessment
+                </li>
+            </ol>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Assessment details</span>
+                <h1 class="govuk-heading-l">{{assessment.Name}}</h1>
+                <table class="govuk-table ">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Type</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Date</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Portfolio</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">{{assessment.Type}}</td>
+                            <td class="govuk-table__cell">{{assessment.Phase}}</td>
+                            <td class="govuk-table__cell">{{ assessment.AssessmentTime }} on
+                                {{assessment.AssessmentDateTime | date('D MMMM YYYY')}}</td>
+                            <td class="govuk-table__cell">{{assessment.Portfolio}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <h2 class="govuk-heading-l">Confirm your volunteer request</h2>
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Assessor role</dt>
+                <dd class="govuk-summary-list__value">{{role | capitalize}}</dd>
+            </div>
+        </dl>
+        <p>By submitting this request, you are agreeing that:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>you're able to carry out the role of {{role }} assessor</li>
+            <li>you're not part of the team or business area, working on this service</li>
+        </ul>
+        <p>The request will go to the Service Assessment Plus team to review and you'll get an email in the next few
+            days if you've been accepted to be the {{role}} assessor.</p>
+        <form action="/volunteer" method="post">
+            <input type="hidden" name="assessmentID" value="{{assessment.AssessmentID}}">
+            <input type="hidden" name="role" value="{{role}}">
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Submit request</button>
+                <a class="govuk-link govuk-link--no-visited-state"
+                    href="/volunteer/detail/{{assessment.AssessmentID}}">Cancel and return to assessment</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

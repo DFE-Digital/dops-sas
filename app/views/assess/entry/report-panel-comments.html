@@ -1,0 +1,96 @@
+{% extends "layouts/auth.html" %}
+
+{% block head %}<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">{% endblock %}
+{% set selectedNav = "Assess" %}
+{% set pageName = 'Things the team have done well' %}
+{% set view = 'report' %}
+
+{% block hero %}
+    {% include './_header.html' %}
+{% endblock %}
+
+{% set hasRed = false %}
+{% set hasAmber = false %}
+
+{% set hasRedCount = 0 %}
+{% set hasAmberCount = 0 %}
+
+{% for rating in ratings %}
+    {% if rating.Outcome === 'Red' %}
+        {% set hasRed = true %}
+        {% set hasRedCount = (hasRedCount + 1) %}
+    {% endif %}
+{% endfor %}
+
+{% for rating in ratings %}
+    {% if rating.Outcome === 'Amber' %}
+        {% set hasAmber = true %}
+        {% set hasAmberCount = (hasAmberCount + 1) %}
+    {% endif %}
+{% endfor %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+
+        <div class="govuk-grid-column-one-quarter">
+
+            <nav class="dfe-vertical-nav">
+
+                <a href="/assess/report/{{assessment.AssessmentID}}" class="govuk-back-link" style="margin-top:-20px; margin-bottom: 30px;">Return to tasks</a>
+
+                <h2 class="dfe-vertical-nav--section-header">Outcome</h2>
+                <ul class="dfe-vertical-nav__section">
+                    <li class="dfe-vertical-nav__section-item">
+                        <a class="dfe-vertical-nav__link" href="/assess/report-rating/{{assessment.AssessmentID}}/{{standard}}">Rating</a>
+                    </li>
+                    <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+                        <a class="dfe-vertical-nav__link" href="/assess/report-panel-comments/{{assessment.AssessmentID}}">Done well</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+        <div class="govuk-grid-column-three-quarters">
+            {% if assessment.Status == 'Active' %}
+
+                <form method="post" action="/assess/report-panel-comments">
+                    <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="750">
+                        <div class="govuk-form-group">
+                            <h2 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--l" for="with-hint">
+        {{pageName}}
+      </label>
+                            </h2>
+                            <div id="with-hint-hint" class="govuk-hint">
+      This should be completed by the lead assessor. 
+    </div>
+                            <textarea class="govuk-textarea govuk-js-character-count" id="with-hint" name="PanelComments" rows="10" aria-describedby="with-hint-info with-hint-hint">{{assessment.PanelComments}}</textarea>
+                        </div>
+                        <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
+    You can enter up to 750 characters
+  </div>
+                    </div>
+
+                    <div class="govuk-button-group">
+                        <button class="govuk-button" data-module="govuk-button">Save and return <span class="govuk-visually-hidden">to tasks</span></button>
+                        <a class="govuk-link govuk-link--no-visited-state" href="/assess/report/{{assessment.AssessmentID}}">Cancel and return to tasks</a>
+                    </div>
+
+                </form>
+
+            {% else %}
+
+            <h2 class="govuk-heading-l">Panel comments</h2>
+
+                <p>{{assessment.PanelComments}}</p>
+
+             
+            {% endif %}
+        </div>
+
+    </div>
+
+{% endblock %}
