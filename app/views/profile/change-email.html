@@ -1,0 +1,84 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Profile" %}
+{% set pageName = "Change email" %}
+{% set view = "profile" %}
+
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Profile</span>
+                <h1 class="govuk-heading-l">Your profile</h1>
+
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='profile' %} aria-current="page" {% endif
+                                %} href="/profile">Profile</a>
+                        </li>
+                        {% if data.User.IsAssessor == true %}
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='training' %} aria-current="page" {% endif
+                                %}href="/profile/assessor-training">Assessor training</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='history' %} aria-current="page" {% endif
+                                %}href="/profile/assessor-history">Assessor history</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% set hasEmailError = false %}
+{% for error in errors %}
+{% if error.path === 'emailAddress' %}
+{% set hasEmailError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-three-quarters">
+
+        {% include 'partials/errorSummary.html' %}
+
+        <h2 class="govuk-heading-l">Update your email address</h2>
+
+        <form action="/profile/change-email" method="post" novalidate="novalidate" class="govuk-!-margin-bottom-9">
+            <div class="govuk-form-group {%if hasEmailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+
+                <label class="govuk-label" for="emailAddress">Your email address</label>
+                {%if hasEmailError %}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter your email address.
+                </p>
+                {% endif %}
+                <div id="event-name-hint" class="govuk-hint">
+                    You must have access to this email address as it is used to sign in to this service.
+                </div>
+                <input class="govuk-input govuk-!-width-one-half {%if hasEmailError%} govuk-input--error{% endif%}"
+                    id="emailAddress" name="emailAddress" type="email" spellcheck="false" aria-describedby="email-hint"
+                    autocomplete="email" value="{{data.User.EmailAddress}}">
+            </div>
+
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Update email address</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/profile">Cancel</a>
+            </div>
+    </div>
+    </form>
+
+</div>
+
+</div>
+
+{% endblock %}

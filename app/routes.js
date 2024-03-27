@@ -12,6 +12,7 @@ const serviceAdminController = require('./controllers/serviceAdminController');
 const analysisController = require('./controllers/analysisController');
 const reportsController = require('./controllers/reportsController');
 const assessController = require('./controllers/assessController');
+const profileController = require('./controllers/profileController');
 
 const rolesToCheck = ['Department Lead', 'Administrator', 'Service Administrator'];
 
@@ -205,6 +206,15 @@ router.get("/volunteer/submitted/:id/", isAuthenticated, assessController.g_subm
 
 // Posts
 router.post("/volunteer", isAuthenticated, assessController.p_volunteer);
+
+
+// PROFILE ROUTES
+router.get('/profile', isAuthenticated, profileController.g_profile);
+router.get('/profile/change-name', isAuthenticated, profileController.g_changeName);
+router.get('/profile/change-email', isAuthenticated, profileController.g_changeEmail);
+
+router.post('/profile/change-name', isAuthenticated, profileController.p_changeName);
+router.post('/profile/change-email', isAuthenticated, profileController.p_changeEmail);
 
 
 module.exports = router;

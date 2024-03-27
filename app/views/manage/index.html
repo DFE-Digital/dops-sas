@@ -39,7 +39,7 @@
 
 {% block content %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
 
 
 
@@ -88,7 +88,7 @@
                 <h2 class="govuk-summary-card__title">Your services being assessed</h2>
             </div>
             <div class="govuk-summary-card__content"> {% if assessments | length%}
-                <table class="govuk-table dfe-table--smaller">
+                <table class="govuk-table ">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header govuk-!-width-one-third">Service</th>
@@ -129,9 +129,17 @@
 
     </div>
 
-    <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column-one-quarter">
 
-        {% include '../partials/_cta_assidfe.html'%}
+        <aside class="dfe-aside">
+            <h2 class="govuk-heading-m">Related guidance</h2>
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    <a href="https://apply-service-standard.education.gov.uk"
+                        target="_blank">Apply the Service Standard in DfE</a>
+                </li>
+            </ul>
+        </aside>
     </div>
 </div>
 

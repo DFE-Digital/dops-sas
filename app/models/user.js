@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
- ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false }
 });
 
 /**
@@ -103,28 +103,65 @@ async function UpsertUserNoToken(emailAddress, firstName, lastName, createdBy, c
  * @returns {Promise<{EmailAddress: string, FirstName: string, LastName: string}|null>}
  */
 async function getBasicUserDetails(userId) {
-    try {
-      const result = await pool.query(`
-        SELECT "EmailAddress", "FirstName", "LastName"
+  try {
+    const result = await pool.query(`
+        SELECT "UserID", "EmailAddress", "FirstName", "LastName", "Department"
         FROM public."User"
         WHERE "UserID" = $1
       `, [userId]);
-  
-      if (result.rows.length > 0) {
-        return result.rows[0];
-      } else {
-        console.log(`No user found with UserID: ${userId}`);
-        return null;
-      }
-    } catch (error) {
-      console.error('Error in getBasicUserDetails:', error);
-      throw error;
+
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      console.log(`No user found with UserID: ${userId}`);
+      return null;
     }
+  } catch (error) {
+    console.error('Error in getBasicUserDetails:', error);
+    throw error;
   }
-  
+}
+
+
+/**
+ * Updates the first and last name of a user based on their user ID.
+ * @param {string} firstName The user's new first name.
+ * @param {string} lastName The user's new last name.
+ * @param {number} userId The unique identifier of the user.
+ */
+async function updateName(firstName, lastName, userId) {
+  try {
+    await pool.query(`
+        UPDATE public."User"
+        SET "FirstName" = $1, "LastName" = $2
+        WHERE "UserID" = $3
+      `, [firstName, lastName, userId]);
+  } catch (error) {
+    console.error('Error in updateName:', error);
+    throw error;
+  }
+}
+
+/**
+ * Updates the email address of a user based on their user ID.
+ * @param {string} emailAddress The user's new email address.
+ * @param {number} userId The unique identifier of the user.
+ */
+async function updateEmail(emailAddress, userId) {
+  try {
+    await pool.query(`
+        UPDATE public."User"
+        SET "EmailAddress" = $1
+        WHERE "UserID" = $2
+      `, [emailAddress, userId]);
+  } catch (error) {
+    console.error('Error in updateEmail:', error);
+    throw error;
+  }
+}
 
 
 
 module.exports = {
-    UpsertUserNoToken, checkAndSetUserToken, checkToken, getBasicUserDetails
-  };
+  UpsertUserNoToken, checkAndSetUserToken, checkToken, getBasicUserDetails, updateName, updateEmail
+};

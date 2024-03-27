@@ -1,0 +1,105 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Profile" %}
+{% set pageName = "Your profile" %}
+{% set view = "profile" %}
+
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Profile</span>
+                <h1 class="govuk-heading-l">Your profile</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='profile' %} aria-current="page" {% endif
+                                %} href="/profile">Profile</a>
+                        </li>
+                        {% if data.User.IsAssessor == true %}
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='training' %} aria-current="page" {% endif
+                                %}href="/profile/assessor-training">Assessor training</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='history' %} aria-current="page" {% endif
+                                %}href="/profile/assessor-history">Assessor history</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+isAssessor
+
+{% block content %}
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Profile</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{data.User.FirstName + " " + data.User.LastName }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="/profile/change-name">Change<span class="govuk-visually-hidden">
+                            name</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{data.User.EmailAddress }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="/profile/change-email">Change<span class="govuk-visually-hidden"> email
+                            address</span></a>
+                </dd>
+            </div>
+
+        </dl>
+
+        {% if data['isAssessor'] == true %}
+        <h2 class="govuk-heading-m">Assessor</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Cross-Gov Assessor
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if data['isXGovAssessor'] == true %}Yes{% else%}No{% endif %}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    {% if data['isXGovAssessor'] == false %}<a class="govuk-link"
+                        href="https://www.gov.uk/service-manual/service-assessments/become-a-service-assessor"
+                        target="_blank">Find out more<span class="govuk-visually-hidden"> about becoming a cross-gov
+                            assessor</span></a>{% endif %}
+                </dd>
+            </div>
+
+
+        </dl>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

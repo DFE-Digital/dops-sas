@@ -1,0 +1,36 @@
+.dfe-panel--interruption {
+    background-color: #1d70b8;
+    text-align: left;
+    padding: 30px;
+}
+
+.dfe-panel--interruption * {
+    color: #fff;
+}
+
+.dfe-panel--interruption .govuk-radios__label::before,
+.dfe-panel--interruption ::after {
+    color: #0b0c0c;
+    border-color: #0b0c0c;
+    background-color: #fff;
+}
+
+.dfe-panel--interruption .govuk-list--definition dd,
+.dfe-panel--interruption .govuk-list--definition dt {
+    color: #1d70b8;
+}
+
+.dfe-panel--interruption .govuk-button-group {
+    margin: 60px 0 0 0;
+}
+
+.dfe-panel--interruption .govuk-button,
+.dfe-panel--interruption .govuk-button:disabled:hover {
+    color: #0b0c0c;
+    background-color: #fff;
+    box-shadow: 0 2px 0 #003078;
+}
+
+.dfe-panel--interruption .govuk-button:hover {
+    background-color: #f3f2f1;
+}

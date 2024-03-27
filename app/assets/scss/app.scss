@@ -16,6 +16,7 @@ $govuk-global-styles: true;
 @import './_subnav.scss';
 @import './_feedback.scss';
 @import './_autocomplete.scss';
+@import './_interruption.scss';
 
 
 .govuk-width-container {
@@ -1653,7 +1654,7 @@ code {
 
 .dfe-cta-panel {
   background: #F2AA66;
-  padding: 40px 40px 40px 40px;
+  padding: 20px;
 
   .dfe-cta-panel--header {
     margin-bottom: 60px;
@@ -2482,73 +2483,30 @@ ol {
 }
 
 
-.dfe-table--smaller .govuk-table__header {
-  font-size: 14px;
-  font-size: 0.875rem;
-  line-height: 1.1428571429;
-}
-
-@media (min-width: 40.0625em) {
-  .dfe-table--smaller .govuk-table__header {
-    font-size: 16px;
-    font-size: 1rem;
-    line-height: 1.25;
-  }
-}
-
-@media print {
-  .dfe-table--smaller .govuk-table__header {
-    font-size: 14pt;
-    line-height: 1.2;
-  }
-}
-
-.dfe-table--smaller .govuk-table__cell {
-  font-size: 14px;
-  font-size: 0.875rem;
-  line-height: 1.1428571429;
-}
-
-@media (min-width: 40.0625em) {
-  .dfe-table--smaller .govuk-table__cell {
-    font-size: 16px;
-    font-size: 1rem;
-    line-height: 1.25;
-  }
-}
-
-@media print {
-  .dfe-table--smaller .govuk-table__cell {
-    font-size: 14pt;
-    line-height: 1.2;
-  }
-}
-
-
 ul.dfe-items-list {
   list-style-type: none;
   margin-left: 0;
   padding-left: 0;
 }
 
-ul.dfe-items-list > li {
+ul.dfe-items-list>li {
   border-bottom: 1px solid #888888;
   list-style-type: none;
   margin-left: 0;
   padding-left: 0;
 }
 
-ul.dfe-items-list > li > div {
+ul.dfe-items-list>li>div {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-ul.dfe-items-list > li > div > h2 {
+ul.dfe-items-list>li>div>h2 {
   margin: 10px 0 5px;
 }
 
-ul.dfe-items-list > li > ul.meta {
+ul.dfe-items-list>li>ul.meta {
   display: flex;
   padding: 0;
   list-style-type: none;
@@ -2558,14 +2516,14 @@ ul.dfe-items-list > li > ul.meta {
   /* Aligns items to the start (left) */
 }
 
-ul.dfe-items-list > li > ul.meta > li {
+ul.dfe-items-list>li>ul.meta>li {
   text-align: left;
   margin-right: 20px;
   font-size: 16px;
   color: #505a5f;
 }
 
-ul.dfe-items-list > li > ul.meta > li > span {
+ul.dfe-items-list>li>ul.meta>li>span {
   font-weight: bold;
 }
 
@@ -2573,4 +2531,10 @@ ul.dfe-items-list > li > ul.meta > li > span {
 .govuk-tag--amber {
   background: #ffe599;
   color: #4c3900;
+}
+
+
+.dfe-aside{
+  border-top: 5px solid $color_dfe-blue;
+  padding-top: 15px;
 }

@@ -322,7 +322,13 @@ exports.p_type = [
         } else {
             model = await getAssessmentById(assessmentID);
 
-            model.Type = req.body.Type;
+            if(model.Phase === 'Discovery'){
+                model.Type = 'Peer review';
+            } else {
+                model.Type = 'Service assessment';
+            }
+
+            //model.Type = req.body.Type;
 
             // Update existing assessment
             await updateAssessment(assessmentID, model, userID);

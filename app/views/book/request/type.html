@@ -28,89 +28,68 @@
 
 
 {% block content %}
-<form method="post" action="/book/request/type">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-    {% if model.Phase === "Discovery" %}
+        <form method="post" action="/book/request/type">
 
-    <div class="govuk-panel govuk-panel--interruption">
-        <input type="hidden" name="Type" value="Peer review">
+            {% if model.Phase === "Discovery" %}
 
-        <h2 class="govuk-heading-l">
-            You've said you're in the discovery phase
-        </h2>
+            <div class="dfe-panel--interruption">
+                <input type="hidden" name="Type" value="Peer review">
 
-        <p class="govuk-body">
-            At the moment, you can only have a discovery peer review.
-        </p>
-
-        <p class="govuk-body">
-            You can read the guidance for <a class="govuk-link govuk-link--inverse" href="">what happens at a peer
-                review</a> and <a class="govuk-link govuk-link--inverse" href="">how to prepare for a peer review</a>.
-        </p>
-
-        <div class="govuk-button-group">
-            <button class="govuk-button  govuk-button--inverse" data-module="govuk-button">Continue with a peer review
-                request</button>
-            <a class="govuk-link govuk-link--inverse" href="/book/request/phase">Change phase</a>
-        </div>
-    </div>
-
-    {% else %}
-
-    {% include 'partials/errorSummary.html' %}
-
-
-    <div class="govuk-form-group {%if hasError %}govuk-form-group--error{% endif%}">
-        <fieldset class="govuk-fieldset" aria-describedby="Type-hint">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                <h2 class="govuk-fieldset__heading">
-                    {{pageName}}
+                <h2 class="govuk-heading-l">
+                    You've said you're in the discovery phase
                 </h2>
-            </legend>
-            {%if hasError%}
-            <p id="event-name-error" class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> Select an option
-            </p>
-            {% endif%}
-            <div id="Type-hint" class="govuk-hint">
-                You will be assessed against the 14 point Service Standard.
-            </div>
-            <div class="govuk-radios" data-module="govuk-radios">
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="Type" name="Type" type="radio" value="Peer review" {% if
-                        model.Type==='Peer review' %}checked{% endif%}>
-                    <label class="govuk-label govuk-radios__label" for="Type">
 
-                        Peer review
-                    </label>
-                    <div id="Type-item-hint" class="govuk-hint govuk-radios__hint">
-                        Informal review which can help you prepare for a later service assessment
-                    </div>
+                <p class="govuk-body">
+                    At the moment, you can only have a discovery peer review.
+                </p>
+
+                <p class="govuk-body">
+                    You can read the guidance for <a class="govuk-link govuk-link--inverse" href=""  target="_blank">what happens at a
+                        peer
+                        review <span class="govuk-visually-hidden">(opens in a new tab)</span></a> and <a class="govuk-link govuk-link--inverse" href="">how to prepare for a peer
+                        review</a>.
+                </p>
+
+                <div class="govuk-button-group">
+                    <button class="govuk-button  govuk-button--inverse" data-module="govuk-button">Continue with your
+                        request</button>
+                    <a class="govuk-link govuk-link--inverse" href="/book/request/phase">Change phase</a>
                 </div>
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="Type-2" name="Type" type="radio" value="Service assessment"
-                        {% if model.Type==='Service assessment' %}checked{% endif%}>
-                    <label class="govuk-label govuk-radios__label" for="Type-2">
-                        Service assessment
-                    </label>
-                    <div id="Type-2-item-hint" class="govuk-hint govuk-radios__hint">
-                        Formal service assessment which could be a panel of DfE or cross-gov assessors
-                    </div>
-                </div>
-
-
             </div>
-        </fieldset>
+
+            {% else %}
+
+            <div class="dfe-panel--interruption">
+                <input type="hidden" name="Type" value="Service assessment">
+
+                <h2 class="govuk-heading-l">
+                    You're in the {{model.Phase | lower}} phase
+                </h2>
+
+                <p class="govuk-body">
+                    You need a service assessment.
+                </p>
+
+                <p class="govuk-body">
+                    You can read the guidance for <a class="govuk-link govuk-link--inverse" href="" target="_blank">what happens at a
+                        service
+                        assessment <span class="govuk-visually-hidden">(opens in a new tab)</span></a> and how to prepare for one.
+                </p>
+
+                <div class="govuk-button-group">
+                    <button class="govuk-button  govuk-button--inverse" data-module="govuk-button">Continue with your
+                        request</button>
+                    <a class="govuk-link govuk-link--inverse" href="/book/request/phase">Change phase</a>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </form>
     </div>
-
-    <div class="govuk-button-group">
-        <button class="govuk-button" data-module="govuk-button">Save and continue</button>
-        <a class="govuk-link govuk-link--no-visited-state" href="/book/request/tasks">Skip and return to later</a>
-    </div>
-
-
-    {% endif %}
-
-</form>
+</div>
 
 {% endblock %}
