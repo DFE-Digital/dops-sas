@@ -1,0 +1,158 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Admin" %}
+{% set pageName = "Assessor" %}
+{% set view = "assessors" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <nav class="dfe-vertical-nav">
+            <ul class="dfe-vertical-nav__section">
+                <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessor/{{assessor.AssessorID}}">Overview</a>
+                </li>
+                <li class="dfe-vertical-nav__section-item ">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessor-history/{{assessor.AssessorID}}">Assessment
+                        history</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Assessor profile</h2>
+
+            </div>
+            <div class="govuk-summary-card__content">
+
+
+
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Name
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.FirstName}}   {{assessor.LastName}}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                           
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Email address
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.EmailAddress }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                           
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Cross-Gov assessor
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.CrossGovAssessor | BoolToYesNo }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/assessor-change-cross-gov">Change<span
+                                    class="govuk-visually-hidden"> cross-gov assessor status</span></a>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Is a lead assessor
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.LeadAssessor | BoolToYesNo }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/assessor-change-lead-assessor">Change<span
+                                    class="govuk-visually-hidden"> lead assessor status</span></a>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Profession or assessor role
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.PrimaryRole }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/assessor-change-role">Change<span
+                                    class="govuk-visually-hidden"> assessor role</span></a>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Status
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.Active |  BoolToActiveInactive}}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/assessor-change-status">Change<span
+                                    class="govuk-visually-hidden"> assessor role</span></a>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Training history</h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action"> <a class="govuk-link"
+                            href="/admin/assessor-add-training/{{assessor.AssessorID}}">Add training<span
+                                class="govuk-visually-hidden"> history</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+
+                <table class="govuk-table dfe-table--smaller">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">Training</th>
+                            <th scope="col" class="govuk-table__header">Provider</th>
+                            <th scope="col" class="govuk-table__header">Date</th>
+                            <th scope="col" class="govuk-table__header">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in training %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">{{record.Training}}</th>
+                            <td class="govuk-table__cell">{{record.Provider}}</td>
+                            <td class="govuk-table__cell">{{record.TrainingDate | date('D MMM YYYY')}}</td>
+
+                            <td class="govuk-table__cell"><a href="/admin/remove-training/{{record.UniqueID}}"
+                                    class="govuk-link">Remove <span class="govuk-visually-hidden"> {{record.Training}}
+                                        from {{record.Provider}} on {{record.TrainingDate | date('D MMM YYYY')}}
+                                    </span></a></td>
+                        </tr>
+                        {% endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+{% endblock %}

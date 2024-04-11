@@ -5,7 +5,6 @@ $govuk-new-link-styles: true;
 $govuk-global-styles: true;
 
 
-
 @import 'node_modules/govuk-frontend/dist/govuk/all';
 @import 'node_modules/dfe-frontend-alpha/packages/dfefrontend';
 @import './_hero.scss';
@@ -22,6 +21,15 @@ $govuk-global-styles: true;
 .govuk-width-container {
   @include govuk-width-container;
 }
+
+.dfe-width-container {
+  max-width: 1400px;
+}
+
+.dfe-header__navigation {
+  max-width: 100%;
+}
+
 
 a:visited {
   color: $govuk-link-colour;

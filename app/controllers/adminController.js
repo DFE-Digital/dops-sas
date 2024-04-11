@@ -1,9 +1,10 @@
 const { check, validationResult } = require('express-validator');
-const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, getDraftsForUser, deleteAssessment, getRequestsByStatus, getRequestsByMixedStatus } = require('../models/assessmentModel');
+const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, getDraftsForUser, deleteAssessment, getRequestsByStatus, getRequestsByMixedStatus, getActiveAssessmentsWithAssessorData } = require('../models/assessmentModel');
 const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
-const { getAllAssessors, createAssessor } = require('../models/assessors');
-const { validateRequest, validateAddPanel } = require('../validation/admin');
+const { getAllAssessors, createAssessor, getAssessor } = require('../models/assessors');
+const { validateRequest, validateAddPanel, validateAddAdmin } = require('../validation/admin');
 const { UpsertUserNoToken, getBasicUserDetails } = require('../models/user');
+const { getAllAdmins, addAdmin, getAdminByRoleID, deleteAdmin } = require('../models/userrole');
 const { getServiceStandards, getServiceStandardOutcomesByAssessmentID } = require('../models/standards');
 const { getActionsForAssessmentID } = require('../models/actions');
 const { getArtefactsForAssessment } = require('../models/artefacts');
@@ -71,14 +72,40 @@ exports.g_assessments = async function (req, res) {
 exports.g_assessors = async function (req, res) {
     const department = req.session.data.User.Department;
     const assessors = await getAllAssessors(department);
-    console.log(assessors)
-
     return res.render('admin/assessors', { assessors });
+};
+
+exports.g_assessor = async function (req, res) {
+    const { assessorID } = req.params;
+    const assessor = await getAssessor(assessorID);
+    return res.render('admin/assessor', { assessor });
+
+}
+
+
+exports.g_admins = async function (req, res) {
+    const department = req.session.data.User.Department;
+
+    const admins = await getAllAdmins(department);
+    return res.render('admin/admins', { admins });
+};
+
+exports.g_removeadmin = async function (req, res) {
+    const department = req.session.data.User.Department;
+    const { userRoleID } = req.params;
+    const admin = await getAdminByRoleID(department, userRoleID);
+    return res.render('admin/remove-admin', { admin });
 };
 
 exports.g_addassessor = async function (req, res) {
     return res.render('admin/add-assessor');
 };
+
+exports.g_addadmin = async function (req, res) {
+    return res.render('admin/add-admin');
+};
+
+
 
 exports.g_report = async function (req, res) {
 
@@ -108,6 +135,22 @@ exports.g_team = async function (req, res) {
     return res.render('admin/entry/team', { assessment, team });
 }
 
+exports.g_reporting = async function (req, res) {
+
+    return res.render('admin/reporting/index');
+}
+
+exports.g_reportingAssessmentsAndPanels = async function (req, res) {
+
+    const department = req.session.data.User.Department;
+    const assessments = await getActiveAssessmentsWithAssessorData(department);
+
+    return res.render('admin/reporting/assessments', {
+        assessments: assessments
+    });
+
+
+}
 
 
 // POSTS
@@ -274,6 +317,7 @@ exports.p_addassessor = async function (req, res) {
 
 
 
+
 exports.p_sendReport = async function (req, res) {
 
     const { AssessmentID } = req.body;
@@ -337,5 +381,45 @@ exports.p_publishReport = async function (req, res) {
 
     return res.redirect('/admin/report/' + AssessmentID);
 
+
+};
+
+
+
+exports.p_addadmin = [
+    validateAddAdmin,
+    async (req, res) => {
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+
+            return res.render('admin/entry/add-admin', {
+                assessment, assessors,
+                errors: errors.array()
+            });
+        }
+
+        const user = req.session.data.User;
+        const department = req.session.data.User.Department;
+
+        const { FirstName, LastName, EmailAddress, createAsLead } = req.body;
+
+        const admin = addAdmin(FirstName, LastName, EmailAddress, department, createAsLead, user.UserID);
+
+
+        return res.redirect(`/admin/admins`);
+    }
+];
+
+exports.p_removeadmin = async function (req, res) {
+
+    const { userRoleID } = req.body;
+    const userID = req.session.data.User.UserID;
+
+    const department = req.session.data.User.Department;
+    await deleteAdmin(userRoleID, department, userID)
+
+    return res.redirect(`/admin/admins`);
 
 };

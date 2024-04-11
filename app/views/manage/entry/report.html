@@ -19,9 +19,16 @@
                 <aside class="dfe-aside">
                     <h2 class="govuk-heading-m">Related guidance</h2>
                     <ul class="govuk-list govuk-list--spaced">
+                        {% if assessment.Type === "Service assessment" %}
                         <li>
                             <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/get-assessment-report" target="_blank">Getting your report</a>
                         </li>
+                        {% endif %}
+                        {% if assessment.Type === "Peer review" %}
+                        <li>
+                            <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/get-assessment-report" target="_blank">Getting your report</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </aside>
             </div>

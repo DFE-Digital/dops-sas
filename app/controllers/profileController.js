@@ -2,7 +2,25 @@ const { check, validationResult } = require('express-validator');
 const { validateChangeName, validateChangeEmail } = require('../validation/profile');
 const { getBasicUserDetails, updateName, updateEmail } = require('../models/user');
 
-exports.g_profile = (req, res) => {
+const { getRoleByUserID } = require('../models/userrole');
+const e = require('express');
+
+exports.g_profile = async (req, res) => {
+
+    const user = req.session.data.User;
+
+    const roles = await getRoleByUserID(user.UserID);
+
+   
+    if (roles) {
+        req.session.data['IsAdmin'] = true;
+    }
+    else {  
+        req.session.data['IsAdmin'] = false;
+    }
+
+
+
     res.render('profile/index')
 }
 
@@ -36,7 +54,7 @@ exports.p_changeName = [
 
         req.session.data.User = model;
 
-      
+
         return res.redirect('/profile');
 
     }

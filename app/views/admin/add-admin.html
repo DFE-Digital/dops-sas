@@ -1,0 +1,145 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Admin" %}
+{% set pageName = "Add administrator" %}
+{% set view = "admins" %}
+{% block
+hero %}
+{% include './_header.html'%}
+{% endblock %}
+{% set emailError = false %}
+{% set hasFirstNameError = false %}
+{% set hasLastNameError = false %}
+{% set hasLeadError = false %}
+
+{% for error in errors %}
+{% if error.field === 'EmailAddress' %}
+{% set emailError = true %}
+{% endif %}
+{% if error.field === 'FirstName' %}
+{% set hasFirstNameError = true %}
+{% endif %}
+{% if error.field === 'LastName' %}
+{% set hasLastNameError = true %}
+{% endif %}
+{% if error.field === 'leadAssessor' %}
+{% set hasLeadError = true %}
+{% endif %}
+
+
+{% endfor %}
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <h2>Administrator details</h2>
+
+        <form action="/admin/add-admin" method="post">
+            {% if errors %}
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">There is a problem</h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            {% for error in errors %}
+                            <li>
+                                <a href="#{{error.field}}">{{error.message}}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
+
+            <div
+                class="govuk-form-group {%if hasFirstNameError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+                <label class="govuk-label" for="firstName">First name</label>
+                {%if hasFirstNameError %}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter their first name
+                </p>
+                {% endif %}
+                <input class="govuk-input {%if hasFirstNameError%} govuk-input--error{% endif%}" id="FirstName"
+                    name="FirstName" type="text" spellcheck="false" aria-describedby="firstName-hint"
+                    autocomplete="firstName" value="" />
+            </div>
+
+            <div class="govuk-form-group {%if hasLastNameError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+                <label class="govuk-label" for="lastName">Last name</label>
+                {%if hasLastNameError %}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter their last name
+                </p>
+                {% endif %}
+                <input class="govuk-input {%if hasLastNameError%} govuk-input--error{% endif%}" id="LastName"
+                    name="LastName" type="text" spellcheck="false" aria-describedby="lastName-hint"
+                    autocomplete="lastName" value="" />
+            </div>
+
+            <div class="govuk-form-group {%if emailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+                <label class="govuk-label" for="EmailAddress">Email address</label>
+                {%if emailError %}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address
+                </p>
+                {% endif %}
+                <input class="govuk-input {%if emailError%} govuk-input--error{% endif%}" id="EmailAddress"
+                    name="EmailAddress" type="email" spellcheck="false" aria-describedby="email-hint"
+                    autocomplete="email" value="" />
+            </div>
+
+
+          
+
+
+         
+
+            <div class="govuk-form-group {%if hasLeadError %}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="createAsLead-hint">
+                    <legend class="govuk-fieldset__legend">
+                       Add as a department lead? 
+                    </legend>
+                    <div id="createAsLead-hint" class="govuk-hint">
+                      Department leads can add other administrators and department leads. If unsure, select no.
+                    </div>{%if hasLeadError%}
+                    <p id="passport-issued-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select if they are from another government department
+                    </p>{% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="createAsLead" name="createAsLead"
+                                type="radio" value="Yes" />
+                            <label class="govuk-label govuk-radios__label" for="createAsLead">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="createAsLead-2" name="createAsLead"
+                                type="radio" value="No" />
+                            <label class="govuk-label govuk-radios__label" for="createAsLead-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+
+
+
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Save and return</button>
+                <a href="/admin/admins" class="govuk-link">Cancel and return to admins</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    accessibleAutocomplete.enhanceSelectElement({ defaultValue: "", selectElement: document.querySelector(".role") });
+</script>
+{% endblock %}

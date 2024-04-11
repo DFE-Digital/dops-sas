@@ -308,6 +308,45 @@ async function checkSubmitStatus(assessmentID) {
     }
 }
 
+/** 
+ * Get all active assessments for a given department with assessor firstname and lastname and emailaddress
+ * @param {number} departmentID The ID of the department
+ * @returns {Promise<Array>} A promise that resolves to an array of assessment objects.
+ */
+async function getActiveAssessmentsWithAssessorData(departmentID) {
+    try {
+        const result = await pool.query(
+            `
+            SELECT
+            "Assessment"."AssessmentID",
+            "Assessment"."Name",
+            "Assessment"."AssessmentDateTime",
+            "Assessment"."AssessmentTime",
+            STRING_AGG(CASE WHEN "AssessmentPanel"."Role" = 'Design assessor' THEN "User"."FirstName" || ' ' || "User"."LastName" END, ', ') AS "Design",
+            STRING_AGG(CASE WHEN "AssessmentPanel"."Role" = 'Lead assessor' THEN "User"."FirstName" || ' ' || "User"."LastName" END, ', ') AS "Lead",
+            STRING_AGG(CASE WHEN "AssessmentPanel"."Role" = 'Accessibility assessor' THEN "User"."FirstName" || ' ' || "User"."LastName" END, ', ') AS "Accessibility",
+            STRING_AGG(CASE WHEN "AssessmentPanel"."Role" = 'User research assessor' THEN "User"."FirstName" || ' ' || "User"."LastName" END, ', ') AS "UR",
+            STRING_AGG(CASE WHEN "AssessmentPanel"."Role" = 'Technical assessor' THEN "User"."FirstName" || ' ' || "User"."LastName" END, ', ') AS "Tech",
+            STRING_AGG(CASE WHEN "AssessmentPanel"."Role" = 'Performance assessor' THEN "User"."FirstName" || ' ' || "User"."LastName" END, ', ') AS "Performance"
+        FROM
+            public."Assessment"
+        LEFT JOIN public."AssessmentPanel" ON "Assessment"."AssessmentID" = "AssessmentPanel"."AssessmentID"
+        LEFT JOIN public."User" ON "AssessmentPanel"."UserID" = "User"."UserID"
+        WHERE "Assessment"."Status" = 'Active' AND "Assessment"."Department" = $1
+        GROUP BY
+             "Assessment"."AssessmentID","Assessment"."Name", "Assessment"."AssessmentDateTime", "Assessment"."AssessmentTime"
+        
+            `,
+            [departmentID]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getActiveAssessmentsWithAssessorData:', error);
+        throw error;
+    }
+}
+
+
 
 
 module.exports = {
@@ -321,5 +360,6 @@ module.exports = {
     getRequestsByMixedStatus,
     getAssessmentsUserCanAccess,
     getAssessmentPanelByUserID, 
-    checkSubmitStatus
+    checkSubmitStatus,
+    getActiveAssessmentsWithAssessorData
 };

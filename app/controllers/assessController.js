@@ -231,6 +231,14 @@ exports.g_submitted = async function (req, res) {
     })
 }
 
+exports.g_previous = async function (req, res) {
+    const user = req.session.data.User;
+    const userOnPanels = await getAssessmentPanelByUserID(user.UserID);
+    return res.render('assess/previous', {
+        userOnPanels
+    })
+}
+
 
 
 

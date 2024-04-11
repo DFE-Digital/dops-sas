@@ -7,35 +7,54 @@ const pool = new Pool({
 
 /**
  * Checks for a user by email and updates or sets their token and token expiry if they exist.
+ * If the user does not exist, creates a new user with the given details and additional default fields.
  * @param {string} emailAddress The email address of the user.
  * @param {string} token The new token for the user.
  * @param {Date} tokenExpiry The expiry date and time for the new token.
- * @returns {Promise<number>} The user's ID if successful, or 0 if no user found.
+ * @returns {Promise<number>} The user's ID if successful, or 0 if an error occurs.
  */
 async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    const res = await client.query('SELECT "UserID" FROM public."User" WHERE "EmailAddress" = $1', [emailAddress]);
+    let res = await client.query('SELECT "UserID" FROM public."User" WHERE "EmailAddress" = $1', [emailAddress]);
+    let userId;
+
     if (res.rows.length === 0) {
-      await client.query('ROLLBACK');
-      return 0;
+      // User does not exist, create a new user with additional fields
+      const query = `
+        INSERT INTO public."User"(
+          "EmailAddress", 
+          "Token", 
+          "TokenExpiry", 
+          "FirstName", 
+          "LastName", 
+          "CreatedBy", 
+          "CreatedByProcess", 
+          "AccountActive", 
+          "Department"
+        ) VALUES ($1, $2, $3, '', '', 0, 'Registration', true, 1) RETURNING "UserID"
+      `;
+      res = await client.query(query, [emailAddress, token, tokenExpiry]);
+      userId = res.rows[0].UserID; // Assuming the table returns "UserID" upon insertion
+    } else {
+      // User exists, update their token and expiry
+      userId = res.rows[0].UserID;
+      await client.query('UPDATE public."User" SET "Token" = $2, "TokenExpiry" = $3 WHERE "EmailAddress" = $1', [emailAddress, token, tokenExpiry]);
     }
 
-    const userId = res.rows[0].UserID;
-    await client.query('UPDATE public."User" SET "Token" = $2, "TokenExpiry" = $3 WHERE "EmailAddress" = $1', [emailAddress, token, tokenExpiry]);
     await client.query('COMMIT');
-
     return userId;
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Database query error in checkAndSetUserToken:', error);
-    throw error;
+    return 0;
   } finally {
     client.release();
   }
 }
+
 
 /**
  * Checks the validity of a token and returns the user details if the token is valid.
@@ -123,6 +142,7 @@ async function getBasicUserDetails(userId) {
 }
 
 
+
 /**
  * Updates the first and last name of a user based on their user ID.
  * @param {string} firstName The user's new first name.
@@ -143,23 +163,45 @@ async function updateName(firstName, lastName, userId) {
 }
 
 /**
- * Updates the email address of a user based on their user ID.
+ * Updates the email address of a user based on their user ID, if the new email address does not already exist.
  * @param {string} emailAddress The user's new email address.
  * @param {number} userId The unique identifier of the user.
+ * @returns {Promise<boolean>} Returns true if the update was successful, false if the email address already exists.
  */
 async function updateEmail(emailAddress, userId) {
+  const client = await pool.connect();
   try {
-    await pool.query(`
-        UPDATE public."User"
-        SET "EmailAddress" = $1
-        WHERE "UserID" = $2
-      `, [emailAddress, userId]);
+    await client.query('BEGIN');
+
+    // Check if the new email address already exists for a different user
+    const emailExists = await client.query(`
+      SELECT 1 FROM public."User"
+      WHERE "EmailAddress" = $1 AND "UserID" <> $2
+    `, [emailAddress, userId]);
+
+    if (emailExists.rows.length > 0) {
+      // Email address exists for another user, rollback and return false
+      await client.query('ROLLBACK');
+      return false;
+    }
+
+    // Proceed with the update since the email address does not exist for another user
+    await client.query(`
+      UPDATE public."User"
+      SET "EmailAddress" = $1
+      WHERE "UserID" = $2
+    `, [emailAddress, userId]);
+
+    await client.query('COMMIT');
+    return true; // Update successful
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error('Error in updateEmail:', error);
     throw error;
+  } finally {
+    client.release();
   }
 }
-
 
 
 module.exports = {

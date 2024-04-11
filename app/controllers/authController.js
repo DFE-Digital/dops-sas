@@ -3,6 +3,7 @@ const { validateSignIn } = require('../validation/authValidation');
 const { v4: uuidv4 } = require('uuid');
 const { checkAndSetUserToken, checkToken } = require('../models/user'); // Adjust the path as necessary
 const { sendNotifyEmail } = require('../middleware/notify');
+const { getRoleByUserID } = require('../models/userrole');
 
 
 exports.g_signin = (req, res) => {
@@ -32,18 +33,26 @@ exports.g_checktoken = async (req, res) => {
         req.session.UserId = user.UserID;
         req.session.data['User'] = user;
 
+        const roles = await getRoleByUserID(user.UserID);
+
+
+        if (roles) {
+            req.session.data['IsAdmin'] = true;
+        }
+        else {  
+            req.session.data['IsAdmin'] = false;
+        }
+
+        if(user.FirstName === '' || user.LastName === ''){
+            return res.redirect('/profile/change-name')
+        }
+
         return res.redirect('/manage')
-
-
 
     }catch(error){
         console.error('Error:', error);
         return res.redirect('/error')
     }
-
-
-
-    res.redirect('/manage');
 };
 
 exports.g_signout = (req, res) => {

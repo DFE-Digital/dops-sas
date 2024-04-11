@@ -1,0 +1,30 @@
+{% extends "layouts/auth.html" %}
+
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Reporting" %}
+{% set view = "reporting" %}
+{% set filter = ""%}
+
+{% block hero %}
+{% include '../_header.html'%}
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <div class="dfe-grid-container dfe-grid-container--wider govuk-!-margin-top-5">
+            <div class="dfe-card">
+               <div class="dfe-card-container">
+                  <h3 class="govuk-heading-m">
+                     <a href="/admin/reporting/assessments" class="govuk-link govuk-link--no-visited-state dfe-card-link--header">Assessments and assessors</a>
+                  </h3>
+                  <p>View all active assessments and panel information. Used for getting people to volunteer.</p>
+               </div>
+            </div>
+         </div>
+    </div>
+</div>
+{% endblock %}

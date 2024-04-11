@@ -137,12 +137,16 @@ router.get("/admin/remove-panel/:assessmentPanelID/:uniqueID", isAuthenticated, 
 router.get("/admin/add-date/:assessmentID", isAuthenticated, isAdmin, adminController.g_adddate);
 router.get("/admin/assessments", isAuthenticated, isAdmin, adminController.g_assessments);
 router.get("/admin/assessors", isAuthenticated, isAdmin, adminController.g_assessors);
+router.get("/admin/assessor/:assessorID", isAuthenticated, isAdmin, adminController.g_assessor);
 router.get("/admin/add-assessor", isAuthenticated, isAdmin, adminController.g_addassessor);
 router.get("/admin/report/:assessmentID", isAuthenticated, isAdmin, adminController.g_report);
 router.get("/admin/artefacts/:assessmentID", isAuthenticated, isAdmin, adminController.g_artefacts);
 router.get("/admin/team/:assessmentID", isAuthenticated, isAdmin, adminController.g_team);
-
-
+router.get("/admin/reporting", isAuthenticated, isAdmin, adminController.g_reporting);
+router.get("/admin/reporting/assessments", isAuthenticated, isAdmin, adminController.g_reportingAssessmentsAndPanels);
+router.get("/admin/admins", isAuthenticated, isAdmin, adminController.g_admins);
+router.get("/admin/add-admin", isAuthenticated, isAdmin, adminController.g_addadmin);
+router.get("/admin/remove-admin/:userRoleID", isAuthenticated, isAdmin, adminController.g_removeadmin);
 
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
@@ -151,7 +155,8 @@ router.post("/admin/add-date", isAuthenticated, isAdmin, adminController.p_addda
 router.post("/admin/add-assessor", isAuthenticated, isAdmin, adminController.p_addassessor);
 router.post("/admin/send-report", isAuthenticated, isAdmin, adminController.p_sendReport);
 router.post("/admin/publish-report", isAuthenticated, isAdmin, adminController.p_publishReport);
-
+router.post("/admin/add-admin", isAuthenticated, isAdmin, adminController.p_addadmin);
+router.post("/admin/remove-admin", isAuthenticated, isAdmin, adminController.p_removeadmin);
 
 
 
@@ -164,6 +169,7 @@ router.get('/analysis/portfolio/:name', isAuthenticated, analysisController.g_po
 
 // ASSESS ROUTES
 router.get('/assess', isAuthenticated, assessController.g_index);
+router.get('/assess/previous', isAuthenticated, assessController.g_previous);
 router.get("/assess/overview/:assessmentID", isAuthenticated, assessController.g_overview);
 router.get("/assess/report/:assessmentID", isAuthenticated, assessController.g_report);
 router.get("/assess/panel/:assessmentID", isAuthenticated, assessController.g_panel);

@@ -59,6 +59,12 @@ nunjuckEnv.addFilter('split', function(str, seperator) {
   nunjuckEnv.addFilter('BoolToYesBlank', function(str){
     return str ? 'Yes' : '-'
   })
+
+  nunjuckEnv.addFilter('BoolToActiveInactive', function(str){
+    return str ? 'Active' : 'Inactive'
+  })
+
+  
   
   
   nunjuckEnv.addFilter('andify', function (input) {
@@ -91,7 +97,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(saveFormDataToSession);
 app.use(makeFormDataGlobal);
 
-app.locals.debug = process.env.debug || false;
+
+app.locals.debug = process.env.debug === 'true' ? true : false;
+
 app.locals.serviceName = process.env.serviceName || 'Service Assessment Service';
 
 app.use('/assets', express.static('public/assets'));

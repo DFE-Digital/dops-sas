@@ -1,0 +1,166 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Manage administrators" %}
+{% set view = "admins" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Filters</h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="/admin/admins">Clear</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+                <div class="govuk-form-group">
+                    <label id="filterTableLabel" for="filterTable" class="govuk-label govuk-!-font-weight-bold">Filter
+                        by name</label>
+                    <input type="text" id="filterTable" class="govuk-input" aria-describedby="filterTableLabel" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Administrators</h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="/admin/add-admin">Add new <span class="govuk-visually-hidden">
+                                administrator</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+                <div class="govuk-table-container">
+                    <table class="govuk-table  " id="assessorsTable">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Role</th>
+                                <th scope="col" class="govuk-table__header">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            {% for admin in admins%}
+                            <tr class="govuk-table__row" data-role="{{assessor.PrimaryRole}}">
+                                <th scope="row" class="govuk-table__header">{{admin.FirstName}}
+                                    {{admin.LastName}}
+                                </th>
+                                <td class="govuk-table__cell">{{admin.UserRole}}</td>
+                                <td class="govuk-table__cell">
+                                    {% if admin.UserID !== data.User.UserID %}
+                                    <a href="/admin/remove-admin/{{admin.UserRoleID}}"
+                                    class="govuk-link govuk-link--no-visited-state">Remove <span class="govuk-visually-hidden">{{admin.FirstName}}
+                                        {{admin.LastName}}</span></a>
+                                    {% else %}
+                                      Cannot remove yourself      
+                                    {% endif%}
+                                    </td>
+                              
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No admins found.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document
+        .getElementById('filterTable')
+        .addEventListener('keyup', function () {
+            let filter = this
+                .value
+                .toUpperCase();
+            let tableBody = document.querySelector('.govuk-table__body');
+            let rows = tableBody.querySelectorAll('.govuk-table__row');
+            let noMatchingAssessors = document.getElementById('noMatchingAssessors');
+            let table = document.getElementById('assessorsTable');
+
+            let matchingAssessorsExist = false;
+
+            for (let i = 0; i < rows.length; i++) {
+                let person = rows[i].querySelector('.govuk-table__header');
+
+                if (person) {
+                    let txtValue = person.textContent || person.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = "";
+                        rows[i].setAttribute("aria-hidden", "false");
+                        matchingAssessorsExist = true;
+                    } else {
+                        rows[i].style.display = "none";
+                        rows[i].setAttribute("aria-hidden", "true");
+                    }
+                }
+            }
+
+            // Toggle the visibility of the table and paragraph based on matching assessors
+            if (matchingAssessorsExist) {
+                table.style.display = "table"; // Show the table
+                noMatchingAssessors.style.display = "none"; // Hide the paragraph
+            } else {
+                table.style.display = "none"; // Hide the table
+                noMatchingAssessors.style.display = "block"; // Show the paragraph
+            }
+        });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const filters = document.querySelectorAll('.govuk-checkboxes__input');
+        filters.forEach(filter => filter.addEventListener('change', applyFilters));
+
+        function applyFilters() {
+            let activeRole = getActiveFilters('role');
+            let rows = document.querySelectorAll('.govuk-table > tbody > tr');
+
+            let visibleCount = 0;
+            rows.forEach(row => {
+                let role = row.getAttribute('data-role');
+
+                if ((activeRole.includes(role) || activeRole.length === 0)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document
+                .getElementById('noResultsMessage')
+                .style
+                .display = visibleCount > 0
+                    ? 'none'
+                    : '';
+            updateItemCount(visibleCount);
+        }
+
+        function getActiveFilters(filterName) {
+            return Array
+                .from(document.querySelectorAll(`input[name="${filterName}"]:checked`))
+                .map(el => el.value);
+        }
+
+        function updateItemCount(count) {
+            const countElement = document.getElementById('assessorCount');
+            countElement.textContent = count;
+        }
+
+        // Apply filters on initial load
+        applyFilters();
+    });
+</script>
+{% endblock %}

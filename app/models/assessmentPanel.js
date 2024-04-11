@@ -44,7 +44,7 @@ async function assessmentPanelExtended(assessmentID) {
             `,
             [assessmentID]
         );
-
+        
         return result.rows;
     } catch (error) {
         console.error('Error in assessmentPanelExtended:', error);

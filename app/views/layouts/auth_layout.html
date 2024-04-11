@@ -65,36 +65,11 @@
   {% block footer %}
   {% include 'layouts/_footer.html'%}
   {% endblock %}
-  {{debug | true}}
-  {% if debug == true %}
-  <div style="background:#ffffe6; padding: 40px 0px; margin-bottom:0px;">
-    <div class="govuk-width-container dfe-width-container">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-          <div>
-            <h2 class="govuk-heading-l">Debug Information</h2>
-            <table class="govuk-table  ">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th class="govuk-table__header govuk-!-width-one-third" scope="col">Key</th>
-                  <th class="govuk-table__header" scope="col">Value</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                {% for key, value in model %}
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell">{{ key }}</td>
-                  <td class="govuk-table__cell">{{value }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% endif %}
+
+
+
+
+
 
   <script type="module" src="/assets/js/govuk-frontend-5.0.0.min.js"></script>
   <script type="module">

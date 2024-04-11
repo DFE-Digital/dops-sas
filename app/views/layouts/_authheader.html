@@ -4,23 +4,22 @@
 { "url": "/book", "label": "Book" },
 { "url": "/reports", "label": "Reports" },
 { "url": "/analysis", "label": "Analysis" },
-{ "url": "/action-plans", "label": "Action plans" },
-{ "url": "/admin", "label": "Admin" }
+{ "url": "/action-plans", "label": "Action plans" }
 ] %}
 
-{# {% if 'Administrator' in data.userRoles or 'Service Administrator' in data.userRoles %}
-
+{% if data.IsAdmin == true %}
 {% set primaryLinks = [
-{ "url": "/manage", "label": "Manage" },
-{ "url": "/assess", "label": "Assess" },
-{ "url": "/book", "label": "Book" },
-{ "url": "/reports", "label": "Reports" },
-{ "url": "/admin", "label": "Admin" },
-{ "url": "/analysis", "label": "Analysis" },
-{ "url": "/action-plans", "label": "Action plans" }
-] %} #}
+  { "url": "/manage", "label": "Manage" },
+  { "url": "/assess", "label": "Assess" },
+  { "url": "/book", "label": "Book" },
+  { "url": "/reports", "label": "Reports" },
+  { "url": "/assessments", "label": "Assessments" },
+  { "url": "/action-plans", "label": "Action plans" },
+  { "url": "/admin", "label": "Admin" }
+  ] %}
+{% endif %}
 
-{# {% endif %} #}
+
 
 {{ header({
 "showNav": "true",

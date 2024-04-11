@@ -1,0 +1,22 @@
+{% extends "layouts/auth.html" %}
+
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Assessments and assessors" %}
+{% set view = "reporting" %}
+{% set filter = ""%}
+
+{% block hero %}
+{% include '../_header.html'%}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        {{assessments | dump}}
+
+
+    </div>
+</div>
+{% endblock %}

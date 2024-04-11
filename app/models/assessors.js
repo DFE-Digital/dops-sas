@@ -52,9 +52,29 @@ async function createAssessor(UserID, Role, CrossGovAssessor, LeadAssessor, Exte
 }
 
 
+/**
+ * Get assessor by assessorID
+ * @param {number} assessorID The unique
+ */
+async function getAssessor(assessorID) {
+    try {
+        const result = await pool.query(`
+            SELECT a.*, u."FirstName", u."LastName", u."EmailAddress"
+            FROM public."Assessor" a
+            INNER JOIN public."User" u ON a."UserID" = u."UserID"
+            WHERE a."AssessorID" = $1
+        `, [assessorID]);
+
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in getAssessor:', error);
+        return null;
+    }
+}
+
 
 
 
 module.exports = {
-    getAllAssessors, createAssessor
+    getAllAssessors, createAssessor, getAssessor
 };

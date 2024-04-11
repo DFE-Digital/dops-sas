@@ -21,12 +21,12 @@ function sendNotifyEmail(template, recipient, templateParams) {
     console.log('Send email to:', recipient);
     try {
 
-        const safeList = process.env.EmailSafeList.split(',');
+        // const safeList = process.env.EmailSafeList.split(',');
 
-        if (!safeList.includes(recipient)) {
-            console.log(`Recipient ${recipient} is not in the safe list.`);
-            return false;
-        }
+        // if (!safeList.includes(recipient)) {
+        //     console.log(`Recipient ${recipient} is not in the safe list.`);
+        //     return false;
+        // }
 
 
         console.log('Sending');

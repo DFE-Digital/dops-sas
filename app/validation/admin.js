@@ -32,3 +32,38 @@ exports.validateAddPanel = [
             return true;
         })
 ];
+
+exports.validateAddAdmin = [
+    check('FirstName')
+        .trim()
+        .custom((value, { req }) => {
+            if (value === '') {
+                throw new Error('Enter a first name');
+            }
+            return true;
+        }),
+        check('LastName')
+        .trim()
+        .custom((value, { req }) => {
+            if (value === '') {
+                throw new Error('Enter a last name');
+            }
+            return true;
+        }),
+        check('EmailAddress')
+        .trim()
+        .custom((value, { req }) => {
+            if (value === '') {
+                throw new Error('Enter an email address');
+            }
+            return true;
+        }), 
+        check('createAsLead')
+        .trim()
+        .custom((value, { req }) => {
+            if (value === '') {
+                throw new Error('Select an option');
+            }
+            return true;
+        })
+];
