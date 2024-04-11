@@ -127,6 +127,17 @@
                 <p>There are no recommendations or actions for the team.</p>
               </div>
             </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="outcomerag-4" name="outcomerag" type="radio" value="NA"
+                aria-describedby="outcomerag-4-item-hint" {% if ratingFromStandards.Outcome==="NA" %}checked{% endif
+                %}>
+              <label class="govuk-label govuk-radios__label" for="outcomerag-4">
+                Not assessed
+              </label>
+              <div id="outcomerag-3-item-hint" class="govuk-hint govuk-radios__hint">
+                <p>This standard point has not been assessed.</p>
+              </div>
+            </div>
           </div>
         </fieldset>
       </div>

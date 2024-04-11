@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const { checkAndSetUserToken, checkToken } = require('../models/user'); // Adjust the path as necessary
 const { sendNotifyEmail } = require('../middleware/notify');
 const { getRoleByUserID } = require('../models/userrole');
-
+const { getAllAssessors, createAssessor, getAssessorByUserID } = require('../models/assessors');
 
 exports.g_signin = (req, res) => {
     res.render('auth/sign-in');
@@ -41,6 +41,16 @@ exports.g_checktoken = async (req, res) => {
         }
         else {  
             req.session.data['IsAdmin'] = false;
+        }
+
+        const assessor = await getAssessorByUserID(user.UserID);
+
+
+        if (assessor) {
+            req.session.data['IsAssessor'] = true;
+        }
+        else {  
+            req.session.data['IsAssessor'] = false;
         }
 
         if(user.FirstName === '' || user.LastName === ''){

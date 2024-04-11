@@ -86,7 +86,7 @@
                         aria-describedby="standard-details-{{standard.point}}-status">{{standard.Point}}.
                         {{standard.Title}}</a>
                     {% for rating in ratings %}
-                    {% if (rating.Standard === standard.Point) and rating.Outcome != 'Green' %}
+                    {% if (rating.Standard === standard.Point) and (rating.Outcome != 'Green' and  rating.Outcome != 'NA') %}
 
 
 
@@ -111,7 +111,7 @@
                     {% for rating in ratings %}
                     {% if rating.Standard === standard.Point %}
                     {% set rated = true %}
-                    <strong class="govuk-tag govuk-tag--{{rating.Outcome | lower}}">{{rating.Outcome}}</strong>
+                    <strong class="govuk-tag govuk-tag--{{rating.Outcome | lower}}">{{rating.Outcome | NAToString }}</strong>
                     {% endif %}
                     {% endfor %}
                     {% if rated == false%}

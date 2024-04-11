@@ -64,8 +64,16 @@ nunjuckEnv.addFilter('split', function(str, seperator) {
     return str ? 'Active' : 'Inactive'
   })
 
+  // Create a filter so that if the string is NA it returns Not assessed
+  nunjuckEnv.addFilter('NAToString', function(str){
+    return str === 'NA' ? 'Not assessed' : str
+  })
   
-  
+  // If NA return NA for everything else, return the first character
+  nunjuckEnv.addFilter('OutcomeForGrid', function(str){
+    return str === 'NA' ? 'NA' : str.charAt(0)
+  })
+
   
   nunjuckEnv.addFilter('andify', function (input) {
     const values = input.split(', ');

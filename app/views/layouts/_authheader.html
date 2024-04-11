@@ -1,10 +1,8 @@
 {% set primaryLinks = [
 { "url": "/manage", "label": "Manage" },
-{ "url": "/assess", "label": "Assess" },
 { "url": "/book", "label": "Book" },
 { "url": "/reports", "label": "Reports" },
-{ "url": "/analysis", "label": "Analysis" },
-{ "url": "/action-plans", "label": "Action plans" }
+{ "url": "/analysis", "label": "Analysis" }
 ] %}
 
 {% if data.IsAdmin == true %}
@@ -13,11 +11,21 @@
   { "url": "/assess", "label": "Assess" },
   { "url": "/book", "label": "Book" },
   { "url": "/reports", "label": "Reports" },
-  { "url": "/assessments", "label": "Assessments" },
-  { "url": "/action-plans", "label": "Action plans" },
+  { "url": "/analysis", "label": "Analysis" },
   { "url": "/admin", "label": "Admin" }
   ] %}
 {% endif %}
+
+{% if data.IsAssessor == true and data.IsAdmin == false %}
+{% set primaryLinks = [
+  { "url": "/manage", "label": "Manage" },
+  { "url": "/assess", "label": "Assess" },
+  { "url": "/book", "label": "Book" },
+  { "url": "/reports", "label": "Reports" },
+  { "url": "/analysis", "label": "Analysis" }
+  ] %}
+{% endif %}
+
 
 
 

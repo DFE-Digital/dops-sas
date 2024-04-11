@@ -37,7 +37,7 @@
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">
                                 <strong
-                                    class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">{{assessment.Outcome}}</strong>
+                                    class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">{{assessment.Outcome | NAToString }}</strong>
                             </td>
                             <td class="govuk-table__cell">{{assessment.Phase}}</td>
                             <td class="govuk-table__cell">{{assessment.Type}}</td>

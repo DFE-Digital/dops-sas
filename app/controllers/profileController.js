@@ -2,6 +2,7 @@ const { check, validationResult } = require('express-validator');
 const { validateChangeName, validateChangeEmail } = require('../validation/profile');
 const { getBasicUserDetails, updateName, updateEmail } = require('../models/user');
 
+const { getAllAssessors, createAssessor, getAssessorByUserID } = require('../models/assessors');
 const { getRoleByUserID } = require('../models/userrole');
 const e = require('express');
 
@@ -17,6 +18,16 @@ exports.g_profile = async (req, res) => {
     }
     else {  
         req.session.data['IsAdmin'] = false;
+    }
+
+    const assessor = await getAssessorByUserID(user.UserID);
+
+
+    if (assessor) {
+        req.session.data['IsAssessor'] = true;
+    }
+    else {  
+        req.session.data['IsAssessor'] = false;
     }
 
 

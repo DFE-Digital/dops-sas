@@ -314,7 +314,7 @@ exports.p_reportSection = [
             user.UserID
         )
 
-        if (outcomerag === 'Green') {
+        if (outcomerag === 'Green' || outcomerag === 'NA') {
             return res.redirect('/assess/report/' + AssessmentID)
         } else {
             return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard)

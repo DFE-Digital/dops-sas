@@ -7,7 +7,7 @@ exports.validateAddRating = [
             if (value === '') {
                 throw new Error('Select an option');
             }
-            if (!['Red', 'Amber', 'Green'].includes(value)) {
+            if (!['Red', 'Amber', 'Green', 'NA'].includes(value)) {
                 throw new Error('Invalid option selected');
             }
             return true;

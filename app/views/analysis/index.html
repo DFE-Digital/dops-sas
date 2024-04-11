@@ -69,87 +69,13 @@
         <a href="/reports/report/{{ item.AssessmentID }}/#point-{{ item.Standard }}"
             class="cell {{ item.Outcome | lower }}"
             aria-label="{{ group[0].Name}} outcome:{{ item.Outcome }} for standard {{ item.Standard }}" tabindex="0">{{
-            item.Outcome[0] }}</a>
+            item.Outcome | OutcomeForGrid  }}</a>
         {% endfor %}
     </div>
     {% endfor %}
 </div>
 
-<h2 class="govuk-heading-l govuk-!-margin-top-5">Portfolio analysis</h2>
-<p>Analysis of assessments and peer reviews completed by portfolio.</p>
 
-<table class="govuk-table">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Portfolio</th>
-        <th scope="col" class="govuk-table__header">DD</th>
-        <th scope="col" class="govuk-table__header">Service assessments</th>
-        <th scope="col" class="govuk-table__header">Peer reviews</th>
-      </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header"><a href="/analysis/portfolio/cxd">Customer Experience and Design</a></th>
-        <td class="govuk-table__cell">Sam Barton</td>
-        <td class="govuk-table__cell">2</td>
-        <td class="govuk-table__cell">0</td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header"><a href="">Data</a></th>
-        <td class="govuk-table__cell">Corrine Richardson</td>
-        <td class="govuk-table__cell">0</td>
-        <td class="govuk-table__cell">0</td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header"><a href="">Funding</a></th>
-        <td class="govuk-table__cell">Cathy Dutton</td>
-        <td class="govuk-table__cell">0</td>
-        <td class="govuk-table__cell">0</td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header"><a href="">Regions</a></th>
-        <td class="govuk-table__cell">Shaf Dawood</td>
-        <td class="govuk-table__cell">1</td>
-        <td class="govuk-table__cell">4</td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header"><a href="">Schools</a></th>
-        <td class="govuk-table__cell">Shaf Dawood</td>
-        <td class="govuk-table__cell">1</td>
-        <td class="govuk-table__cell">1</td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header"><a href="">Skills</a></th>
-        <td class="govuk-table__cell">Gary Tucker</td>
-        <td class="govuk-table__cell">0</td>
-        <td class="govuk-table__cell">0</td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header"><a href="">Vulnerable Children and Families</a></th>
-        <td class="govuk-table__cell">Rachel Shooter</td>
-        <td class="govuk-table__cell">5</td>
-        <td class="govuk-table__cell">3</td>
-      </tr>
-    </tbody>
-  </table>
-
-
-{#
-<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-<div class="govuk-grid-row">
-
-    <div class="govuk-grid-column-one-third">
-        <h2 class="govuk-heading-l">Overall rating outcomes</h2>
-        <canvas id="outcomeChart" width="400" height="400"></canvas>
-    </div>
-
-    <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l">Spread of standard rating outcomes</h2>
-        <canvas id="outcomeChart2" width="800" height="400"></canvas>
-    </div>
-
-</div> #}
 
 <style>
     .grid {
@@ -239,6 +165,12 @@
 
     .red {
         background-color: #d4351c;
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+
+    .na {
+        background-color: #505a5f;
         color: #ffffff !important;
         font-weight: 600;
     }

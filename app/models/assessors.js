@@ -73,8 +73,26 @@ async function getAssessor(assessorID) {
 }
 
 
+/**
+ * Get assessor by userID
+ * @param {number} userID The unique identifier of the user.
+ */
+async function getAssessorByUserID(userID) {
+    try {
+        const result = await pool.query(`
+            SELECT a.*, u."FirstName", u."LastName", u."EmailAddress"
+            FROM public."Assessor" a
+            INNER JOIN public."User" u ON a."UserID" = u."UserID"
+            WHERE a."UserID" = $1
+        `, [userID]);
 
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in getAssessorByUserID:', error);
+        return null;
+    }
+}
 
 module.exports = {
-    getAllAssessors, createAssessor, getAssessor
+    getAllAssessors, createAssessor, getAssessor, getAssessorByUserID
 };
