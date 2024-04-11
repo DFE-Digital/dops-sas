@@ -26,3 +26,15 @@ exports.g_features = (req, res) => {
 exports.g_contact = (req, res) => {
     res.render('contact')
 }
+
+exports.g_accessibility = (req, res) => {
+    res.render('accessibility')
+}
+
+exports.g_privacy = (req, res) => {
+    res.render('privacy')
+}
+
+exports.g_cookies = (req, res) => {
+    res.render('cookies')
+}

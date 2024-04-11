@@ -12,7 +12,9 @@
         <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-full">
-                <h1 class="govuk-heading-l">Book</h1>
+
+                <span class="govuk-caption-l">Book</span>
+                <h1 class="govuk-heading-l">Tasks</h1>
 
             </div>
         </div>
@@ -27,7 +29,7 @@
     <div class="govuk-grid-column-two-thirds">
 
 
-        <h2 class="govuk-heading-l">Tasks</h2>
+        <h2 class="govuk-heading-l">{% if model.Name %}{{model.Name}}{%else%}Name of service not given{% endif %}</h2>
 
         {% if data['disco-start-month'] and data['disco-start-day'] and data['disco-start-year'] %}
         {% set dstartDate = (data['disco-start-month'] + "/" + data['disco-start-day'] + "/" + data['disco-start-year'])

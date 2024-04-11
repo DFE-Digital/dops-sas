@@ -210,22 +210,22 @@ exports.validateDD = [
             }
             return true;
         }),
-    check('ddfirstName')
-        .trim()
-        .custom((value, { req }) => {
-            if (value === '') {
-                throw new Error('Enter a first name');
-            }
-            return true;
-        }),
-    check('ddlastName')
-        .trim()
-        .custom((value, { req }) => {
-            if (value === '') {
-                throw new Error('Enter a last name');
-            }
-            return true;
-        }),
+    // check('ddfirstName')
+    //     .trim()
+    //     .custom((value, { req }) => {
+    //         if (value === '') {
+    //             throw new Error('Enter a first name');
+    //         }
+    //         return true;
+    //     }),
+    // check('ddlastName')
+    //     .trim()
+    //     .custom((value, { req }) => {
+    //         if (value === '') {
+    //             throw new Error('Enter a last name');
+    //         }
+    //         return true;
+    //     }),
 ];
 
 
@@ -249,25 +249,25 @@ exports.validatePM = [
                 throw new Error('Please enter a valid email address.');
             }
             return true;
-        }),
-    check('pmfirstName')
-        .trim()
-        .if((value, { req }) => req.body.pm === 'Yes') 
-        .custom((value, { req }) => {
-            if (value === '') {
-                throw new Error('Enter a first name');
-            }
-            return true;
-        }),
-    check('pmlastName')
-        .trim()
-        .if((value, { req }) => req.body.pm === 'Yes') 
-        .custom((value, { req }) => {
-            if (value === '') {
-                throw new Error('Enter a last name');
-            }
-            return true;
-        }),
+         }),
+    // check('pmfirstName')
+    //     .trim()
+    //     .if((value, { req }) => req.body.pm === 'Yes') 
+    //     .custom((value, { req }) => {
+    //         if (value === '') {
+    //             throw new Error('Enter a first name');
+    //         }
+    //         return true;
+    //     }),
+    // check('pmlastName')
+    //     .trim()
+    //     .if((value, { req }) => req.body.pm === 'Yes') 
+    //     .custom((value, { req }) => {
+    //         if (value === '') {
+    //             throw new Error('Enter a last name');
+    //         }
+    //         return true;
+    //     }),
 ];
 
 exports.validateDM = [
@@ -291,22 +291,22 @@ exports.validateDM = [
             }
             return true;
         }),
-    check('dmfirstName')
-        .trim()
-        .if((value, { req }) => req.body.dm === 'Yes') 
-        .custom((value, { req }) => {
-            if (value === '') {
-                throw new Error('Enter a first name');
-            }
-            return true;
-        }),
-    check('dmlastName')
-        .trim()
-        .if((value, { req }) => req.body.dm === 'Yes') 
-        .custom((value, { req }) => {
-            if (value === '') {
-                throw new Error('Enter a last name');
-            }
-            return true;
-        }),
+    // check('dmfirstName')
+    //     .trim()
+    //     .if((value, { req }) => req.body.dm === 'Yes') 
+    //     .custom((value, { req }) => {
+    //         if (value === '') {
+    //             throw new Error('Enter a first name');
+    //         }
+    //         return true;
+    //     }),
+    // check('dmlastName')
+    //     .trim()
+    //     .if((value, { req }) => req.body.dm === 'Yes') 
+    //     .custom((value, { req }) => {
+    //         if (value === '') {
+    //             throw new Error('Enter a last name');
+    //         }
+    //         return true;
+    //     }),
 ];

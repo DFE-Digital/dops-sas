@@ -84,35 +84,7 @@
                                     value="{{userDetails.EmailAddress}}">
                             </div>
 
-                            <div
-                                class="govuk-form-group {%if hasFirstNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
-
-                                <label class="govuk-label" for="dmfirstName">Enter their first name</label>
-                                {%if hasFirstNameError %}
-                                <p id="event-name-error" class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span>Enter their first name
-                                </p>
-                                {% endif%}
-                                <input class="govuk-input {%if hasFirstNameError%} govuk-input--error{% endif%}"
-                                    id="dmfirstName" name="dmfirstName" type="text" spellcheck="false"
-                                    aria-describedby="firstName-hint" autocomplete="firstName"
-                                    value="{{userDetails.FirstName}}">
-                            </div>
-
-                            <div
-                                class="govuk-form-group {%if hasLastNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
-
-                                <label class="govuk-label" for="dmlastName">Enter their last name</label>
-                                {%if hasLastNameError %}
-                                <p id="event-name-error" class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span>Enter their last name
-                                </p>
-                                {% endif%}
-                                <input class="govuk-input {%if hasLastNameError%} govuk-input--error{% endif%}"
-                                    id="dmlastName" name="dmlastName" type="text" spellcheck="false"
-                                    aria-describedby="lastName-hint" autocomplete="lastName"
-                                    value="{{userDetails.LastName}}">
-                            </div>
+                        
                         </div>
 
                         <div class="govuk-radios__item">

@@ -1,8 +1,8 @@
 {% extends "layouts/auth.html" %}
 
-{% set selectedNav = "Analysis" %}
+{% set selectedNav = "Reports" %}
 {% set pageName = "Analysis of service assessment and peer review data." %}
-{% set view = "current" %}
+{% set view = "analysis" %}
 
 
 {% block head %}
@@ -16,24 +16,28 @@
         <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-full">
-                <span class="govuk-caption-l">Analysis</span>
+                <span class="govuk-caption-l">Reports</span>
                 <h1 class="govuk-heading-l">Assessment data analysis</h1>
                 <nav class="app-sub-navigation" aria-label="Application menu">
                     <ul class="app-sub-navigation__list">
                         <li class="app-sub-navigation__item">
-                            <a class="app-sub-navigation__link" {% if year==currentYear %} aria-current="page" {% endif
-                                %} href="/analysis">Current year</a>
+                            <a class="app-sub-navigation__link" {% if view==="reports" %} aria-current="page" {% endif
+                                %} href="/reports">Reports</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==="analysis" %} aria-current="page" {% endif
+                                %} href="/analysis">Analysis</a>
                         </li>
 
 
 
-                        {% for i in range(1, 6) %}
+                        {# {% for i in range(1, 2) %}
 
                         <li class="app-sub-navigation__item">
                             <a class="app-sub-navigation__link" {% if year==(currentYear -i) %} aria-current="page" {%
                                 endif %}href="/analysis/{{ currentYear -i}}">{{ currentYear -i}}</a>
                         </li>
-                        {% endfor %}
+                        {% endfor %} #}
                     </ul>
                 </nav>
             </div>

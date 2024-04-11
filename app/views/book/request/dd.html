@@ -12,12 +12,12 @@
 {% if error.path === 'ddemail' %}
 {% set hasEmailError = true %}
 {% endif %}
-{% if error.path === 'ddfirstName' %}
+{# {% if error.path === 'ddfirstName' %}
 {% set hasFirstNameError = true %}
 {% endif %}
 {% if error.path === 'ddlastName' %}
 {% set hasLastNameError = true %}
-{% endif %}
+{% endif %} #}
 {% endfor %}
 
 
@@ -56,7 +56,7 @@
                     <input class="govuk-input {%if hasEmailError%} govuk-input--error{% endif%}" id="ddemail" name="ddemail" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email" value="{{userDetails.EmailAddress}}">
                 </div>
 
-                <div class="govuk-form-group {%if hasFirstNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
+                {# <div class="govuk-form-group {%if hasFirstNameError%}govuk-form-group--error{% endif%}  govuk-!-margin-top-5">
 
                     <label class="govuk-label" for="ddfirstName">Enter their first name</label>
                     {%if hasFirstNameError %}
@@ -74,7 +74,7 @@
                             <span class="govuk-visually-hidden">Error:</span>Enter their last name</p>
                     {% endif %}
                     <input class="govuk-input {%if hasLastNameError%} govuk-input--error{% endif%}" id="ddlastName" name="ddlastName" type="text" spellcheck="false" aria-describedby="lastName-hint" autocomplete="lastName" value="{{userDetails.LastName}}">
-                </div>
+                </div> #}
 
                 <div class="govuk-button-group">
                     <button class="govuk-button" data-module="govuk-button">Save and continue</button>

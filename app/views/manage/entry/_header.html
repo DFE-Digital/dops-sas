@@ -61,13 +61,6 @@
                             <a class="app-sub-navigation__link" {% if view==='report' %} aria-current="page" {% endif %}
                                 href="/manage/report/{{assessment.AssessmentID}}">Report</a>
                         </li>
-                        {% if assessment.Status == 'Team Review' or assessment.Status == 'SA Publish' or
-                        assessment.Status == 'Published' %}
-                        <li class="app-sub-navigation__item">
-                            <a class="app-sub-navigation__link" {% if view==='actionplan' %} aria-current="page" {%
-                                endif %} href="/manage/action-plan/{{assessment.AssessmentID}}">Action plan</a>
-                        </li>
-                        {% endif %}
                     </ul>
                 </nav>
             </div>

@@ -225,7 +225,7 @@ exports.g_submitted = async function (req, res) {
     const assessmentID = req.params.id;
 
     const assessment = await getAssessmentById(assessmentID);
- 
+
     return res.render('assess/submitted', {
         assessment: assessment
     })
@@ -440,6 +440,38 @@ exports.p_submitReport = async function (req, res) {
     assessment.SubmittedBy = userID
     assessment.SubmittedDate = now;
     assessment.Outcome = outcome;
+
+    await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
+
+    // ToDo: Send email to SA team
+
+    return res.redirect('/assess/overview/' + AssessmentID);
+}
+
+
+exports.p_submitPRReport = async function (req, res) {
+    const { AssessmentID, PanelComments, PanelCommentsImprove } = req.body;
+    const assessment = await getAssessmentById(AssessmentID);
+
+    const userID = req.session.data.User.UserID;
+    const now = new Date();
+
+    // If button value 'action' is save, save the action
+    if (req.body.action === 'save') {
+        assessment.PanelComments = PanelComments;
+        assessment.PanelCommentsComplete = true;
+        assessment.PanelCommentsImprove = PanelCommentsImprove;
+    }
+
+
+    if (req.body.action === 'submit') {
+        assessment.Status = "SA Review";
+        assessment.SubmittedBy = userID
+        assessment.SubmittedDate = now;
+        assessment.PanelComments = PanelComments;
+        assessment.PanelCommentsComplete = true;
+        assessment.PanelCommentsImprove = PanelCommentsImprove;
+    }
 
     await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
 

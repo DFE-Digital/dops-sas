@@ -724,7 +724,7 @@ exports.p_dd = [
         } else {
             model = await getAssessmentById(assessmentID);
 
-            let ddUserID = await UpsertUserNoToken(req.body.ddemail, req.body.ddfirstName, req.body.ddlastName, userID, 'Book request: ' + assessmentID);
+            let ddUserID = await UpsertUserNoToken(req.body.ddemail, "","", userID, 'Book request: ' + assessmentID);
             model.DD = ddUserID;
 
             // Update existing assessment
@@ -774,7 +774,7 @@ exports.p_product = [
             model = await getAssessmentById(assessmentID);
 
             if (req.body.pm === "Yes") {
-                let pmUserID = await UpsertUserNoToken(req.body.pmemail, req.body.pmfirstName, req.body.pmlastName, userID, 'Book request: ' + assessmentID);
+                let pmUserID = await UpsertUserNoToken(req.body.pmemail, "","", userID, 'Book request: ' + assessmentID);
                 model.PM = pmUserID;
                 model.PMYN = "Yes";
             }
@@ -831,7 +831,7 @@ exports.p_delivery = [
             model = await getAssessmentById(assessmentID);
 
             if (req.body.dm === "Yes") {
-                let dmUserID = await UpsertUserNoToken(req.body.dmemail, req.body.dmfirstName, req.body.dmlastName, userID, 'Book request: ' + assessmentID);
+                let dmUserID = await UpsertUserNoToken(req.body.dmemail, "","", userID, 'Book request: ' + assessmentID);
                 model.DM = dmUserID;
                 model.DMYN = "Yes";
             }

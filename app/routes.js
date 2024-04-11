@@ -48,12 +48,13 @@ async function isAdmin(req, res, next) {
     }
 }
 
-
-
 router.get('/', publicController.g_home);
 router.get('/features', publicController.g_features);
 router.get('/contact', publicController.g_contact);
-
+router.get('/support', publicController.g_contact);
+router.get('/accessibility', publicController.g_accessibility);
+router.get('/privacy', publicController.g_privacy);
+router.get('/cookies', publicController.g_cookies);
 
 // Auth routes
 router.get('/sign-in', authController.g_signin);
@@ -62,7 +63,6 @@ router.get('/sign-out', authController.g_signout);
 router.get('/check-email', authController.g_checkemail);
 
 router.post('/sign-in', authController.p_signin);
-
 
 // Book routes
 router.get('/book', isAuthenticated, bookController.g_start);
@@ -84,7 +84,6 @@ router.get("/book/request/delete", isAuthenticated, bookController.g_delete);
 router.get("/book/deleted", isAuthenticated, bookController.g_deleted);
 router.get("/book/submitted", isAuthenticated, bookController.g_submitted);
 
-// Posts
 router.post('/book/request/phase', bookController.p_phase);
 router.post('/book/request/type', bookController.p_type);
 router.post("/book/request/name", isAuthenticated, bookController.p_name);
@@ -100,7 +99,6 @@ router.post("/book/request/delivery", isAuthenticated, bookController.p_delivery
 router.post("/book/request/submit", isAuthenticated, bookController.p_submit);
 router.post("/book/request/confirm-delete", isAuthenticated, bookController.p_confirmdelete);
 
-
 // Manage routes
 router.get('/manage', isAuthenticated, manageController.g_manage);
 router.get("/manage/previous", isAuthenticated, manageController.g_previous);
@@ -115,16 +113,11 @@ router.get("/manage/remove-artefact/:artefactID/:uniqueID", isAuthenticated, man
 router.get("/manage/add-team/:assessmentID", isAuthenticated, manageController.g_addteam);
 router.get("/manage/remove-team/:teamID/:uniqueID", isAuthenticated, manageController.g_removeteam);
 
-
-
 router.post("/manage/add-artefact", isAuthenticated, manageController.p_addartefact);
 router.post("/manage/remove-artefact", isAuthenticated, manageController.p_removeartefact);
 router.post("/manage/add-team", isAuthenticated, manageController.p_addteam);
 router.post("/manage/remove-team", isAuthenticated, manageController.p_removeteam);
 router.post("/manage/accept-report", isAuthenticated, manageController.p_acceptReport);
-
-
-
 
 // Admin routes
 router.get('/admin', isAuthenticated, isAdmin, adminController.g_index);
@@ -158,14 +151,9 @@ router.post("/admin/publish-report", isAuthenticated, isAdmin, adminController.p
 router.post("/admin/add-admin", isAuthenticated, isAdmin, adminController.p_addadmin);
 router.post("/admin/remove-admin", isAuthenticated, isAdmin, adminController.p_removeadmin);
 
-
-
 // ANALYSIS ROUTES
 router.get('/analysis', isAuthenticated, analysisController.g_index);
 router.get('/analysis/portfolio/:name', isAuthenticated, analysisController.g_portfolio);
-
-
-
 
 // ASSESS ROUTES
 router.get('/assess', isAuthenticated, assessController.g_index);
@@ -182,13 +170,12 @@ router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthentic
 router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, assessController.g_reportSectionActionsAdd);
 router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, assessController.g_reportSectionActionsManage);
 
-
 router.post("/assess/report-section", isAuthenticated, assessController.p_reportSection);
 router.post("/assess/report-section-actions-add", isAuthenticated, assessController.p_reportSectionActionsAdd);
 router.post("/assess/report-section-actions-manage", isAuthenticated, assessController.p_reportSectionActionsManage);
 router.post("/assess/report-panel-comments", isAuthenticated, assessController.p_reportPanelComments);
 router.post("/assess/submit-report", isAuthenticated, assessController.p_submitReport);
-
+router.post("/assess/pr-report", isAuthenticated, assessController.p_submitPRReport);
 
 // REPORTS ROUTES
 router.get('/reports', isAuthenticated, reportsController.g_index);
@@ -196,12 +183,10 @@ router.get('/reports/report/:assessmentID', isAuthenticated, reportsController.g
 router.get("/report/generate-doc/:assessmentID", isAuthenticated, reportsController.g_doc);
 router.get("/report/generate-excel/:assessmentID", isAuthenticated, reportsController.g_excel);
 
-
-
 // Service Admin routes
 router.get('/service-admin/create-department', isAuthenticated, serviceAdminController.g_createDepartment);
-router.post('/service-admin/create-department', isAuthenticated, serviceAdminController.p_createDepartment);
 
+router.post('/service-admin/create-department', isAuthenticated, serviceAdminController.p_createDepartment);
 
 // Volunteer
 router.get('/volunteer', isAuthenticated, assessController.g_volunteer);
@@ -210,9 +195,7 @@ router.get("/volunteer/volunteer/:id/:role", isAuthenticated, assessController.g
 router.get("/volunteer/detail/:id/", isAuthenticated, assessController.g_detail);
 router.get("/volunteer/submitted/:id/", isAuthenticated, assessController.g_submitted);
 
-// Posts
 router.post("/volunteer", isAuthenticated, assessController.p_volunteer);
-
 
 // PROFILE ROUTES
 router.get('/profile', isAuthenticated, profileController.g_profile);
@@ -221,6 +204,5 @@ router.get('/profile/change-email', isAuthenticated, profileController.g_changeE
 
 router.post('/profile/change-name', isAuthenticated, profileController.p_changeName);
 router.post('/profile/change-email', isAuthenticated, profileController.p_changeEmail);
-
 
 module.exports = router;
