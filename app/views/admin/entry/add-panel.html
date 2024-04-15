@@ -70,7 +70,7 @@
                         <select class="govuk-select   govuk-!-width-one-half assessor" id="Assessor" name="Assessor">
                             <option value=""></option>
                             {% for assessor in assessors %}
-                            <option value="{{assessor.UserID}}">{{assessor.FirstName}} {{assessor.LastName}}
+                            <option value="{{assessor.UserID}}">{{assessor.FirstName}} {{assessor.LastName}} - {{assessor.EmailAddress}}
                             </option>
                             {% endfor %}
                         </select>

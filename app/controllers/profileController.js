@@ -1,17 +1,18 @@
 const { check, validationResult } = require('express-validator');
 const { validateChangeName, validateChangeEmail } = require('../validation/profile');
 const { getBasicUserDetails, updateName, updateEmail } = require('../models/user');
-
-const { getAllAssessors, createAssessor, getAssessorByUserID } = require('../models/assessors');
+const { getAssessmentPanelByUserID } = require('../models/assessmentModel');
+const { getAllAssessors, createAssessor, getAssessorByUserID, getTrainingForUser } = require('../models/assessors');
 const { getRoleByUserID } = require('../models/userrole');
+
+const {getDepartments, getDepartmentForUser } = require('../models/departments');
+
 const e = require('express');
 
 exports.g_profile = async (req, res) => {
 
     const user = req.session.data.User;
-
     const roles = await getRoleByUserID(user.UserID);
-
    
     if (roles) {
         req.session.data['IsAdmin'] = true;
@@ -22,7 +23,6 @@ exports.g_profile = async (req, res) => {
 
     const assessor = await getAssessorByUserID(user.UserID);
 
-
     if (assessor) {
         req.session.data['IsAssessor'] = true;
     }
@@ -30,7 +30,8 @@ exports.g_profile = async (req, res) => {
         req.session.data['IsAssessor'] = false;
     }
 
-
+    const department = await getDepartmentForUser(req.session.data.User.Department);
+    req.session.data['Department'] = department;
 
     res.render('profile/index')
 }
@@ -42,6 +43,20 @@ exports.g_changeEmail = (req, res) => {
     res.render('profile/change-email')
 }
 
+exports.g_training = async (req, res) => {
+    // Get assessor training for the UserID
+    const training = await getTrainingForUser(req.session.data.User.UserID);
+
+    res.render('profile/training', {training})
+}
+
+exports.g_history = async (req, res) => {
+    const user = req.session.data.User;
+    const assessments = await getAssessmentPanelByUserID(user.UserID);
+    return res.render('profile/history', {
+        assessments
+    })
+}
 
 
 exports.p_changeName = [

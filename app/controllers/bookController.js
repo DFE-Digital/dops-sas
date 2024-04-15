@@ -724,7 +724,7 @@ exports.p_dd = [
         } else {
             model = await getAssessmentById(assessmentID);
 
-            let ddUserID = await UpsertUserNoToken(req.body.ddemail, "","", userID, 'Book request: ' + assessmentID);
+            let ddUserID = await UpsertUserNoToken(req.body.ddemail, userID, 'Book request: ' + assessmentID);
             model.DD = ddUserID;
 
             // Update existing assessment

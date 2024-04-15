@@ -18,14 +18,14 @@
                             <a class="app-sub-navigation__link" {% if view==='profile' %} aria-current="page" {% endif
                                 %} href="/profile">Profile</a>
                         </li>
-                        {% if data.User.IsAssessor == true %}
+                        {% if data.IsAssessor === true %}
                         <li class="app-sub-navigation__item">
                             <a class="app-sub-navigation__link" {% if view==='training' %} aria-current="page" {% endif
-                                %}href="/profile/assessor-training">Assessor training</a>
+                                %}href="/profile/training">Training</a>
                         </li>
                         <li class="app-sub-navigation__item">
                             <a class="app-sub-navigation__link" {% if view==='history' %} aria-current="page" {% endif
-                                %}href="/profile/assessor-history">Assessor history</a>
+                                %}href="/profile/history">History</a>
                         </li>
                         {% endif %}
                     </ul>

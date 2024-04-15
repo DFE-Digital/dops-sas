@@ -87,9 +87,15 @@
 
 
         {% else %}
+
+
+
+
         <h2 class="govuk-heading-l">Request details</h2>
         <p>You can alter details of the request at any point.</p>
         {% endif %}
+
+
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
@@ -252,6 +258,31 @@
 
         </dl>
 
+
+        <h2 class="govuk-heading-l">Change primary contact</h2>
+        <p>The primary contact will be notified of all significant tasks that are required for the {{assessment.Type | lower }}.</p>
+
+        <p>Current primary contact email: {{primaryContactEmail}}</p>
+
+        <form action="/admin/change-primary-contact" method="post">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+            <div class="govuk-form-group {%if hasEmailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+
+                <label class="govuk-label" for="primaryContactEmail">New primary contact email</label>
+                {%if hasEmailError %}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>Enter a valid email address</p>
+                {% endif %}
+                <input class="govuk-input govuk-!-width-one-half {%if hasEmailError%} govuk-input--error{% endif%}" id="primaryContactEmail" name="primaryContactEmail" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
+            </div>
+
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Change primary contact
+            </button>
+
+
+        </form>
 
 
     </div>

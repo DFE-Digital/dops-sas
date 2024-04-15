@@ -90,7 +90,7 @@
     <div class="govuk-grid-column-three-quarters">
         <div class="govuk-summary-card">
             <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title">Assessors</h2>
+                <h2 class="govuk-summary-card__title">Active assessors</h2>
                 <ul class="govuk-summary-card__actions">
                     <li class="govuk-summary-card__action">
                         <a class="govuk-link" href="/admin/add-assessor">Add new <span class="govuk-visually-hidden">
@@ -112,6 +112,7 @@
                         </thead>
                         <tbody class="govuk-table__body">
                             {% for assessor in assessors%}
+                            {% if assessor.Active === true %}
                             <tr class="govuk-table__row" data-role="{{assessor.PrimaryRole}}">
                                 <th scope="row" class="govuk-table__header">
                                     <a href="/admin/assessor/{{assessor.AssessorID}}"
@@ -125,6 +126,53 @@
                                 <td class="govuk-table__cell">{{assessor.CrossGovAssessor | BoolToYesNo}}</td>
                                 <td class="govuk-table__cell">{{assessor.ExternalAssessor | BoolToYesNo}}</td>
                             </tr>
+
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No assessors found.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">Inactive assessors</h2>
+               
+            </div>
+            <div class="govuk-summary-card__content">
+                <div class="govuk-table-container">
+                    <table class="govuk-table  " id="assessorsTable">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
+                                <th scope="col" class="govuk-table__header">Role</th>
+                                <th scope="col" class="govuk-table__header">Lead</th>
+                                <th scope="col" class="govuk-table__header">Cross GOV</th>
+                                <th scope="col" class="govuk-table__header">External to DfE</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            {% for assessor in assessors%}
+                            {% if assessor.Active === false %}
+                            <tr class="govuk-table__row" data-role="{{assessor.PrimaryRole}}">
+                                <th scope="row" class="govuk-table__header">
+                                    <a href="/admin/assessor/{{assessor.AssessorID}}"
+                                        class="govuk-link govuk-link--no-visited-state">{{assessor.FirstName}}
+                                        {{assessor.LastName}}</a><br />
+                                    <span class="govuk-body govuk-body-s lighter-text">
+                                        {{assessor.EmailAddress}}</span>
+                                </th>
+                                <td class="govuk-table__cell">{{assessor.PrimaryRole}}</td>
+                                <td class="govuk-table__cell">{{assessor.LeadAssessor | BoolToYesNo}}</td>
+                                <td class="govuk-table__cell">{{assessor.CrossGovAssessor | BoolToYesNo}}</td>
+                                <td class="govuk-table__cell">{{assessor.ExternalAssessor | BoolToYesNo}}</td>
+                            </tr>
+                            {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>

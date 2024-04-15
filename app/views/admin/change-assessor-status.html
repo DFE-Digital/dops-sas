@@ -1,0 +1,72 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Admin" %}
+{% set pageName = "Assessor" %}
+{% set view = "assessors" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <nav class="dfe-vertical-nav">
+            <ul class="dfe-vertical-nav__section">
+                <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessor/{{assessor.AssessorID}}">Overview</a>
+                </li>
+                <li class="dfe-vertical-nav__section-item ">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessment-history/{{assessor.AssessorID}}">Assessment
+                        history</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+     
+        <form action="/admin/assessor-change-status" method="post">
+            <input type="hidden" name="AssessorID" value="{{assessor.AssessorID}}">
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="changeStatus-hint">
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">
+                        Change assessor status
+                    </h2>
+                  </legend>
+                  <div id="changeStatus-hint" class="govuk-hint">
+                    Setting the status to disabled will prevent the assessor from being assigned to any new assessments.
+                  </div>
+                  <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                      <input class="govuk-radios__input" id="changeStatus" name="changeStatus" type="radio" value="true" {% if assessor.Active === true%}checked{% endif %}>
+                      <label class="govuk-label govuk-radios__label" for="changeStatus">
+                        Active
+                      </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                      <input class="govuk-radios__input" id="changeStatus-2" name="changeStatus" type="radio" value="false" {% if assessor.Active === false%}checked{% endif %}>
+                      <label class="govuk-label govuk-radios__label" for="changeStatus-2">
+                        Disabled
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            
+
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Save and return</button>
+                <a href="/admin/assessor/{{assessor.AssessorID}}" class="govuk-link">Cancel and return to assessor profile</a>
+            </div>
+        </form>
+
+
+
+    </div>
+</div>
+
+{% endblock %}

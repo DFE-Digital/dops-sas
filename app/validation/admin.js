@@ -42,7 +42,7 @@ exports.validateAddAdmin = [
             }
             return true;
         }),
-        check('LastName')
+    check('LastName')
         .trim()
         .custom((value, { req }) => {
             if (value === '') {
@@ -50,19 +50,30 @@ exports.validateAddAdmin = [
             }
             return true;
         }),
-        check('EmailAddress')
+    check('EmailAddress')
         .trim()
         .custom((value, { req }) => {
             if (value === '') {
                 throw new Error('Enter an email address');
             }
             return true;
-        }), 
-        check('createAsLead')
+        }),
+    check('createAsLead')
         .trim()
         .custom((value, { req }) => {
             if (value === '') {
                 throw new Error('Select an option');
+            }
+            return true;
+        })
+];
+
+exports.validateAddTraining = [
+    check('Training')
+        .trim()
+        .custom((value, { req }) => {
+            if (value === '') {
+                throw new Error('Select a training type');
             }
             return true;
         })

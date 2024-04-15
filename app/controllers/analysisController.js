@@ -15,7 +15,10 @@ exports.g_index = async function (req, res) {
 
 
     // Get all assessments
-    const results = await getRequestsByStatus("Published");
+    const results = await getRequestsByStatus("Published", req.session.data.User.Department );
+
+console.log(results)
+
     const standards = await countOutcomesByStandard(year);
     const data = await getAssessmentDetailsByYear(year);
 

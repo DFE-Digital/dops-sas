@@ -19,7 +19,7 @@
                     <a class="dfe-vertical-nav__link" href="/admin/assessor/{{assessor.AssessorID}}">Overview</a>
                 </li>
                 <li class="dfe-vertical-nav__section-item ">
-                    <a class="dfe-vertical-nav__link" href="/admin/assessor-history/{{assessor.AssessorID}}">Assessment
+                    <a class="dfe-vertical-nav__link" href="/admin/assessment-history/{{assessor.AssessorID}}">Assessment
                         history</a>
                 </li>
             </ul>
@@ -27,14 +27,7 @@
     </div>
     <div class="govuk-grid-column-three-quarters">
 
-        <div class="govuk-summary-card">
-            <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title">Assessor profile</h2>
-
-            </div>
-            <div class="govuk-summary-card__content">
-
-
+        <h2 class="govuk-heading-l">Assessor details</h2>
 
                 <dl class="govuk-summary-list">
                     <div class="govuk-summary-list__row">
@@ -103,25 +96,26 @@
                             {{assessor.Active |  BoolToActiveInactive}}
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class="govuk-link" href="/admin/assessor-change-status">Change<span
-                                    class="govuk-visually-hidden"> assessor role</span></a>
+                            <a class="govuk-link" href="/admin/assessor-change-status/{{assessor.AssessorID}}">Change<span
+                                    class="govuk-visually-hidden"> assessor active status</span></a>
                         </dd>
                     </div>
                 </dl>
-            </div>
-        </div>
+   
 
         <div class="govuk-summary-card">
             <div class="govuk-summary-card__title-wrapper">
                 <h2 class="govuk-summary-card__title">Training history</h2>
                 <ul class="govuk-summary-card__actions">
                     <li class="govuk-summary-card__action"> <a class="govuk-link"
-                            href="/admin/assessor-add-training/{{assessor.AssessorID}}">Add training<span
+                            href="/admin/add-training/{{assessor.AssessorID}}">Add training<span
                                 class="govuk-visually-hidden"> history</span></a>
                     </li>
                 </ul>
             </div>
             <div class="govuk-summary-card__content">
+
+                {% if training | length > 0%}
 
                 <table class="govuk-table dfe-table--smaller">
                     <thead class="govuk-table__head">
@@ -137,16 +131,19 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">{{record.Training}}</th>
                             <td class="govuk-table__cell">{{record.Provider}}</td>
-                            <td class="govuk-table__cell">{{record.TrainingDate | date('D MMM YYYY')}}</td>
+                            <td class="govuk-table__cell">{{record.Date | date('D MMM YYYY')}}</td>
 
                             <td class="govuk-table__cell"><a href="/admin/remove-training/{{record.UniqueID}}"
                                     class="govuk-link">Remove <span class="govuk-visually-hidden"> {{record.Training}}
-                                        from {{record.Provider}} on {{record.TrainingDate | date('D MMM YYYY')}}
+                                        from {{record.Provider}} on {{record.Date | date('D MMM YYYY')}}
                                     </span></a></td>
                         </tr>
                         {% endfor%}
                     </tbody>
                 </table>
+                {% else %}
+<p>No training history for this assessor.</p>
+                {% endif %}
             </div>
         </div>
 

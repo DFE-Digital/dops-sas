@@ -6,6 +6,7 @@
  */
 
 const { check, validationResult } = require('express-validator');
+const domainWhiteList = process.env.domainWhiteList.split(',');
 
 exports.validateSignIn = [
   check('EmailAddress')
@@ -17,8 +18,10 @@ exports.validateSignIn = [
       if (!/\S+@\S+\.\S+/.test(value)) {
         throw new Error('Please enter a valid email address.');
       }
-      if (!value.endsWith('@education.gov.uk')) {
-        throw new Error('Email must be an education.gov.uk address.');
+      // Only allow emails which end with whitelisted domains from process.env.domainWhileList comma separated list
+      
+      if (!domainWhiteList.some((domain) => value.endsWith(domain))) {
+        throw new Error('Your email is not from an approved domain. Please contact us for help.');
       }
       return true;
     })

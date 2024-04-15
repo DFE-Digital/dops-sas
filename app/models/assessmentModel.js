@@ -157,8 +157,7 @@ async function getRequestsByStatus(status, department) {
 
     try {
         const result = await pool.query(
-            `
-          SELECT * FROM "Assessment"
+            `SELECT * FROM "Assessment"
           WHERE "Status" = $1 AND "Department" = $2
         `,
             [status, department]
@@ -319,7 +318,10 @@ async function getActiveAssessmentsWithAssessorData(departmentID) {
             `
             SELECT
             "Assessment"."AssessmentID",
+            "Assessment"."Description",
             "Assessment"."Name",
+            "Assessment"."Type",
+            "Assessment"."Phase",
             "Assessment"."AssessmentDateTime",
             "Assessment"."AssessmentTime",
             STRING_AGG(CASE WHEN "AssessmentPanel"."Role" = 'Design assessor' THEN "User"."FirstName" || ' ' || "User"."LastName" END, ', ') AS "Design",
@@ -346,7 +348,21 @@ async function getActiveAssessmentsWithAssessorData(departmentID) {
     }
 }
 
-
+/**
+ * Change the primary contact for an assessment
+ */
+async function changePrimaryContact(assessmentID, userID) {
+    try {
+        await pool.query(`
+            UPDATE "Assessment"
+            SET "CreatedBy" = $2
+            WHERE "AssessmentID" = $1
+        `, [assessmentID, userID]);
+    } catch (error) {
+        console.error('Error in changePrimaryContact:', error);
+        throw error;
+    } 
+}
 
 
 module.exports = {
@@ -361,5 +377,6 @@ module.exports = {
     getAssessmentsUserCanAccess,
     getAssessmentPanelByUserID, 
     checkSubmitStatus,
-    getActiveAssessmentsWithAssessorData
+    getActiveAssessmentsWithAssessorData,
+    changePrimaryContact
 };

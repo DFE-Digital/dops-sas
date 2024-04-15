@@ -32,9 +32,8 @@ async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
           "LastName", 
           "CreatedBy", 
           "CreatedByProcess", 
-          "AccountActive", 
-          "Department"
-        ) VALUES ($1, $2, $3, '', '', 0, 'Registration', true, 1) RETURNING "UserID"
+          "AccountActive"
+        ) VALUES ($1, $2, $3, '', '', 0, 'Registration', true) RETURNING "UserID"
       `;
       res = await client.query(query, [emailAddress, token, tokenExpiry]);
       userId = res.rows[0].UserID; // Assuming the table returns "UserID" upon insertion
@@ -83,34 +82,61 @@ async function checkToken(token) {
 }
 
 /**
- * Inserts or updates a user's details based on the email address.
+ * Inserts or updates a user's details based on the email address. if FirstName and LastName exist, don't update
  * @param {string} emailAddress The user's email address.
  * @param {string} firstName The user's first name.
  * @param {string} lastName The user's last name.
  * @param {string} createdBy The identifier for what created the user.
  * @param {string} createdByProcess The process by which the user was created.
+ * @param {number} departmentID 
  * @returns {Promise<number>} The ID of the upserted user.
  */
-async function UpsertUserNoToken(emailAddress, firstName, lastName, createdBy, createdByProcess) {
+async function UpsertUserNoToken(emailAddress, firstName, lastName, createdBy, createdByProcess, departmentID) {
+  const client = await pool.connect();
   try {
-    const { rows } = await pool.query(`
-      INSERT INTO "User" ("EmailAddress", "FirstName", "LastName", "CreatedBy", "CreatedByProcess", "AccountActive", "Department")
-      VALUES ($1, $2, $3, $4, $5, true, 1)
-      ON CONFLICT ("EmailAddress")
-      DO UPDATE SET
-          "FirstName" = EXCLUDED."FirstName",
-          "LastName" = EXCLUDED."LastName",
-          "CreatedBy" = EXCLUDED."CreatedBy",
-          "CreatedByProcess" = EXCLUDED."CreatedByProcess",
-          "Department" = EXCLUDED."Department",
-          "AccountActive" = EXCLUDED."AccountActive"
-      RETURNING "UserID";
-    `, [emailAddress, firstName, lastName, createdBy, createdByProcess]);
+    await client.query('BEGIN');
 
-    return rows[0].UserID;
+    // Check if the user already exists
+    const userExists = await client.query(`
+      SELECT "UserID", "FirstName", "LastName"
+      FROM public."User"
+      WHERE "EmailAddress" = $1
+    `, [emailAddress]);
+
+    if (userExists.rows.length > 0) {
+      // User exists, check if the first and last name are empty
+      if (!userExists.rows[0].FirstName && !userExists.rows[0].LastName) {
+        // Update the first and last name
+        await client.query(`
+          UPDATE public."User"
+          SET "FirstName" = $1, "LastName" = $2
+          WHERE "UserID" = $3
+        `, [firstName, lastName, userExists.rows[0].UserID]);
+      }
+      await client.query('COMMIT');
+      return userExists.rows[0].UserID;
+    } else {
+      // User does not exist, create a new user
+      const newUser = await client.query(`
+        INSERT INTO public."User"(
+          "EmailAddress", 
+          "FirstName", 
+          "LastName", 
+          "CreatedBy", 
+          "CreatedByProcess", 
+          "AccountActive", 
+          "Department"
+        ) VALUES ($1, $2, $3, $4, $5, true, $6) RETURNING "UserID"
+      `, [emailAddress, firstName, lastName, createdBy, createdByProcess, departmentID]);
+      await client.query('COMMIT');
+      return newUser.rows[0].UserID;
+    }
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error('Error in UpsertUserNoToken:', error);
     throw error;
+  } finally {
+    client.release();
   }
 }
 
@@ -203,7 +229,30 @@ async function updateEmail(emailAddress, userId) {
   }
 }
 
+/**
+ * get user by email address
+ */
+async function getBasicUserDetailsByEmail(emailAddress) {
+  try {
+    const result = await pool.query(`
+        SELECT "UserID", "EmailAddress", "FirstName", "LastName"
+        FROM public."User"
+        WHERE "EmailAddress" = $1
+      `, [emailAddress]);
+
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      console.log(`No user found with EmailAddress: ${emailAddress}`);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error in getBasicUserDetailsByEmail:', error);
+    throw error;
+  }
+}
+
 
 module.exports = {
-  UpsertUserNoToken, checkAndSetUserToken, checkToken, getBasicUserDetails, updateName, updateEmail
+  UpsertUserNoToken, checkAndSetUserToken, checkToken, getBasicUserDetails, updateName, updateEmail, getBasicUserDetailsByEmail
 };

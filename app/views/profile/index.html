@@ -5,30 +5,12 @@
 {% set view = "profile" %}
 
 {% block hero %}
-<div class="dfe-page-header dfe-page-header--with-sub-nav">
+<div class="dfe-page-header">
     <div class="govuk-width-container dfe-width-container ">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <span class="govuk-caption-l">Profile</span>
                 <h1 class="govuk-heading-l">Your profile</h1>
-                <nav class="app-sub-navigation" aria-label="Application menu">
-                    <ul class="app-sub-navigation__list">
-                        <li class="app-sub-navigation__item">
-                            <a class="app-sub-navigation__link" {% if view==='profile' %} aria-current="page" {% endif
-                                %} href="/profile">Profile</a>
-                        </li>
-                        {% if data.User.IsAssessor == true %}
-                        <li class="app-sub-navigation__item">
-                            <a class="app-sub-navigation__link" {% if view==='training' %} aria-current="page" {% endif
-                                %}href="/profile/assessor-training">Assessor training</a>
-                        </li>
-                        <li class="app-sub-navigation__item">
-                            <a class="app-sub-navigation__link" {% if view==='history' %} aria-current="page" {% endif
-                                %}href="/profile/assessor-history">Assessor history</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
@@ -41,6 +23,28 @@ isAssessor
 
 {% block content %}
 <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+
+        <nav class="dfe-vertical-nav">
+            <ul class="dfe-vertical-nav__section">
+                <li
+                    class="dfe-vertical-nav__section-item {% if view == 'profile' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <a class="dfe-vertical-nav__link" href="/profile">Profile</a>
+                </li>
+                <li
+                    class="dfe-vertical-nav__section-item {% if view == 'training' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <a class="dfe-vertical-nav__link" href="/profile/training">Training</a>
+                </li>
+                <li
+                    class="dfe-vertical-nav__section-item {% if view == 'history' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <a class="dfe-vertical-nav__link" href="/profile/history">History</a>
+                </li>
+
+            </ul>
+        </nav>
+
+
+    </div>
 
     <div class="govuk-grid-column-three-quarters">
 
@@ -69,6 +73,17 @@ isAssessor
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link" href="/profile/change-email">Change<span class="govuk-visually-hidden"> email
                             address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Department
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{data.Department.Name }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  
                 </dd>
             </div>
 

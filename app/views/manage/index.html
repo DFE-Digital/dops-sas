@@ -87,7 +87,20 @@
             <div class="govuk-summary-card__title-wrapper">
                 <h2 class="govuk-summary-card__title">Your services being assessed</h2>
             </div>
-            <div class="govuk-summary-card__content"> {% if assessments | length%}
+            <div class="govuk-summary-card__content"> 
+
+                {% set hasAssessments = false %}
+
+                {% for record in assessments %}
+                {% if record.Status !== 'Draft' %}
+                {% set hasAssessments = true %}
+                {% endif %}
+                {% endfor %}
+
+           
+
+                
+                {% if hasAssessments %}
                 <table class="govuk-table ">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">

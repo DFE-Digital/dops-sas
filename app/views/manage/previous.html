@@ -37,15 +37,17 @@
     <div class="govuk-grid-column-three-quarters">
 
 
+        {% set hasAssessments = false %}
+
+        {% for record in assessments %}
+        {% if record.Status === 'Published' %}
+        {% set hasAssessments = true %}
+        {% endif %}
+        {% endfor %}
 
 
 
-
-        <div class="govuk-summary-card">
-            <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title">Your previous assessments</h2>
-            </div>
-            <div class="govuk-summary-card__content"> {% if assessments.length%}
+      {% if hasAssessments%}
                 <table class="govuk-table ">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
@@ -88,9 +90,7 @@
                 </table> {% else %}
                 <p>You don't have any completed assessments.</p>
                 {% endif %}
-            </div>
-        </div>
-
+     
 
     </div>
 

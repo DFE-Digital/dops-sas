@@ -1,0 +1,109 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Admin" %}
+{% set pageName = "Assessor" %}
+{% set view = "assessors" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <nav class="dfe-vertical-nav">
+            <ul class="dfe-vertical-nav__section">
+                <li class="dfe-vertical-nav__section-item">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessor/{{assessor.AssessorID}}">Overview</a>
+                </li>
+                <li class="dfe-vertical-nav__section-item  dfe-vertical-nav__section-item--current">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessment-history/{{assessor.AssessorID}}">Assessment
+                        history</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Assessor details</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessor.FirstName}}   {{assessor.LastName}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                   
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessor.EmailAddress }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                   
+                </dd>
+            </div>
+            
+        </dl>
+
+
+        <h2 class="govuk-heading-l">Assessment history</h2>
+
+        {% if assessments | length > 0 %}
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Service</th>
+                    <th scope="col" class="govuk-table__header ">Phase</th>
+                    <th scope="col" class="govuk-table__header ">Type</th>
+                    <th scope="col" class="govuk-table__header ">Assessment date</th>
+                    <th scope="col" class="govuk-table__header ">Outcome</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for record in assessments %}
+                {% if record.Status === 'Published' %}
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">
+                        <a class="govuk-link govuk-link--no-visited-state "
+                            href="/assess/report/{{record.AssessmentID}}">{{record.Name}}</a>
+                    </th>
+                    <td class="govuk-table__cell">{{record.Phase}}</td>
+                    <td class="govuk-table__cell">{{record.Type}}</td>
+        
+                  
+                    <td class="govuk-table__cell">{{record.AssessmentDateTime|date('D MMM YYYY')}}
+                    </td>  
+                    <td class="govuk-table__cell">
+                    {% if record.Status == "Team Review" or record.Status
+                                        == "SA Publish" or record.Status == "Published" %}
+                                        <strong
+                                            class="govuk-tag govuk-tag--{{record.Outcome | lower}}">{{record.Outcome}}</strong>
+                                        {% else %}
+                                        <strong class="govuk-tag">Not rated</strong>
+                                        {% endif %}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No assessments completed.</p>
+        {% endif %}
+        
+
+
+
+    </div>
+</div>
+
+{% endblock %}

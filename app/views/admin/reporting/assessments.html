@@ -2,7 +2,7 @@
 
 
 {% set selectedNav = "Admin" %}
-{% set pageName = "Assessments and assessors" %}
+{% set pageName = "Report" %}
 {% set view = "reporting" %}
 {% set filter = ""%}
 
@@ -14,8 +14,59 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-        {{assessments | dump}}
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+              <h2 class="govuk-summary-card__title">
+                Report of assessment and assessors
+              </h2>
+              <ul class="govuk-summary-card__actions">
+                <li class="govuk-summary-card__action">
+                  <a class="govuk-link" href="/admin/reporting/export-assessment-report">Export to Excel</a>
+                </li>
+              </ul>
+            </div>
+            <div class="govuk-summary-card__content">
 
+        <table class="govuk-table dfe-table--smaller">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Service</th>
+                    <th scope="col" class="govuk-table__header">Phase</th>
+                    <th scope="col" class="govuk-table__header">Type</th>
+                    <th scope="col" class="govuk-table__header">Date</th>
+                    <th scope="col" class="govuk-table__header ">Time</th>
+                    <th scope="col" class="govuk-table__header ">Lead</th>
+                    <th scope="col" class="govuk-table__header ">Design</th>
+                    <th scope="col" class="govuk-table__header ">UR</th>
+                    <th scope="col" class="govuk-table__header ">Tech</th>
+                    <th scope="col" class="govuk-table__header ">Performance</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for assessment in assessments %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/admin/overview/{{assessment.AssessmentID}}">{{assessment.Name}}</a></td>
+                    <td class="govuk-table__cell">{{assessment.Phase}}</td>
+                    <td class="govuk-table__cell">{{assessment.Type}}</td>
+                    <td class="govuk-table__cell">{{assessment.AssessmentDateTime | date('D MMM YYYY') }}</td>
+                    <td class="govuk-table__cell">{{assessment.AssessmentTime}}</td>
+                    <td class="govuk-table__cell">{{assessment.Lead | blankToNA }}</td>
+                    <td class="govuk-table__cell">{{assessment.Design | blankToNA }}</td>
+                    <td class="govuk-table__cell">{{assessment.UR | blankToNA }}</td>
+                    <td class="govuk-table__cell">{{assessment.Tech | blankToNA }}</td>
+                    <td class="govuk-table__cell">{{assessment.Performance | blankToNA }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>  
+        </div>
+
+        <style>
+            .dfe-table--smaller * {
+                font-size: 0.9em;
+            }
+        </style>
 
     </div>
 </div>

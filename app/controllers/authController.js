@@ -5,6 +5,7 @@ const { checkAndSetUserToken, checkToken } = require('../models/user'); // Adjus
 const { sendNotifyEmail } = require('../middleware/notify');
 const { getRoleByUserID } = require('../models/userrole');
 const { getAllAssessors, createAssessor, getAssessorByUserID } = require('../models/assessors');
+const {getDepartments, getDepartmentForUser } = require('../models/departments');
 
 exports.g_signin = (req, res) => {
     res.render('auth/sign-in');
@@ -56,6 +57,9 @@ exports.g_checktoken = async (req, res) => {
         if(user.FirstName === '' || user.LastName === ''){
             return res.redirect('/profile/change-name')
         }
+
+        const department = await getDepartmentForUser(user.Department);
+        req.session.data['Department'] = department;
 
         return res.redirect('/manage')
 

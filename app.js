@@ -68,6 +68,11 @@ nunjuckEnv.addFilter('split', function(str, seperator) {
   nunjuckEnv.addFilter('NAToString', function(str){
     return str === 'NA' ? 'Not assessed' : str
   })
+
+  nunjuckEnv.addFilter('blankToNA', function(str){
+    console.log(str)
+    return str === null ? '-' : str
+  })
   
   // If NA return NA for everything else, return the first character
   nunjuckEnv.addFilter('OutcomeForGrid', function(str){

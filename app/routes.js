@@ -140,6 +140,11 @@ router.get("/admin/reporting/assessments", isAuthenticated, isAdmin, adminContro
 router.get("/admin/admins", isAuthenticated, isAdmin, adminController.g_admins);
 router.get("/admin/add-admin", isAuthenticated, isAdmin, adminController.g_addadmin);
 router.get("/admin/remove-admin/:userRoleID", isAuthenticated, isAdmin, adminController.g_removeadmin);
+router.get("/admin/add-training/:assessorID", isAuthenticated, isAdmin, adminController.g_addtraining);
+router.get("/admin/remove-training/:trainingUniqueID", isAuthenticated, isAdmin, adminController.g_removetraining);
+router.get("/admin/assessment-history/:assessorID", isAuthenticated, isAdmin, adminController.g_assessmentHistory);
+router.get("/admin/reporting/export-assessment-report", isAuthenticated, isAdmin, adminController.g_exportAssessmentReport);
+router.get("/admin/assessor-change-status/:assessorID", isAuthenticated, isAdmin, adminController.g_changeAssessorStatus);
 
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
@@ -150,6 +155,10 @@ router.post("/admin/send-report", isAuthenticated, isAdmin, adminController.p_se
 router.post("/admin/publish-report", isAuthenticated, isAdmin, adminController.p_publishReport);
 router.post("/admin/add-admin", isAuthenticated, isAdmin, adminController.p_addadmin);
 router.post("/admin/remove-admin", isAuthenticated, isAdmin, adminController.p_removeadmin);
+router.post("/admin/add-training", isAuthenticated, isAdmin, adminController.p_addTraining);
+router.post("/admin/remove-training", isAuthenticated, isAdmin, adminController.p_removeTraining);
+router.post("/admin/assessor-change-status", isAuthenticated, isAdmin, adminController.p_changeAssessorStatus);
+router.post("/admin/change-primary-contact", isAuthenticated, isAdmin, adminController.p_changePrimaryContact);
 
 // ANALYSIS ROUTES
 router.get('/analysis', isAuthenticated, analysisController.g_index);
@@ -201,6 +210,8 @@ router.post("/volunteer", isAuthenticated, assessController.p_volunteer);
 router.get('/profile', isAuthenticated, profileController.g_profile);
 router.get('/profile/change-name', isAuthenticated, profileController.g_changeName);
 router.get('/profile/change-email', isAuthenticated, profileController.g_changeEmail);
+router.get('/profile/training', isAuthenticated, profileController.g_training);
+router.get('/profile/history', isAuthenticated, profileController.g_history);
 
 router.post('/profile/change-name', isAuthenticated, profileController.p_changeName);
 router.post('/profile/change-email', isAuthenticated, profileController.p_changeEmail);

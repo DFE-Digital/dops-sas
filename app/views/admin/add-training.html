@@ -1,0 +1,169 @@
+{% extends "layouts/auth.html" %} 
+{% set selectedNav = "Admin" %}
+ {% set pageName = "Add assessor training" %} 
+ {% set
+view = "assessors" %} 
+{%
+block hero %} {% include './_header.html'%} {% endblock %} {% set trainingError = false %} {% for error in errors %} {%
+if error.field === 'Training'
+%} {% set trainingError = true %} {% endif %} {% endfor %} {% set providerError = false %} {% for error in errors %} {%
+if error.field === 'Provider'
+%} {% set providerError = true %} {% endif %} {% endfor %} {% set Trainingday = false %} {% for error in errors %} {% if
+error.field === 'Trainingday'
+%} {% set Trainingday = true %} {% endif %} {% endfor %} {% set Trainingmonth = false %} {% for error in errors %} {% if
+error.field ===
+'Trainingmonth' %} {% set Trainingmonth = true %} {% endif %} {% endfor %} {% set Trainingyear = false %} {% for error
+in errors %} {% if error.field
+=== 'Trainingyear' %} {% set Trainingyear = true %} {% endif %} {% endfor %} {% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        {{errors.Training | dump}}
+
+        <form action="/admin/add-training" method="post">
+            <input type="hidden" name="AssessorID" value="{{assessorID}}" />
+
+            {% if errors %}
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">There is a problem</h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            {% for error in errors %}
+                            <li>
+                                <a href="#{{error.field}}">{{error.message}}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <h2 class="govuk-heading-l">Training details</h2>
+
+            <div class="govuk-form-group {%if trainingError %}govuk-form-group--error{% endif %}">
+                <fieldset class="govuk-fieldset" aria-describedby="Training-hint">
+                    <legend class="govuk-fieldset__legend">What was the training?</legend>
+                    {%if trainingError %}
+                    <p id="Training-error" class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span>
+                        Select the type of training</p>
+                    {% endif %}
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Training" name="Training" type="radio"
+                                value="Assessor training" {% if data['Training']=='Assessor training' %}checked{% endif
+                                %}>
+                            <label class="govuk-label govuk-radios__label" for="Training"> Assessor training </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Training-2" name="Training" type="radio"
+                                value="Lead assessor training" {% if data['Training']=='Lead assessor training'
+                                %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Training-2"> Lead assessor training
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Training-3" name="Training" type="radio"
+                                value="Refresher training" {% if data['Training']=='Refresher training' %}checked{%
+                                endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Training-3"> Refresher training </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Training-4" name="Training" type="radio"
+                                value="Other training" {% if data['Training']=='Other
+                  training' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Training-4"> Other training </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-form-group {%if providerError %}govuk-form-group--error{% endif %}">
+                <fieldset class="govuk-fieldset" aria-describedby="Provider-hint">
+                    <legend class="govuk-fieldset__legend">Who provided the training?</legend>
+                    {%if trainingError %}
+                    <p id="Provider-error" class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span>
+                        Select the training provider</p>
+                    {% endif %}
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Provider" name="Provider" type="radio" value="CDDO"
+                                {% if data['Provider']=='CDDO' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Provider"> CDDO </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Provider-2" name="Provider" type="radio" value="DfE"
+                                {% if data['Provider']=='DfE' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Provider-2"> DfE </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Provider-3" name="Provider" type="radio" value="DWP"
+                                {% if data['Provider']=='DWP' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Provider-3"> DWP </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Provider-4" name="Provider" type="radio" value="HMRC"
+                                {% if data['Provider']=='HMRC' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Provider-4"> HMRC </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="Provider-5" name="Provider" type="radio" value="OGD"
+                                {% if data['Provider']=='OGD' %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="Provider-5"> Other Government Department
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div
+                class="govuk-form-group {%if Trainingyear or Trainingmonth or Trainingday %}govuk-form-group--error{% endif %}">
+                <fieldset class="govuk-fieldset" role="group" aria-describedby="Training-hint">
+                    <legend class="govuk-fieldset__legend">When did it take place</legend>
+                    <div id="Training-hint" class="govuk-hint">For example, 27 3 2023</div>
+                    {%if Trainingyear or Trainingmonth or Trainingday %}
+                    <p id="passport-issued-error" class="govuk-error-message"><span
+                            class="govuk-visually-hidden">Error:</span> Enter a date</p>
+                    {% endif %}
+                    <div class="govuk-date-input" id="Training">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="Training-day"> Day </label>
+                                <input
+                                    class="govuk-input govuk-date-input__input govuk-input--width-2 {%if Trainingday %}govuk-input--error{% endif %}"
+                                    id="Training-day " name="Trainingday" type="text" inputmode="numeric"
+                                    value="{{data['Trainingday']}}" />
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="Training-month"> Month </label>
+                                <input
+                                    class="govuk-input govuk-date-input__input govuk-input--width-2 {%if Trainingmonth %}govuk-input--error{% endif %}"
+                                    id="Training-month" name="Trainingmonth" type="text" inputmode="numeric"
+                                    value="{{data['Trainingmonth']}}" />
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-date-input__label" for="Training-year"> Year </label>
+                                <input
+                                    class="govuk-input govuk-date-input__input govuk-input--width-4 {%if Trainingyear %}govuk-input--error{% endif %}"
+                                    id="Training-year" name="Trainingyear" type="text" inputmode="numeric"
+                                    value="{{data['Trainingyear']}}" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Save and return</button>
+                <a href="/admin/assessor/{{assessorID}}" class="govuk-link">Cancel and return to assessor
+                    information</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -80,9 +80,10 @@ async function countOutcomesByStandard(year) {
 /**
  * Fetches assessment details for a given year where the status is 'Published'.
  * @param {number} year - The year to filter assessments by.
+ * @param {number} department - The department to filter assessments by.
  * @returns {Promise<Array>} - A promise that resolves to an array of assessment details.
  */
-async function getAssessmentDetailsByYear(year) {
+async function getAssessmentDetailsByYear(year, department) {
     try {
         const query = `
             SELECT sso."AssessmentID", sso."Standard", sso."Outcome", a."Name"
@@ -90,9 +91,10 @@ async function getAssessmentDetailsByYear(year) {
             INNER JOIN "Assessment" a ON sso."AssessmentID" = a."AssessmentID"
             WHERE a."Status" = 'Published'
             AND EXTRACT(YEAR FROM a."AssessmentDateTime") = $1
+            AND a."Department" = $2
             ORDER BY sso."Standard" ASC;
         `;
-        const { rows } = await pool.query(query, [year]);
+        const { rows } = await pool.query(query, [year, department]);
         return rows;
     } catch (error) {
         console.error('Error in getAssessmentDetailsByYear:', error);

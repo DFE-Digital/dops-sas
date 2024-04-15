@@ -17,7 +17,7 @@ async function getAllAssessors(departmentID) {
             SELECT a.*, u."FirstName", u."LastName", u."EmailAddress"
             FROM public."Assessor" a
             INNER JOIN public."User" u ON a."UserID" = u."UserID"
-            WHERE u."Department" = $1
+            WHERE a."DepartmentID" = $1
         `, [departmentID]);
 
         return result.rows;
@@ -37,13 +37,13 @@ async function getAllAssessors(departmentID) {
  * @param {*} LeadAssessor 
  * @param {*} ExternalAssessor 
  */
-async function createAssessor(UserID, Role, CrossGovAssessor, LeadAssessor, ExternalAssessor) {
+async function createAssessor(UserID, Role, CrossGovAssessor, LeadAssessor, ExternalAssessor, DepartmentID) {
 
     try {
         await pool.query(`
             INSERT INTO public."Assessor" ("UserID", "PrimaryRole", "Active","CrossGovAssessor", "LeadAssessor", "ExternalAssessor", "DepartmentID")
-            VALUES ($1, $2, true, $3, $4, $5, 1)
-        `, [UserID, Role, CrossGovAssessor, LeadAssessor, ExternalAssessor]);
+            VALUES ($1, $2, true, $3, $4, $5, $6)
+        `, [UserID, Role, CrossGovAssessor, LeadAssessor, ExternalAssessor, DepartmentID]);
     } catch (error) {
         console.error('Error in createAssessor:', error);
         throw error;
@@ -93,6 +93,99 @@ async function getAssessorByUserID(userID) {
     }
 }
 
+/**
+ * get training for a given userid
+ * @param {number} userID The unique identifier of the user.
+ */
+async function getTrainingForUser(userID) {
+    console.log('userID:', userID);
+    try {
+        const result = await pool.query(`
+            SELECT *
+            FROM public."AssessorTraining"
+            WHERE "UserID" = $1
+        `, [userID]);
+
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getTrainingForUser:', error);
+        return [];
+    }
+}
+
+/**
+ * Create training for a user
+ * @param {number} userID The unique identifier of the user.
+ * @param {string} training The training to add.
+ * @param {date} date The date the training was completed.
+ * @param {string} provider who did the training
+ */
+async function createTraining(userID, training, date, provider) {
+    try {
+        await pool.query(`
+            INSERT INTO public."AssessorTraining" ("UserID", "Training", "Date", "Provider")
+            VALUES ($1, $2, $3, $4)
+        `, [userID, training, date, provider]);
+    } catch (error) {
+        console.error('Error in createTraining:', error);
+        throw error;
+    }   
+}
+
+/**
+ * Get training by unique ID
+ * @param {UniqueID} uniqueID The unique identifier of the training.
+ */
+async function getTrainingByUniqueID(uniqueID) {
+    try {
+        const result = await pool.query(`
+            SELECT *
+            FROM public."AssessorTraining"
+            WHERE "UniqueID" = $1
+        `, [uniqueID]);
+
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in getTrainingByUniqueID:', error);
+        return {};
+    }
+}
+
+/**
+ * Delete training by unique ID
+ * @param {UniqueID} uniqueID The unique identifier of the training.
+ */
+async function deleteTraining(uniqueID) {
+    try {
+        await pool.query(`
+            DELETE FROM public."AssessorTraining"
+            WHERE "UniqueID" = $1
+        `, [uniqueID]);
+    } catch (error) {
+        console.error('Error in deleteTraining:', error);
+        throw error;
+    }
+}
+
+/**
+ * Update assessor
+ * @param {number} assessorID The unique
+ * @param {string} Status The status
+ */
+async function updateAssessor(assessorID, Status) {
+    try {
+        await pool.query(`
+            UPDATE public."Assessor"
+            SET "Active" = $2
+            WHERE "AssessorID" = $1
+        `, [assessorID, Status]);
+    } catch (error) {
+        console.error('Error in updateAssessor:', error);
+        throw error;
+    }
+}
+
+
 module.exports = {
-    getAllAssessors, createAssessor, getAssessor, getAssessorByUserID
+    getAllAssessors, createAssessor, getAssessor, getAssessorByUserID, getTrainingForUser, createTraining, getTrainingByUniqueID, deleteTraining, updateAssessor
 };
