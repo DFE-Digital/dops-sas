@@ -16,8 +16,6 @@ const fs = require('fs');
 const PizZip = require('pizzip');
 const Docxtemplater = require('docxtemplater');
 const ExcelJS = require('exceljs');
-const { get } = require('browser-sync');
-
 
 exports.g_index = async function (req, res) {
     const department = req.session.data.User.Department;
