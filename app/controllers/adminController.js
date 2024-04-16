@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator');
-const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, getDraftsForUser, deleteAssessment, getRequestsByStatus, getRequestsByMixedStatus, getActiveAssessmentsWithAssessorData, getAssessmentPanelByUserID, changePrimaryContact } = require('../models/assessmentModel');
+const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, getDraftsForUser, deleteAssessment, getRequestsByStatus, getRequestsByMixedStatus, getActiveAssessmentsWithAssessorData, getAssessmentPanelByUserID, changePrimaryContact, getAllAssessments } = require('../models/assessmentModel');
 const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
 const { getAllAssessors, createAssessor, getAssessor, getTrainingForUser, createTraining, getTrainingByUniqueID, getAssessorByUserID, deleteTraining, updateAssessor } = require('../models/assessors');
 const { validateRequest, validateAddPanel, validateAddAdmin, validateAddTraining } = require('../validation/admin');
@@ -19,9 +19,52 @@ const ExcelJS = require('exceljs');
 
 exports.g_index = async function (req, res) {
     const department = req.session.data.User.Department;
-    const statuses = ['New', 'SA Review', 'SA Publish'];
-    const requests = await getRequestsByMixedStatus(statuses, department);
-    return res.render('admin/index', { requests });
+    const requests = await getAllAssessments(department);
+    let { filter } = req.params;
+
+    if(!filter){
+        filter = 'priority';
+    }
+
+    let filteredData = [];
+    let filterView = ""
+
+    const priority = requests.filter(request => request.Status === 'New' || request.Status === 'Team Review' || request.Status === 'SA Review' || request.Status === 'SA Publish');
+    const noDateRequests = requests.filter(request => request.Status === 'Active' && !request.AssessmentDateTime);
+    const saReviewRequests = requests.filter(request => request.Status === 'SA Review');
+    const saPublishRequests = requests.filter(request => request.Status === 'SA Publish');
+    const teamReviewRequests = requests.filter(request => request.Status === 'Team Review');
+
+
+
+    if(filter === 'priority'){
+        filteredData = priority
+        filterView = "Priority tasks"
+    }
+
+    if(filter === 'sa-review'){
+        filteredData = saReviewRequests
+        filterView = "Reports to send on to the team"
+    }
+
+    if(filter === 'sa-publish'){
+        filteredData = saPublishRequests
+        filterView = "Reports needing to be published"
+    }
+
+    if(filter === 'team-review'){
+        filteredData = teamReviewRequests
+        filterView = "Reports with the team to review"
+    }
+
+    if(filter === 'no-date'){
+        filteredData = noDateRequests
+        filterView = "Requests with no assessment date set"
+    }
+
+ 
+
+    return res.render('admin/index', { filteredData, filter, filterView, priority, noDateRequests, saReviewRequests, saPublishRequests, teamReviewRequests });
 }
 
 exports.g_overview = async function (req, res) {

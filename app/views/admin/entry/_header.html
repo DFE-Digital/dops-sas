@@ -32,7 +32,7 @@
                             <td class="govuk-table__cell">{{assessment.Type}}</td>
                             <td class="govuk-table__cell">
                                 {% if not assessment.AssessmentTime and not assessment.AssessmentDateTime %}
-                                <a href="/admin/set-date/{{assessment.AssessmentID}}" class="govuk-link">Set date and
+                                <a href="/admin/add-date/{{assessment.AssessmentID}}" class="govuk-link">Set date and
                                     time</a>
                                 {% else %}
                                 {% if assessment.AssessmentTime %} {{assessment.AssessmentTime }} on {% else %}Time not

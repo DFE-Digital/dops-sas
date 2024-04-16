@@ -23,7 +23,7 @@
 
                 <form method="post" action="/assess/pr-report">
                     <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
-                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="750">
+                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="2500">
                         <div class="govuk-form-group">
                             <h2 class="govuk-label-wrapper">
                                 <label class="govuk-label govuk-label--m" for="with-hint">
@@ -36,11 +36,11 @@
                             <textarea class="govuk-textarea govuk-js-character-count" id="with-hint" name="PanelComments" rows="10" aria-describedby="with-hint-info with-hint-hint">{{assessment.PanelComments}}</textarea>
                         </div>
                         <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
-    You can enter up to 750 characters
+    You can enter up to 2500 characters
   </div>
                     </div>
 
-                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="750">
+                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="2500">
                         <div class="govuk-form-group">
                             <h2 class="govuk-label-wrapper">
                                 <label class="govuk-label govuk-label--m" for="with-hint-improve">
@@ -53,7 +53,7 @@
                             <textarea class="govuk-textarea govuk-js-character-count" id="with-hint-improve" name="PanelCommentsImprove" rows="10" aria-describedby="with-hint-info with-hint-hint">{{assessment.PanelCommentsImprove}}</textarea>
                         </div>
                         <div id="with-hint-improve-info" class="govuk-hint govuk-character-count__message">
-    You can enter up to 750 characters
+    You can enter up to 2500 characters
   </div>
                     </div>
 
@@ -99,5 +99,11 @@
         </div>
 
     </div>
-
+    <style>
+        pre {
+          white-space: pre-wrap;
+          word-wrap: break-word; 
+          overflow-wrap: break-word; 
+      }
+      </style>
 {% endblock %}

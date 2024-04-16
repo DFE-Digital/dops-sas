@@ -1,9 +1,9 @@
 {% extends "layouts/public.html" %}
 
-{% set pageName = "Book, manage and assess products and service" %}
+{% set pageName = "Book, manage, assess, and report service assessments" %}
 {% set pageDescription = "Use this service if you need to have a service assessment or peer review in the Department for
 Education." %}
-{% set selectedNav = "Features"%}
+{% set selectedNav = "Home"%}
 
 {% block hero %}
 <section class="dfe-page-hero">
@@ -13,8 +13,15 @@ Education." %}
                 <h1 class="govuk-heading-xl">{{pageName}}</h1>
                 <p class="govuk-body-l">{{pageDescription}}</p>
 
-                <p class="govuk-body"> <a href="/sign-in" class="govuk-link govuk-link--inverse">Sign in</a> to start
-                    using the service</p>
+
+                <div class="govuk-button-group">
+
+                    <a href="/sign-in" role="button" class="govuk-button govuk-button--inverse">Sign in</a>
+                    <p class="govuk-body govuk-body--inverse govuk-!-margin-bottom-0">or <a
+                            class="govuk-link govuk-link--inverse govuk-!-margin-right-0" href="#">find out more <span
+                                class="govuk-visually-hidden">about this service</span></a> about this service.
+                    </p>
+                </div>
             </div>
         </div>
 </section>
@@ -22,10 +29,187 @@ Education." %}
 
 
 {% block content %}
+
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l">Features</h2>
+    <div class="govuk-grid-column-full">
+
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">Everything in one place</h2>
+
+        <div class="dfe-grid-container dfe-grid-container--wider govuk-!-margin-top-7 dfe-home-cards-homepage">
+
+            <div class="dfe-home-card" style="text-align: center;">
+                <picture>
+                    <img src="/assets/images/book.png" alt="">
+                </picture>
+                <div class="dfe-home-card-container">
+                    <h2 class="govuk-heading-m">
+                        Book
+                    </h2>
+                    <p>Book a peer review or service assessment online.</p>
+                </div>
+            </div>
+
+            <div class="dfe-home-card" style="text-align: center;">
+                <picture>
+                    <img src="/assets/images/manage.png" alt="">
+                </picture>
+                <div class="dfe-home-card-container">
+                    <h2 class="govuk-heading-m">
+                        Manage
+                    </h2>
+                    <p>View your assessment, link artefacts and manage the service team.</p>
+                </div>
+            </div>
+
+            <div class="dfe-home-card" style="text-align: center;">
+                <picture>
+                    <img src="/assets/images/assess.png" alt="">
+                </picture>
+                <div class="dfe-home-card-container">
+                    <h2 class="govuk-heading-m">
+                        Assess
+                    </h2>
+                    <p>Complete the assessment report against the Service Standard online.</p>
+                </div>
+            </div>
+        </div>
 
     </div>
+
+    <div class="govuk-grid-column-full">
+
+        <div class="dfe-demo-panel govuk-!-margin-top-5">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-2">Department assurance leads</h2>
+                    <p class="govuk-body">A complete end to end service to manage assessments, including assessors and
+                        reporting.</p>
+
+
+                    <h3 class="govuk-heading-m  govuk-!-margin-bottom-2">Task driven</h3>
+                    <p class="govuk-body">With tasks guiding administrators, assessors and service teams throughout the
+                        process, managing assessments becomes easier.</p>
+
+                    <h3 class="govuk-heading-m  govuk-!-margin-bottom-2">Reporting</h3>
+                    <p class="govuk-body">Assessment and peer review reports published within the service automatically.
+                    </p>
+
+                    <h3 class="govuk-heading-m  govuk-!-margin-bottom-2">Analysis</h3>
+                    <p class="govuk-body">Analysis tools to help understand trends in assessments against the service
+                        standards.
+                    </p>
+
+                    <h3 class="govuk-heading-m  govuk-!-margin-bottom-2">Management</h3>
+                    <p class="govuk-body">Add and manage assessors, track training and participation in assessments over time.</p>
+
+
+                </div>
+                <div class="govuk-grid-column-one-half" style="text-align: center;">
+                    <picture>
+                        <img src="/assets/images/img-05.png" alt="" style="max-width: 75%; text-align: center;">
+                    </picture>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
+<style>
+    .dfe-grid-container {
+        display: flex;
+        flex-direction: column;
+        grid-gap: 15px;
+    }
+
+    @media (min-width: 40.0625em) {
+        .dfe-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 30px;
+        }
+
+        .dfe-grid-container.dfe-grid-container--wider {
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+        }
+    }
+
+    .dfe-home-card {
+        position: relative;
+        background-image: linear-gradient(180deg, rgba(244, 244, 249, 0.8) 50%, rgba(244, 244, 249, 0.05));
+        max-width: 400px;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .dfe-home-card.dfe-home-card--blog-card {
+        border-radius: 12px 12px 0 0;
+    }
+
+    .dfe-home-card.dfe-home-card--blog-card img {
+        border-radius: 12px 12px 0 0;
+    }
+
+    @media (max-width: 40.0525em) {
+        .dfe-home-card {
+            max-width: 100%;
+        }
+    }
+
+    .dfe-home-card>picture,
+    .dfe-home-card>picture>img {
+        max-width: calc(80% - 30px);
+        margin: 30px 0 15px 0;
+    }
+
+    .dfe-home-card-container {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        /* This will push your progress bar to the bottom */
+    }
+
+    .dfe-home-card-container .govuk-link {
+        color: #0b0c0c;
+    }
+
+    .dfe-home-card:focus-within {
+        outline: 3px solid #fd0;
+    }
+
+    .dfe-home-card-container .dfe-home-card-link--header:focus,
+    .dfe-home-card-container .dfe-home-card-link--retake:focus {
+        color: #0b0c0c;
+    }
+
+    .dfe-home-card-link--retake {
+        position: relative;
+        z-index: 2;
+    }
+
+    .dfe-home-card-link--header {
+        text-decoration: none;
+        color: #347ca9;
+    }
+
+    .dfe-home-card-link--header:after {
+        position: absolute;
+        content: "";
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .dfe-demo-panel {
+        position: relative;
+        background: rgba(244, 244, 249, 0.8);
+        border-radius: 12px;
+        padding: 55px;
+    }
+</style>
 {% endblock %}

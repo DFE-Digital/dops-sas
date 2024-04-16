@@ -1,0 +1,72 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Installation" %}
+{% set pageDescription = "Guidance for installing the service assessment service in your own organisation." %}
+{% set selectedNav = "Features"%}
+{% set view = "overview" %}
+
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+
+        {% include './_nav.html' %}
+
+
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Installation</h2>
+
+        <div class="govuk-inset-text">
+            <p>This is a beta product.</p>
+
+            All known issues and bugs can be found on the <a
+                href="https://github.com/orgs/DFE-Digital/projects/39">GitHub repo (opens in new tab)</a> for this
+            service.
+
+        </div>
+
+        <p>If you decide to use this product in your organisation, please fork, and contribute changes into the main
+            repository.</p>
+
+            <p>If you want to contribute to this product, you may want to <a href="" target="_blank">check our backlog</a> for features we have not yet implemented and are looking for help with.</p>
+
+            <h2 class="govuk-heading-l">Expected setup timescales</h2>
+
+            <p>If you follow these instructions step by step, it should take around 1.5 hours from starting, to using the service.</p>
+
+        <h2 class="govuk-heading-l">Prerequisites</h2>
+
+        <p>This is a beta product which we are testing the suitability for supporting the service assessment process in
+            a government department, we are using low-cost hosting and database provision to keep costs at a minimum.
+        </p>
+
+        <h3 class="govuk-heading-m">Hosting</h3>
+        <p>This service is hosted using Heroku. It is sufficient for the intermittent, non-continuous use of the
+            product.</p>
+        <p>We use a standard eco dyno which is about £6 a month.</p>
+
+        <h3 class="govuk-heading-m">Database</h3>
+        <p>We use a Postgres database which is provided as an add-on in Heroku.</p>
+        <p>We are using a Free tier instance which is sufficient for supporting this product.</p>
+
+        <h3 class="govuk-heading-m">Notify</h3>
+        <p>We use GOV.UK Notify to send emails from this service.</p>
+        <p>All templates and parameters are detailed in the GitHub repo in the <a href=""
+                target="_blank">email_templates folder</a>.</p>
+        <p>This is free for government use.</p>
+
+        <h2 class="govuk-heading-l">Codebase</h2>
+        <p>We chose to build this product using Node.JS. This enables the product to be built and contributed to, by a
+            wide range of people, who might not normally contribute code had we built it using Ruby or C#.
+        </p>
+        <p>This also enables us to build quickly, make use of common components and patterns more easily, and be
+            supported by a team familiar with the tech stack used.</p>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Support" %}
+{% set pageDescription = "Contact the Department for Education about the service assessment service." %}
+{% set selectedNav = "Support"%}
+{% block hero %}
+<div class="dfe-page-header">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l govuk-!-margin-top-5">{{pageName}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <p>Support for this service is provided through the DesignOps team alongside the Service assessment plus team.</p>
+
+        <p>Our working days are Monday to Friday between 9:30am and 4:30pm, excluding bank holidays.</p>
+
+        <p>We aim to respond to all queries by the end of the next working day.</p>
+
+        <p><a href="https://ukgovernmentdfe.slack.com/messages/C06URQF80BB" target="_blank">Raise a query on DfE Slack</a>.</p>
+
+        <p class="govuk-body">If you are from another government department, you can <a href="https://ukgovernmentdigital.slack.com/messages/C04GXQ0320Z">contact us on Slack</a>.</p>
+
+    </div>
+</div>
+
+
+{% endblock %}

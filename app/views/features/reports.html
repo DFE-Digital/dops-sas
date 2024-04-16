@@ -1,0 +1,28 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Features" %}
+{% set pageDescription = "" %}
+{% set selectedNav = "Features"%}
+{% set view = "reports" %}
+
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+
+        {% include './_nav.html' %}
+
+
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Reports</h2>
+
+
+
+    </div>
+</div>
+
+{% endblock %}

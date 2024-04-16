@@ -50,8 +50,13 @@ async function isAdmin(req, res, next) {
 
 router.get('/', publicController.g_home);
 router.get('/features', publicController.g_features);
-router.get('/contact', publicController.g_contact);
-router.get('/support', publicController.g_contact);
+router.get('/features/book', publicController.g_features_book);
+router.get('/features/manage', publicController.g_features_manage);
+router.get('/features/assess', publicController.g_features_assess);
+router.get('/features/reports', publicController.g_features_reports);
+router.get('/features/admin', publicController.g_features_admin);
+router.get('/features/installation', publicController.g_features_installation);
+router.get('/support', publicController.g_support);
 router.get('/accessibility', publicController.g_accessibility);
 router.get('/privacy', publicController.g_privacy);
 router.get('/cookies', publicController.g_cookies);
@@ -121,6 +126,7 @@ router.post("/manage/accept-report", isAuthenticated, manageController.p_acceptR
 
 // Admin routes
 router.get('/admin', isAuthenticated, isAdmin, adminController.g_index);
+router.get('/admin/tasks/:filter', isAuthenticated, isAdmin, adminController.g_index);
 router.get("/admin/overview/:assessmentID", isAuthenticated, isAdmin, adminController.g_overview);
 router.get("/admin/process/:assessmentID", isAuthenticated, isAdmin, adminController.g_process);
 router.get("/admin/request/:assessmentID", isAuthenticated, isAdmin, adminController.g_process);

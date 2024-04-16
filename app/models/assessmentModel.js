@@ -363,6 +363,27 @@ async function changePrimaryContact(assessmentID, userID) {
         throw error;
     } 
 }
+    
+/** 
+ * Get all assessments for a department that aren't published
+ * @param {number} departmentID The ID of the department
+ */
+async function getAllAssessments(departmentID) {
+    try {
+        const result = await pool.query(
+            `
+            SELECT *
+            FROM "Assessment"
+            WHERE "Department" = $1 AND "Status" != 'Published'
+            `,
+            [departmentID]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getAllAssessments:', error);
+        throw error;
+    }
+}
 
 
 module.exports = {
@@ -378,5 +399,6 @@ module.exports = {
     getAssessmentPanelByUserID, 
     checkSubmitStatus,
     getActiveAssessmentsWithAssessorData,
-    changePrimaryContact
+    changePrimaryContact,
+    getAllAssessments
 };
