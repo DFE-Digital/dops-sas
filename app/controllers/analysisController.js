@@ -12,15 +12,15 @@ exports.g_index = async function (req, res) {
     }
 
     let currentYear = new Date().getFullYear();
+    const department = req.session.data.User.Department;
 
 
     // Get all assessments
-    const results = await getRequestsByStatus("Published", req.session.data.User.Department );
+    const results = await getRequestsByStatus("Published", department);
 
-console.log(results)
 
-    const standards = await countOutcomesByStandard(year);
-    const data = await getAssessmentDetailsByYear(year);
+    const standards = await countOutcomesByStandard(department);
+    const data = await getAssessmentDetailsByYear(department);
 
     let heatmap = data.reduce((acc, item) => {
         acc[item.AssessmentID] = acc[item.AssessmentID] || [];

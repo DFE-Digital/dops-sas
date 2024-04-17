@@ -32,7 +32,7 @@
         {% if assessment.AssessmentDateTime === null %}
 
         <h2 class="govuk-heading-l">You can't add panel members</h2>
-        <p>You need to <a href="/admin/set-date/{{assessment.AssessmentID}}">add the assessment date and time</a> before
+        <p>You need to <a href="/admin/add-date/{{assessment.AssessmentID}}">add the assessment date and time</a> before
             you can add panel members.</p>
 
         {% else%}
@@ -106,21 +106,7 @@
         {% endif %}
     </div>
     <div class="govuk-grid-column-one-third">
-        <div class="govuk-summary-card">
-            <div class="govuk-summary-card__title-wrapper">
-
-                <h2 class="govuk-summary-card__title">Guidance</h2>
-
-            </div>
-            <div class="govuk-summary-card__content">
-                <ul class="govuk-list govuk-list--spaced">
-                    <li>
-                        <a href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/types-of-assurance"
-                            target="_blank">Who you should add to your team</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        
     </div>
 </div>
 

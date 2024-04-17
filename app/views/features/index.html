@@ -1,0 +1,34 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Features" %}
+{% set pageDescription = "" %}
+{% set selectedNav = "Features"%}
+{% set view = "overview" %}
+
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+
+        {% include './_nav.html' %}
+
+
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Overview</h2>
+
+        <p class="govuk-body">This is the overview page for the features section of the service. Here you can find information on the different features available to you.</p>
+
+        <h2 class="govuk-heading-l">Using in your own department</h2>
+
+        <p>We have made all the source code for this service, open source. This enables you to customise and deploy this service in your own organisation.</p>
+
+        <p><a href="/features/installation">Follow these setup instructions</a> to get started.</p>
+
+    </div>
+</div>
+
+{% endblock %}

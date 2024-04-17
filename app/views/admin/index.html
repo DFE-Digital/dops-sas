@@ -4,7 +4,7 @@
 {% set selectedNav = "Admin" %}
 {% set pageName = "Your dashboard" %}
 {% set view = "dashboard" %}
-{% set filter = ""%}
+
 
 {% block hero %}
 {% include './_header.html'%}
@@ -14,33 +14,33 @@
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-quarter">
-
         <nav class="dfe-vertical-nav">
             <ul class="dfe-vertical-nav__section">
                 <li
-                    class="dfe-vertical-nav__section-item {% if filter == '' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{requests | length }}</span>
+                    class="dfe-vertical-nav__section-item {% if filter == 'priority' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{priority | length }}</span>
                     <a class="dfe-vertical-nav__link" href="/admin">Priority tasks</a>
                 </li>
                 <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'date-not-set' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{noDates | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/date-not-set">Date not set</a>
+                    class="dfe-vertical-nav__section-item {% if filter == 'no-date' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{noDateRequests | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/no-date">Date not set</a>
                 </li>
                 <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'no-assessors' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{noAssessors | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/no-assessors">No assessors</a>
+                    class="dfe-vertical-nav__section-item {% if filter == 'sa-review' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{saReviewRequests | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/sa-review">Send to team</a>
+                </li>
+
+                <li
+                    class="dfe-vertical-nav__section-item {% if filter == 'team-review' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{teamReviewRequests | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/team-review">Team reviewing</a>
                 </li>
                 <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'send-to-team' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{sendToTeam | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/send-to-team">Send to team</a>
-                </li>
-                <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'to-be-published' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{toBePublished | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/to-be-published">To be published</a>
+                    class="dfe-vertical-nav__section-item {% if filter == 'sa-publish' %}dfe-vertical-nav__section-item--current {% endif %}">
+                    <span class="dfe-vertical-nav--count">{{saPublishRequests | length}}</span>
+                    <a class="dfe-vertical-nav__link" href="/admin/tasks/sa-publish">To be published</a>
                 </li>
             </ul>
         </nav>
@@ -49,32 +49,39 @@
     </div>
     <div class="govuk-grid-column-three-quarters">
 
-
+{% if filteredData | length > 0 %}
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">Priority tasks</caption>
+            <caption class="govuk-table__caption govuk-table__caption--m">{{filterView}}</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Task</th>
+                    <th scope="col" class="govuk-table__header">Service</th>  {% if filter === 'priority '%}
+                    <th scope="col" class="govuk-table__header">Action</th>{% endif %}
                     <th scope="col" class="govuk-table__header">Phase</th>
                     <th scope="col" class="govuk-table__header">Type</th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
-                {% for record in requests %}
+
+                {% for record in filteredData %}
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header"><a href="/admin/overview/{{record.AssessmentID}}">
-                        {% if record.Status == "New" %}New request{% endif %}
-                        {% if record.Status == "SA Review" %}Report submitted{% endif %}
-                        {% if record.Status == "SA Publish" %}Publish report{% endif %}
+                    <th scope="row" class="govuk-table__header"><a href="/admin/overview/{{record.AssessmentID}}">{{record.Name}}
                     </a>
                     </th>
+                    {% if filter === 'priority '%}
+                    <td class="govuk-table__cell">                {% if record.Status == "New" %}Process new booking request{% endif %}
+                        {% if record.Status == "SA Review" %}Send report to the team{% endif %}
+                        {% if record.Status == "SA Publish" %}Publish report{% endif %}</td>
+{% endif%}
                     <td class="govuk-table__cell">{{record.Phase}}</td>
                     <td class="govuk-table__cell">{{record.Type}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
+{% else %}
+<h2 class="govuk-heading-m">{{filterView}}</h2>
+<p>There are no requests to show for this status.</p>
+{% endif %}
 
 
 

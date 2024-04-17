@@ -50,7 +50,7 @@ async function getServiceStandardOutcomesByAssessmentID(assessmentID) {
  * @param {number} year - The given year to filter the outcomes by.
  * @returns {Promise<Array>} - The aggregated outcome counts by standard and outcome type.
  */
-async function countOutcomesByStandard(year) {
+async function countOutcomesByStandard(department) {
     try {
         const result = await pool.query(`
             SELECT 
@@ -62,11 +62,11 @@ async function countOutcomesByStandard(year) {
                 public."ServiceStandardOutcomes" sso
             INNER JOIN public."Assessment" a ON sso."AssessmentID" = a."AssessmentID"
             WHERE 
-                EXTRACT(YEAR FROM a."AssessmentDateTime") = $1
-                AND a."Status" = 'Published' -- Assuming you only want outcomes from published assessments
+                AND a."Status" = 'Published' 
+                AND a."Department" = $1
             GROUP BY 
                 "Standard"
-        `, [year]);
+        `, [department]);
 
         return result.rows;
     } catch (error) {
@@ -83,18 +83,17 @@ async function countOutcomesByStandard(year) {
  * @param {number} department - The department to filter assessments by.
  * @returns {Promise<Array>} - A promise that resolves to an array of assessment details.
  */
-async function getAssessmentDetailsByYear(year, department) {
+async function getAssessmentDetailsByYear(department) {
     try {
         const query = `
             SELECT sso."AssessmentID", sso."Standard", sso."Outcome", a."Name"
             FROM "ServiceStandardOutcomes" sso
             INNER JOIN "Assessment" a ON sso."AssessmentID" = a."AssessmentID"
             WHERE a."Status" = 'Published'
-            AND EXTRACT(YEAR FROM a."AssessmentDateTime") = $1
-            AND a."Department" = $2
+            AND a."Department" = $1
             ORDER BY sso."Standard" ASC;
         `;
-        const { rows } = await pool.query(query, [year, department]);
+        const { rows } = await pool.query(query, [department]);
         return rows;
     } catch (error) {
         console.error('Error in getAssessmentDetailsByYear:', error);
