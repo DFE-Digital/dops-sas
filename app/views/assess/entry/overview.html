@@ -25,7 +25,7 @@
           </div>
           <div class="govuk-notification-banner__content">
             <p class="govuk-notification-banner__heading">
-                The report has been submitted. The service assessment plus team will email it to the service team to review.
+                The report has been submitted. The Service Assessment Plus team will email it to the service team to review.
               </p>
           </div>
         </div>
@@ -59,7 +59,7 @@
           </div>
           <div class="govuk-notification-banner__content">
             <p class="govuk-notification-banner__heading">
-                The report has been accepted and is waiting to be published by the service assessment plus team.
+                The report has been accepted and is waiting to be published by the Service Assessment Plus team.
               </p>
           </div>
         </div>
@@ -68,70 +68,9 @@
 
       {% include "./_tasks.html" %}
       {% include "./_description.html" %}
-      {% if assessment.Status == "SA Review" %}
-
-        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
-      data-module="govuk-notification-banner">
-          <div class="govuk-notification-banner__header">
-            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-          Report
-        </h2>
-          </div>
-          <div class="govuk-notification-banner__content">
-            <p class="govuk-notification-banner__heading">
-          The report has been submitted and is with the Service Assessment Team to send to the service team to review.
-        </p>
-          </div>
-        </div>
-
-      {% endif %}
-
-      <p class="govuk-!-margin-bottom-0">Speak to the service assessment
-                    plus team for any previous reports.</p>
     </div>
+
+    <div class="govuk-grid-column-one-third"></div>
   </div>
-  {% if assessment.Status == "Team Review" %}
-
-    <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
-      data-module="govuk-notification-banner">
-      <div class="govuk-notification-banner__header">
-        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-          Report
-        </h2>
-      </div>
-      <div class="govuk-notification-banner__content">
-        <p class="govuk-notification-banner__heading">
-          The report is now with the service team to review.
-        </p>
-      </div>
-    </div>
-
-  {% endif %}
-
-  {% if assessment.Status == "SA Publish" %}
-
-    <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
-      data-module="govuk-notification-banner">
-      <div class="govuk-notification-banner__header">
-        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-          Report
-        </h2>
-      </div>
-      <div class="govuk-notification-banner__content">
-        <p class="govuk-notification-banner__heading">
-          The report has been accepted and is waiting to be published by the Service Assessment Team.
-        </p>
-      </div>
-    </div>
-
-  {% endif %}
-
-  {% include "./_tasks.html" %}
-  {% include "./_description.html" %}
-
-</div>
-
-<div class="govuk-grid-column-one-third"></div>
-</div>
 
 {% endblock %}
