@@ -30,9 +30,7 @@
                 <p class="govuk-notification-banner__heading">
                     Accept the report
                 </p>
-                <p>If you have a query or need clarification on the report, you should <a
-                        href="https://apply-service-standard-staging-7f500b6e58fb.herokuapp.com/service-assurance/get-assessment-report#accept-or-challenge-the-report"
-                        class="govuk-link">follow the guidance for challenging the report</a>.</p>
+                <p>If you have a query or need clarification on the report, email the <a href="mailto:serviceassessment.plus@education.gov.uk">Service Assessment Plus team</a> who will set up a call for the team with the panel.</p>
 
                 <form action="/manage/accept-report" method="post">
                     <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
@@ -85,10 +83,10 @@
         {% if assessment.Type === 'Service assessment' %}
         <p class="govuk-body">A service assessment carried out against the <a
                 href="https://apply-the-service-standard.education.gov.uk/service-standard" target="_blank"
-                class="govuk-link">Government Service Standard</a>
+                class="govuk-link">Government Service Standard (opens in new tab)</a>
         </p>
         {% else %}
-        <p class="govuk-body">An internal peer review carried out to help the team understand what has been done well,
+        <p class="govuk-body">An internal discovery peer review carried out to help the team understand what has been done well,
             and what needs to be improved.</p>
         {% endif %}
     </div>
