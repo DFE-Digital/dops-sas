@@ -17,54 +17,52 @@ const PizZip = require('pizzip');
 const Docxtemplater = require('docxtemplater');
 const ExcelJS = require('exceljs');
 
+
 exports.g_index = async function (req, res) {
-    const department = req.session.data.User.Department;
-    const requests = await getAllAssessments(department);
-    let { filter } = req.params;
+    try {
+        const department = req.session.data.User.Department;
+        const requests = await getAllAssessments(department);
+        const filter = req.params.filter || 'priority'; 
 
-    if(!filter){
-        filter = 'priority';
+   
+        const filterDefinitions = {
+            'priority': {
+                conditions: ['New', 'Team Review', 'SA Review', 'SA Publish'],
+                view: 'Priority tasks'
+            },
+            'sa-review': {
+                conditions: ['SA Review'],
+                view: 'Reports to send on to the team'
+            },
+            'sa-publish': {
+                conditions: ['SA Publish'],
+                view: 'Reports needing to be published'
+            },
+            'team-review': {
+                conditions: ['Team Review'],
+                view: 'Reports with the team to review'
+            },
+            'no-date': {
+                conditionFunc: request => request.Status === 'Active' && !request.AssessmentDateTime,
+                view: 'Requests with no assessment date set'
+            }
+        };
+
+        // Filter requests based on selected filter and condition
+        const { conditions, conditionFunc, view } = filterDefinitions[filter];
+        let filteredData = conditions ? requests.filter(request => conditions.includes(request.Status)) : requests.filter(conditionFunc);
+
+        // Render page with filtered data
+        res.render('admin/index', {
+            filteredData,
+            filter,
+            filterView: view,
+            ...Object.fromEntries(Object.keys(filterDefinitions).map(key => [key, requests.filter(filterDefinitions[key].conditionFunc || ((req) => filterDefinitions[key].conditions.includes(req.Status)))]))
+        });
+    } catch (error) {
+        console.error('Failed to fetch or filter data:', error);
+        res.render('admin/index', { error: 'Failed to fetch or filter data' });
     }
-
-    let filteredData = [];
-    let filterView = ""
-
-    const priority = requests.filter(request => request.Status === 'New' || request.Status === 'Team Review' || request.Status === 'SA Review' || request.Status === 'SA Publish');
-    const noDateRequests = requests.filter(request => request.Status === 'Active' && !request.AssessmentDateTime);
-    const saReviewRequests = requests.filter(request => request.Status === 'SA Review');
-    const saPublishRequests = requests.filter(request => request.Status === 'SA Publish');
-    const teamReviewRequests = requests.filter(request => request.Status === 'Team Review');
-
-
-
-    if(filter === 'priority'){
-        filteredData = priority
-        filterView = "Priority tasks"
-    }
-
-    if(filter === 'sa-review'){
-        filteredData = saReviewRequests
-        filterView = "Reports to send on to the team"
-    }
-
-    if(filter === 'sa-publish'){
-        filteredData = saPublishRequests
-        filterView = "Reports needing to be published"
-    }
-
-    if(filter === 'team-review'){
-        filteredData = teamReviewRequests
-        filterView = "Reports with the team to review"
-    }
-
-    if(filter === 'no-date'){
-        filteredData = noDateRequests
-        filterView = "Requests with no assessment date set"
-    }
-
- 
-
-    return res.render('admin/index', { filteredData, filter, filterView, priority, noDateRequests, saReviewRequests, saPublishRequests, teamReviewRequests });
 }
 
 exports.g_overview = async function (req, res) {

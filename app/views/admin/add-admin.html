@@ -90,33 +90,34 @@ hero %}
             </div>
 
 
-          
 
 
-         
+
+
 
             <div class="govuk-form-group {%if hasLeadError %}govuk-form-group--error{% endif%}">
                 <fieldset class="govuk-fieldset" aria-describedby="createAsLead-hint">
                     <legend class="govuk-fieldset__legend">
-                       Add as a department lead? 
+                        Add as a Department lead?
                     </legend>
                     <div id="createAsLead-hint" class="govuk-hint">
-                      Department leads can add other administrators and department leads. If unsure, select no.
+                        Department leads can add other administrators and Department leads. If unsure, select no.
                     </div>{%if hasLeadError%}
                     <p id="passport-issued-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> Select if they are from another government department
+                        <span class="govuk-visually-hidden">Error:</span> Select if they are from another government
+                        department
                     </p>{% endif %}
                     <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="createAsLead" name="createAsLead"
-                                type="radio" value="Yes" />
+                            <input class="govuk-radios__input" id="createAsLead" name="createAsLead" type="radio"
+                                value="Yes" />
                             <label class="govuk-label govuk-radios__label" for="createAsLead">
                                 Yes
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="createAsLead-2" name="createAsLead"
-                                type="radio" value="No" />
+                            <input class="govuk-radios__input" id="createAsLead-2" name="createAsLead" type="radio"
+                                value="No" />
                             <label class="govuk-label govuk-radios__label" for="createAsLead-2">
                                 No
                             </label>

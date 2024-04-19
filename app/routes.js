@@ -14,7 +14,7 @@ const reportsController = require('./controllers/reportsController');
 const assessController = require('./controllers/assessController');
 const profileController = require('./controllers/profileController');
 
-const rolesToCheck = ['Department Lead', 'Administrator', 'Service Administrator'];
+const rolesToCheck = ['Department lead', 'Administrator', 'Service Administrator'];
 
 
 /**
@@ -41,7 +41,7 @@ async function isAdmin(req, res, next) {
         if (userRolesList.some(role => rolesToCheck.includes(role))) {
             return next();
         } else {
-            return res.redirect('/admin');
+            return res.redirect('/profile');
         }
     } else {
         return res.redirect('/sign-out');

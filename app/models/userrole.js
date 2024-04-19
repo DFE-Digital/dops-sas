@@ -28,7 +28,7 @@ async function getRolesByUserID(userId) {
 }
 
 /**
- * Fetches all admins from the UserRole table where UserRole is Administrator or Department Lead, inner join the user table to get the user's name and email address where the user.Department is the Department parameter from user table
+ * Fetches all admins from the UserRole table where UserRole is Administrator or Department lead, inner join the user table to get the user's name and email address where the user.Department is the Department parameter from user table
  * @param {number} department The department of the admin.
  * 
  * @returns {Promise<Array>} An array of the admins, or an empty array if no admins are found.
@@ -39,7 +39,7 @@ async function getAllAdmins(department) {
             SELECT "User"."FirstName", "User"."LastName", "User"."EmailAddress", "UserRole"."UserRole", "UserRole"."UserRoleID", "UserRole"."UserID"
             FROM public."UserRole"
             INNER JOIN public."User" ON "UserRole"."UserID" = "User"."UserID"
-            WHERE "UserRole" = 'Administrator' OR "UserRole" = 'Department Lead' AND "User"."Department" = $1
+            WHERE "UserRole" = 'Administrator' OR "UserRole" = 'Department lead' AND "User"."Department" = $1
         `, [department]);
 
         return result.rows;
@@ -59,8 +59,8 @@ async function getAllAdmins(department) {
 async function addAdmin(firstName, lastName, emailAddress, department, createAsLead, createdByUserID) {
     const client = await pool.connect();
 
-    // if createAsLead is Yes, set the role to Department Lead, otherwise Administrator
-    const role = createAsLead === 'Yes' ? 'Department Lead' : 'Administrator';
+    // if createAsLead is Yes, set the role to Department lead, otherwise Administrator
+    const role = createAsLead === 'Yes' ? 'Department lead' : 'Administrator';
 
     try {
         await client.query('BEGIN');
