@@ -48,9 +48,9 @@
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Service</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
             <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Type</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Assessment date</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Date</th>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
@@ -61,8 +61,8 @@
                 <a class="govuk-link govuk-link--no-visited-state "
                     href="/assess/overview/{{record.AssessmentID}}">{{record.Name}}</a>
             </th>
-            <td class="govuk-table__cell">{{record.Phase}}</td>
             <td class="govuk-table__cell">{{record.Type}}</td>
+            <td class="govuk-table__cell">{{record.Phase}}</td>
             <td class="govuk-table__cell">{{record.AssessmentDateTime|date('D MMM YYYY')}}
             </td>
         </tr>

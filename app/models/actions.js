@@ -15,6 +15,7 @@ async function getActionsForAssessmentID(assessmentID) {
             SELECT *
             FROM public."Actions"
             WHERE "AssessmentID" = $1
+            ORDER BY "Created" ASC
         `, [assessmentID]);
 
         // Return all rows (roles) instead of a single role

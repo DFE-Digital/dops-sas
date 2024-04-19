@@ -41,18 +41,13 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
 
-
-
+        {% if hasTasks %}
         <div class="govuk-summary-card">
             <div class="govuk-summary-card__title-wrapper">
                 <h2 class="govuk-summary-card__title">Your tasks</h2>
             </div>
             <div class="govuk-summary-card__content">
-
-
-                {% if hasTasks %}
                 <ul class="govuk-task-list govuk-!-margin-bottom-0">
-
 
                     {% for assessment in assessments %}
                     {% if assessment.Status === 'Team Review' %}
@@ -68,26 +63,12 @@
                     </li>
                     {% endif %}
                     {% endfor %}
-
-
-
-
                 </ul>
-
-                {% else %}
-
-                <p>You don't have any tasks that require your attention.</p>
-
-                {% endif %}
             </div>
         </div>
+        {% endif %}
 
-
-        <div class="govuk-summary-card">
-            <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title">Your services being assessed</h2>
-            </div>
-            <div class="govuk-summary-card__content"> 
+     
 
                 {% set hasAssessments = false %}
 
@@ -97,17 +78,14 @@
                 {% endif %}
                 {% endfor %}
 
-           
-
-                
                 {% if hasAssessments %}
                 <table class="govuk-table ">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header govuk-!-width-one-third">Service</th>
-                            <th scope="col" class="govuk-table__header">Phase</th>
                             <th scope="col" class="govuk-table__header">Type</th>
-                            <th scope="col" class="govuk-table__header">Assessment date</th>
+                            <th scope="col" class="govuk-table__header">Phase</th>
+                            <th scope="col" class="govuk-table__header">Date</th>
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -120,8 +98,8 @@
                                     {{record.Name}}
                                 </a>
                             </th>
-                            <td class="govuk-table__cell">{{record.Phase}}</td>
                             <td class="govuk-table__cell">{{record.Type}}</td>
+                            <td class="govuk-table__cell">{{record.Phase}}</td>
                             <td class="govuk-table__cell">
                                 {% if record.AssessmentDateTime %}{{record.AssessmentDateTime | date('D MMMM YYYY')}}
                                 {% else %}Date not set{% endif %}
@@ -132,24 +110,19 @@
 
                     </tbody>
                 </table> {% else %}
-                <p>You don't have any assessments in progress.</p>
+                <p>You aren't assigned to any active assessments or peer reviews for your team.</p>
                 {% endif %}
+
             </div>
-        </div>
 
-
-
-
-    </div>
 
     <div class="govuk-grid-column-one-quarter">
-
         <aside class="dfe-aside">
             <h2 class="govuk-heading-m">Related guidance</h2>
             <ul class="govuk-list govuk-list--spaced">
                 <li>
-                    <a href="https://apply-service-standard.education.gov.uk"
-                        target="_blank">Apply the Service Standard in DfE</a>
+                    <a href="https://apply-service-standard.education.gov.uk" target="_blank">Apply the Service Standard
+                        in DfE</a>
                 </li>
             </ul>
         </aside>

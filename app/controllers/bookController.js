@@ -11,18 +11,18 @@ const { sendNotifyEmail } = require('../middleware/notify');
 
 function removeSpecificSessionDataKeys(req) {
     const keysToRemove = [
-      "Name", "Type", "Description", "ProjectCode", "ProjectCodeYN",
-      "Day", "Month", "Year", "Phase", "EndDay", "EndMonth", "EndYear",
-      "EndDateYN", "ReviewWeek", "Portfolio", "ddemail", "ddfirstName",
-      "ddlastName", "pmemail", "pmfirstName", "pmlastName", "pm",
-      "dmemail", "dmfirstName", "dmlastName", "dm", "AssessmentID",
-      "description", "name"
+        "Name", "Type", "Description", "ProjectCode", "ProjectCodeYN",
+        "Day", "Month", "Year", "Phase", "EndDay", "EndMonth", "EndYear",
+        "EndDateYN", "ReviewWeek", "Portfolio", "ddemail", "ddfirstName",
+        "ddlastName", "pmemail", "pmfirstName", "pmlastName", "pm",
+        "dmemail", "dmfirstName", "dmlastName", "dm", "AssessmentID",
+        "description", "name"
     ];
-  
+
     keysToRemove.forEach(key => {
-      delete req.session.data[key];
+        delete req.session.data[key];
     });
-  }
+}
 
 exports.g_start = async function (req, res) {
     req.session.data.model = {};
@@ -322,7 +322,7 @@ exports.p_type = [
         } else {
             model = await getAssessmentById(assessmentID);
 
-            if(model.Phase === 'Discovery'){
+            if (model.Phase === 'Discovery') {
                 model.Type = 'Peer review';
             } else {
                 model.Type = 'Service assessment';
@@ -774,7 +774,7 @@ exports.p_product = [
             model = await getAssessmentById(assessmentID);
 
             if (req.body.pm === "Yes") {
-                let pmUserID = await UpsertUserNoToken(req.body.pmemail, "","", userID, 'Book request: ' + assessmentID);
+                let pmUserID = await UpsertUserNoToken(req.body.pmemail, "", "", userID, 'Book request: ' + assessmentID);
                 model.PM = pmUserID;
                 model.PMYN = "Yes";
             }
@@ -831,7 +831,7 @@ exports.p_delivery = [
             model = await getAssessmentById(assessmentID);
 
             if (req.body.dm === "Yes") {
-                let dmUserID = await UpsertUserNoToken(req.body.dmemail, "","", userID, 'Book request: ' + assessmentID);
+                let dmUserID = await UpsertUserNoToken(req.body.dmemail, "", "", userID, 'Book request: ' + assessmentID);
                 model.DM = dmUserID;
                 model.DMYN = "Yes";
             }
@@ -904,6 +904,9 @@ exports.p_submit = async function (req, res) {
             sendNotifyEmail(process.env.email_BookSubmission, dmDetails.EmailAddress, templateParams);
         }
     }
+
+    // Send email to SA+ team for a new booking
+    sendNotifyEmail(process.env.email_SANewBooking, process.env.saPlusEmail, templateParams);
 
     req.session.data.model = {};
 

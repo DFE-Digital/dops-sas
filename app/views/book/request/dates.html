@@ -33,7 +33,7 @@
 
         {% if model.EndDateYN === "Yes" and dates | length !== 0 %}
         <p class="govuk-body">Based on your anticipated end date of {{model.EndDate | date('D MMM YYYY')}} for your
-            {{model.Type | lower}} phase we suggest the following weeks for your {{model.Type | lower}}:</p>
+            {{model.Phase | lower }} phase we suggest the following weeks for your {{model.Type | lower}}:</p>
         {% elseif model.EndDateYN === "Yes" and dates | length === 0 %}
         <p class="govuk-body">Your end date is within 5 weeks, you can continue your book request and the service
             assessment plus team will contact you to arrange a date.</p>
