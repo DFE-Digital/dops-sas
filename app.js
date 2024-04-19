@@ -110,7 +110,7 @@ app.use(makeFormDataGlobal);
 
 
 app.locals.debug = process.env.debug === 'true' ? true : false;
-
+app.locals.staging = process.env.staging === 'true' ? true : false;
 app.locals.serviceName = process.env.serviceName || 'Service Assessment Service';
 
 app.use('/assets', express.static('public/assets'));
