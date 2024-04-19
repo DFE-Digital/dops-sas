@@ -77,9 +77,12 @@ exports.g_process = async function (req, res) {
     const assessment = await getAssessmentById(assessmentID);
 
     const primaryContact = await getBasicUserDetails(assessment.CreatedBy);
+    const pmDetails = await getBasicUserDetails(assessment.PM);
+    const dmDetails = await getBasicUserDetails(assessment.DM);
+    const ddDetails = await getBasicUserDetails(assessment.DD);
     const primaryContactEmail = primaryContact.EmailAddress;
 
-    return res.render('admin/entry/request', { assessment, primaryContactEmail });
+    return res.render('admin/entry/request', { assessment, primaryContactEmail, pmDetails, dmDetails, ddDetails });
 }
 
 exports.g_panel = async function (req, res) {
