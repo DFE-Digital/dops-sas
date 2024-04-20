@@ -8,6 +8,11 @@
 {% include './_header.html'%}
 {% endblock %}
 
+// crate a variable for assessors where active exits and another for inactive assessors
+{% set activeAssessors = assessors | filterByProperty('Active', true) %}
+{% set inactiveAssessors = assessors | filterByProperty('Active', false) %}
+
+
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-quarter">
@@ -48,9 +53,37 @@
                             </div>
                             <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input" id="role3" name="role" type="checkbox"
-                                    value="Design assessor">
+                                    value="Design assessor (Content)">
                                 <label class="govuk-label govuk-checkboxes__label" for="role3">
-                                    Design
+                                    Design (Content)
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role3a" name="role" type="checkbox"
+                                    value="Design assessor (Interaction)">
+                                <label class="govuk-label govuk-checkboxes__label" for="role3a">
+                                    Design (Interaction)
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role3b" name="role" type="checkbox"
+                                    value="Design assessor (Service)">
+                                <label class="govuk-label govuk-checkboxes__label" for="role3b">
+                                    Design (Service)
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role3c" name="role" type="checkbox"
+                                    value="Design assessor (All-round)">
+                                <label class="govuk-label govuk-checkboxes__label" for="role3c">
+                                    Design (All-round)
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="role3d" name="role" type="checkbox"
+                                    value="Info security">
+                                <label class="govuk-label govuk-checkboxes__label" for="role3d">
+                                    Info security
                                 </label>
                             </div>
                             <div class="govuk-checkboxes__item">
@@ -100,6 +133,7 @@
             </div>
             <div class="govuk-summary-card__content">
                 <div class="govuk-table-container">
+                    {% if activeAssessors | length > 0 %}
                     <table class="govuk-table  " id="assessorsTable">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
@@ -131,6 +165,9 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    {% else %}
+                    <p>No active assessors.</p>
+                    {% endif %}
                     <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No assessors found.
                     </p>
                 </div>
@@ -146,6 +183,7 @@
             </div>
             <div class="govuk-summary-card__content">
                 <div class="govuk-table-container">
+                    {% if inactiveAssessors | length > 0 %}
                     <table class="govuk-table  " id="assessorsTable">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
@@ -176,6 +214,9 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    {% else %}
+                    <p>No inactive assessors.</p>
+                    {% endif %}
                     <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No assessors found.
                     </p>
                 </div>

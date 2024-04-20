@@ -78,6 +78,10 @@ nunjuckEnv.addFilter('OutcomeForGrid', function (str) {
 })
 
 
+nunjuckEnv.addFilter('filterByProperty', function (array, propName, propValue) {
+  return array.filter(item => item[propName] === propValue);
+});
+
 nunjuckEnv.addFilter('andify', function (input) {
   const values = input.split(', ');
   if (values.length >= 2) {
