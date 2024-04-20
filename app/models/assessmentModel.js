@@ -55,6 +55,56 @@ async function createAssessment(model, userID) {
     }
 }
 
+async function createReAssessment(assessmentId) {
+    try {
+      
+        // Fetch the original assessment data
+        const originalAssessment = await getAssessmentById(assessmentId);
+        if (!originalAssessment) {
+            throw new Error('Original assessment not found.');
+        }
+
+        // We need to reset some values for the new assessment
+        originalAssessment.Status = 'Active';
+        originalAssessment.Outcome = 'Not rated';
+        originalAssessment.Name += ' - Reassessment';
+        originalAssessment.PanelComments = null;
+        originalAssessment.AssessmentDateTime = null;
+        originalAssessment.AssessmentTime = null;
+        originalAssessment.PanelCommentsComplete = null;
+        originalAssessment.PanelCommentsImprove = null;
+
+        // Insert the new assessment into the database
+        const query = `
+            INSERT INTO "Assessment" (
+                "Type", "Phase", "Status", "Outcome", "Name", "Description",
+                "ProjectCodeYN", "ProjectCode", "StartDate", "EndDateYN", "EndDate",
+                "RequestedWeeks", "Portfolio", "DD", "SRO", "PMYN", "PM", "DMYN", "DM",
+                "CreatedBy", "CreatedDate", "AssessmentDateTime", "SubStatusCode",
+                "PanelComments", "PanelCommentsImprove", "PanelCommentsComplete", "AssessmentTime",
+                "Department"
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
+            RETURNING "AssessmentID"
+        `;
+        const values = [
+            originalAssessment.Type, originalAssessment.Phase, originalAssessment.Status, originalAssessment.Outcome, 
+            originalAssessment.Name, originalAssessment.Description, originalAssessment.ProjectCodeYN, originalAssessment.ProjectCode, 
+            originalAssessment.StartDate, originalAssessment.EndDateYN, originalAssessment.EndDate, originalAssessment.RequestedWeeks, 
+            originalAssessment.Portfolio, originalAssessment.DD, originalAssessment.SRO, originalAssessment.PMYN, originalAssessment.PM, 
+            originalAssessment.DMYN, originalAssessment.DM, originalAssessment.CreatedBy, new Date(), originalAssessment.AssessmentDateTime, 
+            originalAssessment.SubStatusCode, originalAssessment.PanelComments, originalAssessment.PanelCommentsImprove, 
+            originalAssessment.PanelCommentsComplete, originalAssessment.AssessmentTime, originalAssessment.Department
+        ];
+        const res = await pool.query(query, values);
+        return res.rows[0].AssessmentID;
+    } catch (err) {
+        console.error('Error in createReAssessment:', err);
+        throw err;
+    }
+}
+
+
+
 async function getAssessmentById(id) {
     try {
         const { rows } = await pool.query(`
@@ -158,7 +208,8 @@ async function getRequestsByStatus(status, department) {
     try {
         const result = await pool.query(
             `SELECT * FROM "Assessment"
-          WHERE "Status" = $1 AND "Department" = $2
+            WHERE "Status" = $1 AND "Department" = $2
+            ORDER BY CASE WHEN "Status" = 'Published' THEN 1 ELSE 0 END, "Status";  
         `,
             [status, department]
         );
@@ -180,9 +231,9 @@ async function getRequestsByMixedStatus(statuses, department) {
     try {
         // Use ANY($1) to match any of the statuses in the array
         const result = await pool.query(
-            `
-            SELECT * FROM "Assessment"
+            `SELECT * FROM "Assessment"
             WHERE "Status" = ANY($1) AND "Department" = $2
+            ORDER BY CASE WHEN "Status" = 'Published' THEN 1 ELSE 0 END, "Status";
             `,
             [statuses, department] // Pass statuses as an array
         );
@@ -400,5 +451,6 @@ module.exports = {
     checkSubmitStatus,
     getActiveAssessmentsWithAssessorData,
     changePrimaryContact,
-    getAllAssessments
+    getAllAssessments,
+    createReAssessment
 };

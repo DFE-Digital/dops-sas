@@ -60,7 +60,7 @@
     <div class="header-row">
         <div class="header-cell assessment-name ">Service name</div>
         {% for i in range(1, 15) %}
-        <div class="header-cell">{{ i }}</div>
+        <a class="header-cell" target="_blank" href="/redirector/service-standard/{{i}}">{{ i }}</a>
         {% endfor %}
     </div>
 
@@ -115,6 +115,16 @@
 
     .header-cell {
         font-weight: 700;
+        color: white !important;
+    }
+
+    a.header-cell:hover {
+        background-color: #737b7f;
+    }
+
+    .header-cell:focus {
+        font-weight: 700;
+        color: black !important;
     }
 
     .header-cell-full {

@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const { copy } = require('../routes');
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -90,9 +91,31 @@ async function deleteArtefact(ArtefactID) {
     }
 }
 
+/**
+ * Copy artefacts from one assessment to another
+ * @param {number} sourceAssessmentID The unique identifier of the source assessment.
+ * @param {number} targetAssessmentID The unique identifier of the target assessment.
+ */
+async function copyArtefacts(sourceAssessmentID, targetAssessmentID) {
+    try {
+        const { rowCount } = await pool.query(`
+            INSERT INTO public."AssessmentArtefacts" (
+                "AssessmentID", "Title", "Description", "URL", "Created", "CreatedBy"
+            )
+            SELECT $2, "Title", "Description", "URL", NOW(), "CreatedBy"
+            FROM public."AssessmentArtefacts"
+            WHERE "AssessmentID" = $1
+        `, [sourceAssessmentID, targetAssessmentID]);
+
+        return rowCount;
+    } catch (error) {
+        console.error('Error in copyArtefacts:', error);
+        throw error;
+    }
+}
 
 
 module.exports = {
-    getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact
+    getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact, copyArtefacts
 };
 

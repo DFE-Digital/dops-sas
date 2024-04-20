@@ -55,6 +55,10 @@
             </div>
             <div class="govuk-summary-card__content">
                 <div class="govuk-form-group">
+                    <label id="filterTableLabel" for="filterTable" class="govuk-label govuk-!-font-weight-bold">Filter by name</label>
+                    <input type="text" id="filterTable" class="govuk-input" aria-describedby="filterTableLabel" onkeyup="applyFilters()" />
+                </div>
+                <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend  govuk-fieldset__legend--s">
                             Phase
@@ -155,40 +159,32 @@
         </div>
     </div>
     <div class="govuk-grid-column-three-quarters">
-        <div id="count-of-items" class="govuk-heading-m govuk-!-padding-top-4 govuk-!-margin-bottom-3"
-            aria-live="polite">{{assessments | length}}</div>
-        <hr class="govuk-section-break  govuk-section-break--visible ">
+        <div id="count-of-items" class="govuk-heading-m govuk-!-padding-top-4 govuk-!-margin-bottom-3" aria-live="polite">{{ assessments | length }}</div>
+        <hr class="govuk-section-break govuk-section-break--visible">
         <ul class="dfe-items-list govuk-!-margin-top-2">
             {% for assessment in assessments %}
-            <li class="row dfe-items-list--{{assessment.Outcome | lower}}" data-phase="{{assessment.Phase}}"
-                data-type="{{assessment.Type}}" data-outcome="{{assessment.Outcome}}">
+            <li class="row dfe-items-list--{{ assessment.Outcome | lower }}" data-phase="{{ assessment.Phase }}" data-type="{{ assessment.Type }}" data-outcome="{{ assessment.Outcome }}" data-name="{{ assessment.Name | lower }}">
                 <div>
                     <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
-                        <a class="govuk-link govuk-link--no-visited-state "
-                            href="/reports/report/{{assessment.AssessmentID}}">{{assessment.Name}}</a>
+                        <a class="govuk-link govuk-link--no-visited-state" href="/reports/report/{{ assessment.AssessmentID }}">{{ assessment.Name }}</a>
                     </h2>
                 </div>
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
                         <ul class="govuk-list govuk-!-font-size-16">
-                            <li><span class="govuk-!-font-weight-bold ">Outcome:</span>
-                                <strong
-                                    class="govuk-tag govuk-!-font-size-16 govuk-tag--{{assessment.Outcome | lower}}">{{assessment.Outcome}}</strong>
+                            <li><span class="govuk-!-font-weight-bold">Outcome:</span>
+                                <strong class="govuk-tag govuk-!-font-size-16 govuk-tag--{{ assessment.Outcome | lower }}">{{ assessment.Outcome }}</strong>
                             </li>
-                            <li><span class="govuk-!-font-weight-bold">Type:</span>
-                                {{assessment.Type}}</li>
+                            <li><span class="govuk-!-font-weight-bold">Type:</span> {{ assessment.Type }}</li>
                         </ul>
                     </div>
                     <div class="govuk-grid-column-one-half">
                         <ul class="govuk-list govuk-!-font-size-16">
-                            <li><span class="govuk-!-font-weight-bold">Phase:</span>
-                                {{assessment.Phase}}</li>
-                            <li><span class="govuk-!-font-weight-bold">Date:</span>
-                                {{assessment.AssessmentDateTime|date('D MMMM YYYY')}}</li>
+                            <li><span class="govuk-!-font-weight-bold">Phase:</span> {{ assessment.Phase }}</li>
+                            <li><span class="govuk-!-font-weight-bold">Date:</span> {{ assessment.AssessmentDateTime | date('D MMMM YYYY') }}</li>
                         </ul>
                     </div>
                 </div>
-
             </li>
             {% endfor %}
         </ul>
@@ -199,71 +195,52 @@
 </div>
 
 <script>
-    function toggleContent() {
-        var content = document.querySelector('.govuk-summary-card__content');
-        var toggle = document.getElementById('toggle');
-
-        var isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-
-        // Toggle visibility of content
-        content.style.display = isExpanded
-            ? 'none'
-            : 'block';
-
-        // Update aria-expanded and button text
-        toggle.setAttribute('aria-expanded', !isExpanded);
-        toggle.innerHTML = isExpanded
-            ? 'Open'
-            : 'Close';
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
+        const filterInput = document.getElementById('filterTable');
+        filterInput.addEventListener('keyup', applyFilters); // Ensure this is binding correctly
+    
         const filters = document.querySelectorAll('.govuk-checkboxes__input');
         filters.forEach(filter => filter.addEventListener('change', applyFilters));
-
+    
         function applyFilters() {
+            console.log('Filtering items...'); // Debug statement
+            let nameFilter = filterInput.value.toLowerCase();
             let activePhases = getActiveFilters('filter_phase');
             let activeOutcomes = getActiveFilters('filter_outcome');
             let activeTypes = getActiveFilters('filter_type');
             let rows = document.querySelectorAll('.dfe-items-list > li');
-
+    
             let visibleCount = 0;
             rows.forEach(row => {
+                let name = row.getAttribute('data-name');
                 let phase = row.getAttribute('data-phase');
                 let outcome = row.getAttribute('data-outcome');
                 let type = row.getAttribute('data-type');
-
-                if ((activePhases.includes(phase) || activePhases.length === 0) && (activeOutcomes.includes(outcome) || activeOutcomes.length === 0) && (activeTypes.includes(type) || activeTypes.length === 0)) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
+                let isVisible = (name.includes(nameFilter) || nameFilter === '') &&
+                                (activePhases.includes(phase) || activePhases.length === 0) &&
+                                (activeOutcomes.includes(outcome) || activeOutcomes.length === 0) &&
+                                (activeTypes.includes(type) || activeTypes.length === 0);
+    
+                row.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount++;
             });
-
-            document
-                .getElementById('noResultsMessage')
-                .style
-                .display = visibleCount > 0
-                    ? 'none'
-                    : '';
+    
+            document.getElementById('noResultsMessage').style.display = visibleCount > 0 ? 'none' : '';
             updateItemCount(visibleCount);
         }
-
+    
         function getActiveFilters(filterName) {
-            return Array
-                .from(document.querySelectorAll(`input[name="${filterName}"]:checked`))
-                .map(el => el.value);
+            return Array.from(document.querySelectorAll(`input[name="${filterName}"]:checked`)).map(el => el.value);
         }
-
+    
         function updateItemCount(count) {
             const countElement = document.getElementById('count-of-items');
             countElement.textContent = count + ' reports';
         }
-
-        // Apply filters on initial load
-        applyFilters();
+    
+        applyFilters(); // Apply filters on initial load to sync with current filter state
     });
-</script>
+    </script>
+    
 
 {% endblock %}

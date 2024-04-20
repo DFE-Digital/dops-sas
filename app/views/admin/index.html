@@ -11,6 +11,7 @@
 {% endblock %}
 
 
+
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-quarter">
@@ -54,7 +55,7 @@
             <caption class="govuk-table__caption govuk-table__caption--m">{{filterView}}</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Service</th>  {% if filter === 'priority '%}
+                    <th scope="col" class="govuk-table__header">Service</th>  {% if filter === 'priority'%}
                     <th scope="col" class="govuk-table__header">Action</th>{% endif %}
                     <th scope="col" class="govuk-table__header">Phase</th>
                     <th scope="col" class="govuk-table__header">Type</th>
@@ -67,7 +68,7 @@
                     <th scope="row" class="govuk-table__header"><a href="/admin/overview/{{record.AssessmentID}}">{{record.Name}}
                     </a>
                     </th>
-                    {% if filter === 'priority '%}
+                    {% if filter === 'priority'%}
                     <td class="govuk-table__cell">                {% if record.Status == "New" %}Process new booking request{% endif %}
                         {% if record.Status == "SA Review" %}Send report to the team{% endif %}
                         {% if record.Status == "SA Publish" %}Publish report{% endif %}</td>

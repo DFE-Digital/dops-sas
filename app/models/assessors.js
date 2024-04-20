@@ -14,10 +14,11 @@ const pool = new Pool({
 async function getAllAssessors(departmentID) {
     try {
         const result = await pool.query(`
-            SELECT a.*, u."FirstName", u."LastName", u."EmailAddress"
-            FROM public."Assessor" a
-            INNER JOIN public."User" u ON a."UserID" = u."UserID"
-            WHERE a."DepartmentID" = $1
+        SELECT a.*, u."FirstName", u."LastName", u."EmailAddress"
+        FROM public."Assessor" a
+        INNER JOIN public."User" u ON a."UserID" = u."UserID"
+        WHERE a."DepartmentID" = $1
+        ORDER BY a."PrimaryRole", u."FirstName";        
         `, [departmentID]);
 
         return result.rows;
@@ -129,7 +130,7 @@ async function createTraining(userID, training, date, provider) {
     } catch (error) {
         console.error('Error in createTraining:', error);
         throw error;
-    }   
+    }
 }
 
 /**

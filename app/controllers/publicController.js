@@ -10,10 +10,15 @@
  * 
  */
 
+
+const { getServiceStandards } = require('../models/standards');
+
+
+
 exports.g_home = (req, res) => {
 
-    if(req.session && req.session.data) {
-       return res.redirect('/manage')
+    if (req.session && req.session.data) {
+        return res.redirect('/manage')
     }
 
     res.render('index')
@@ -26,7 +31,7 @@ exports.g_features = (req, res) => {
 exports.g_features_book = (req, res) => {
     res.render('features/book')
 }
-exports.g_features_manage= (req, res) => {
+exports.g_features_manage = (req, res) => {
     res.render('features/manage')
 }
 exports.g_features_assess = (req, res) => {
@@ -39,7 +44,7 @@ exports.g_features_admin = (req, res) => {
     res.render('features/admin')
 }
 
-exports.g_features_installation= (req, res) => {
+exports.g_features_installation = (req, res) => {
     res.render('features/installation/index')
 }
 
@@ -58,3 +63,24 @@ exports.g_privacy = (req, res) => {
 exports.g_cookies = (req, res) => {
     res.render('cookies')
 }
+
+/**
+ * redirect to assidfe based on the parmeter
+ * @param {standard} the specific standard to redirect to assidfe
+ */
+exports.g_assidfe = async (req, res) => {
+    const { standard } = req.params
+    console.log(standard)
+
+    const serviceStandards = await getServiceStandards()
+
+    console.log(serviceStandards)   
+
+    const standardData = serviceStandards.find(s => s.Point == standard)
+
+    console.log(standardData)
+
+    return res.redirect(standardData.Url);
+
+}
+

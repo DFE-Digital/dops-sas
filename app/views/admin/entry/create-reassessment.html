@@ -1,0 +1,98 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Create reassessment entry" %}
+
+{% set view = 'overview' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Type' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" action="/admin/create-reassessment">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+            <h2 class="govuk-heading-m">Change reassessment entry</h2>
+
+            <p>This assessment has an overall rating red rating, and therefore needs to be reassessed.</p>
+
+                <h3 class="govuk-heading-s">Standards with a red outcome</h3>
+
+     
+                <ol class="govuk-task-list">
+                    {% for standard in serviceStandards %}
+                    {% for rating in ratings %}
+                    {% if standard.Point == rating.Standard %}
+                    {% if rating.Outcome === 'Red' %}
+                    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                       <div class="govuk-task-list__name-and-hint">
+                          <a class="govuk-link govuk-task-list__link" href="#point-{{standard.Point}}"
+                             aria-describedby="standard-{{standard.Point}}-status">{{ standard.Point }}. {{ standard.Title
+                          }}</a>
+                       </div>
+                       <div class="govuk-task-list__status" id="standard-{{standard.Point}}-status">
+                          <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome | NAToString }}</strong>
+                       </div>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                 </ol>
+
+                 {% set ambers = ratings | filterByProperty('Outcome', 'Amber') %}
+
+                 {% if ambers | length > 0 %}
+
+                 <h3 class="govuk-heading-s">Standards with an amber outcome</h3>
+
+                 <p>At the same time as being reassessed, the team may choose to demonstrate they have resolved actions for the following amber rated standards.</p>
+
+                 <ol class="govuk-task-list">
+                    {% for standard in serviceStandards %}
+                    {% for rating in ratings %}
+                    {% if standard.Point == rating.Standard %}
+                    {% if rating.Outcome === 'Amber' %}
+                    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                       <div class="govuk-task-list__name-and-hint">
+                          <a class="govuk-link govuk-task-list__link" href="#point-{{standard.Point}}"
+                             aria-describedby="standard-{{standard.Point}}-status">{{ standard.Point }}. {{ standard.Title
+                          }}</a>
+                       </div>
+                       <div class="govuk-task-list__status" id="standard-{{standard.Point}}-status">
+                          <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome | NAToString }}</strong>
+                       </div>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                 </ol>
+                 {% endif %}
+
+
+                <div class="govuk-button-group">
+                    <button class="govuk-button" data-module="govuk-button">Create reassessment entry</button>
+                    <a class="govuk-link govuk-link--no-visited-state"
+                        href="/admin/overview/{{assessment.AssessmentID}}">Cancel and return to tasks</a>
+                </div>
+
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

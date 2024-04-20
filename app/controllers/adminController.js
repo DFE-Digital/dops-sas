@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator');
-const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, getDraftsForUser, deleteAssessment, getRequestsByStatus, getRequestsByMixedStatus, getActiveAssessmentsWithAssessorData, getAssessmentPanelByUserID, changePrimaryContact, getAllAssessments } = require('../models/assessmentModel');
+const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, getDraftsForUser, deleteAssessment, getRequestsByStatus, getRequestsByMixedStatus, getActiveAssessmentsWithAssessorData, getAssessmentPanelByUserID, changePrimaryContact, getAllAssessments, createReAssessment } = require('../models/assessmentModel');
 const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
 const { getAllAssessors, createAssessor, getAssessor, getTrainingForUser, createTraining, getTrainingByUniqueID, getAssessorByUserID, deleteTraining, updateAssessor } = require('../models/assessors');
 const { validateRequest, validateAddPanel, validateAddAdmin, validateAddTraining } = require('../validation/admin');
@@ -7,7 +7,7 @@ const { UpsertUserNoToken, getBasicUserDetails, getBasicUserDetailsByEmail } = r
 const { getAllAdmins, addAdmin, getAdminByRoleID, deleteAdmin } = require('../models/userrole');
 const { getServiceStandards, getServiceStandardOutcomesByAssessmentID } = require('../models/standards');
 const { getActionsForAssessmentID } = require('../models/actions');
-const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact } = require('../models/artefacts');
+const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact, copyArtefacts } = require('../models/artefacts');
 const { getTeamForAssessmentExtended } = require('../models/team');
 const { sendNotifyEmail } = require('../middleware/notify');
 const { getDepartments } = require('../models/departments');
@@ -20,51 +20,53 @@ const Docxtemplater = require('docxtemplater');
 const ExcelJS = require('exceljs');
 
 
+
 exports.g_index = async function (req, res) {
-    try {
-        const department = req.session.data.User.Department;
-        const requests = await getAllAssessments(department);
-        const filter = req.params.filter || 'priority';
+    const department = req.session.data.User.Department;
+    const requests = await getAllAssessments(department);
+    let { filter } = req.params;
 
-
-        const filterDefinitions = {
-            'priority': {
-                conditions: ['New', 'Team Review', 'SA Review', 'SA Publish'],
-                view: 'Priority tasks'
-            },
-            'sa-review': {
-                conditions: ['SA Review'],
-                view: 'Reports to send on to the team'
-            },
-            'sa-publish': {
-                conditions: ['SA Publish'],
-                view: 'Reports needing to be published'
-            },
-            'team-review': {
-                conditions: ['Team Review'],
-                view: 'Reports with the team to review'
-            },
-            'no-date': {
-                conditionFunc: request => request.Status === 'Active' && !request.AssessmentDateTime,
-                view: 'Requests with no assessment date set'
-            }
-        };
-
-        // Filter requests based on selected filter and condition
-        const { conditions, conditionFunc, view } = filterDefinitions[filter];
-        let filteredData = conditions ? requests.filter(request => conditions.includes(request.Status)) : requests.filter(conditionFunc);
-
-        // Render page with filtered data
-        res.render('admin/index', {
-            filteredData,
-            filter,
-            filterView: view,
-            ...Object.fromEntries(Object.keys(filterDefinitions).map(key => [key, requests.filter(filterDefinitions[key].conditionFunc || ((req) => filterDefinitions[key].conditions.includes(req.Status)))]))
-        });
-    } catch (error) {
-        console.error('Failed to fetch or filter data:', error);
-        res.render('admin/index', { error: 'Failed to fetch or filter data' });
+    if (!filter) {
+        filter = 'priority';
     }
+
+    let filteredData = [];
+    let filterView = ""
+
+    const priority = requests.filter(request => request.Status === 'New' || request.Status === 'Team Review' || request.Status === 'SA Review' || request.Status === 'SA Publish');
+    const noDateRequests = requests.filter(request => request.Status === 'Active' && !request.AssessmentDateTime);
+    const saReviewRequests = requests.filter(request => request.Status === 'SA Review');
+    const saPublishRequests = requests.filter(request => request.Status === 'SA Publish');
+    const teamReviewRequests = requests.filter(request => request.Status === 'Team Review');
+
+
+    if (filter === 'priority') {
+        filteredData = priority
+        filterView = "Priority tasks"
+    }
+
+    if (filter === 'sa-review') {
+        filteredData = saReviewRequests
+        filterView = "Reports to send on to the team"
+    }
+
+    if (filter === 'sa-publish') {
+        filteredData = saPublishRequests
+        filterView = "Reports needing to be published"
+    }
+
+    if (filter === 'team-review') {
+        filteredData = teamReviewRequests
+        filterView = "Reports with the team to review"
+    }
+
+    if (filter === 'no-date') {
+        filteredData = noDateRequests
+        filterView = "Requests with no assessment date set"
+    }
+
+
+    return res.render('admin/index', { filteredData, filter, filterView, priority, noDateRequests, saReviewRequests, saPublishRequests, teamReviewRequests });
 }
 
 exports.g_overview = async function (req, res) {
@@ -120,7 +122,7 @@ exports.g_adddate = async function (req, res) {
 
 exports.g_assessments = async function (req, res) {
     const department = req.session.data.User.Department;
-    const statuses = ['Active', 'Team Review', 'SA Review', 'SA Publish'];
+    const statuses = ['Active', 'Team Review', 'SA Review', 'SA Publish', 'Published'];
     const active = await getRequestsByMixedStatus(statuses, department);
     return res.render('admin/assessments', { assessments: active });
 };
@@ -388,6 +390,20 @@ exports.g_changeDM = async function (req, res) {
         userDetails = await getBasicUserDetails(assessment.DM);
     }
     return res.render('admin/entry/change-dm', { assessment, userDetails });
+}
+
+exports.g_createReassessment = async function (req, res) {
+
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+    const serviceStandards = await getServiceStandards();
+    const actions = await getActionsForAssessmentID(assessmentID);
+    return res.render('admin/entry/create-reassessment', {
+        assessment, ratings, serviceStandards, actions
+    })
+
+
 }
 
 
@@ -1026,3 +1042,25 @@ exports.p_changeDM = [
 
     }
 ];
+
+
+exports.p_createReassessment = async function (req, res) {
+    try {
+        const { AssessmentID } = req.body;
+        const userID = req.session.data.User.UserID;
+
+        const assessment = await getAssessmentById(AssessmentID);
+
+        const newAssessmentID = await createReAssessment(AssessmentID);
+        await copyArtefacts(AssessmentID, newAssessmentID);
+        await addArtefact(newAssessmentID, 'Previous assessment report', 'Rating: ' + assessment.Outcome, process.env.serviceURL + '/reports/report/' + assessment.AssessmentID, req.session.data.User.UserID);
+        
+        assessment.SubStatusCode = newAssessmentID;
+        await updateAssessment(AssessmentID, assessment, userID);
+
+        return res.redirect(`/admin/overview/${newAssessmentID}`);
+    } catch (error) {
+        console.log(error)
+    }
+
+}

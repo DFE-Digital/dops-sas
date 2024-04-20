@@ -61,6 +61,9 @@ router.get('/accessibility', publicController.g_accessibility);
 router.get('/privacy', publicController.g_privacy);
 router.get('/cookies', publicController.g_cookies);
 
+
+router.get('/redirector/service-standard/:standard', publicController.g_assidfe);
+
 // Auth routes
 router.get('/sign-in', authController.g_signin);
 router.get('/auth/t/:token', authController.g_checktoken);
@@ -162,6 +165,7 @@ router.get('/admin/change-portfolio/:assessmentID', isAuthenticated, isAdmin, ad
 router.get('/admin/change-dd/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDD);
 router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePM);
 router.get('/admin/change-dm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDM);
+router.get('/admin/create-reassessment/:assessmentID', isAuthenticated, isAdmin, adminController.g_createReassessment);
 
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
@@ -187,6 +191,7 @@ router.post("/admin/change-portfolio", isAuthenticated, isAdmin, adminController
 router.post("/admin/change-dd", isAuthenticated, isAdmin, adminController.p_changeDD);
 router.post("/admin/change-pm", isAuthenticated, isAdmin, adminController.p_changePM);
 router.post("/admin/change-dm", isAuthenticated, isAdmin, adminController.p_changeDM);
+router.post("/admin/create-reassessment", isAuthenticated, isAdmin, adminController.p_createReassessment);  
 
 // ANALYSIS ROUTES
 router.get('/analysis', isAuthenticated, analysisController.g_index);
@@ -243,5 +248,9 @@ router.get('/profile/history', isAuthenticated, profileController.g_history);
 
 router.post('/profile/change-name', isAuthenticated, profileController.p_changeName);
 router.post('/profile/change-email', isAuthenticated, profileController.p_changeEmail);
+
+
+// OTHER STUFF
+
 
 module.exports = router;
