@@ -105,7 +105,7 @@
                     {{assessment.Type}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> name</span></a>
+                    <a class="govuk-link" href="/admin/change-type/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> type</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -116,7 +116,7 @@
                     {{assessment.Phase}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> date of birth</span></a>
+                    <a class="govuk-link" href="/admin/change-phase/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> phase</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -127,7 +127,7 @@
                     {{assessment.Name}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                    <a class="govuk-link" href="/admin/change-name/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> service name</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -138,7 +138,7 @@
                     {{assessment.Description}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                    <a class="govuk-link" href="/admin/change-description/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> description</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -153,7 +153,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                    <a class="govuk-link" href="/admin/change-code/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> code</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -166,7 +166,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                   
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -179,7 +179,7 @@
                     {% elseif assessment.EndDateYN === "No"%}End date not known{% endif%}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                   
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -196,7 +196,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                  
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -207,7 +207,7 @@
                     {{assessment.Portfolio}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                    <a class="govuk-link" href="/admin/change-portfolio/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> portfolio</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -220,7 +220,7 @@
                     {{ddDetails.EmailAddress}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                    <a class="govuk-link" href="/admin/change-dd/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> deputy director</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -236,7 +236,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                    <a class="govuk-link" href="/admin/change-pm/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> product manager</span></a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -252,7 +252,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
+                    <a class="govuk-link" href="/admin/change-dm/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> delivery manager</span></a>
                 </dd>
             </div>
 

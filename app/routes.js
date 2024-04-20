@@ -153,6 +153,15 @@ router.get("/admin/reporting/export-assessment-report", isAuthenticated, isAdmin
 router.get("/admin/assessor-change-status/:assessorID", isAuthenticated, isAdmin, adminController.g_changeAssessorStatus);
 router.get("/admin/add-artefact/:assessmentID", isAuthenticated, isAdmin, adminController.g_addartefact);
 router.get("/admin/remove-artefact/:artefactID/:uniqueID", isAuthenticated, isAdmin, adminController.g_removeartefact);
+router.get('/admin/change-type/:assessmentID', isAuthenticated, isAdmin, adminController.g_changetype);
+router.get('/admin/change-phase/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePhase);
+router.get('/admin/change-name/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeName);
+router.get('/admin/change-description/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDescription);
+router.get('/admin/change-code/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeCode);
+router.get('/admin/change-portfolio/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePortfolio);
+router.get('/admin/change-dd/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDD);
+router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePM);
+router.get('/admin/change-dm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDM);
 
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
@@ -169,6 +178,15 @@ router.post("/admin/assessor-change-status", isAuthenticated, isAdmin, adminCont
 router.post("/admin/change-primary-contact", isAuthenticated, isAdmin, adminController.p_changePrimaryContact);
 router.post("/admin/add-artefact", isAuthenticated, isAdmin, adminController.p_addartefact);
 router.post("/admin/remove-artefact", isAuthenticated, isAdmin, adminController.p_removeartefact);
+router.post("/admin/change-type", isAuthenticated, isAdmin, adminController.p_changeType);
+router.post("/admin/change-phase", isAuthenticated, isAdmin, adminController.p_changePhase);
+router.post("/admin/change-name", isAuthenticated, isAdmin, adminController.p_changeName);
+router.post("/admin/change-description", isAuthenticated, isAdmin, adminController.p_changeDescription);
+router.post("/admin/change-code", isAuthenticated, isAdmin, adminController.p_changeCode);
+router.post("/admin/change-portfolio", isAuthenticated, isAdmin, adminController.p_changePortfolio);
+router.post("/admin/change-dd", isAuthenticated, isAdmin, adminController.p_changeDD);
+router.post("/admin/change-pm", isAuthenticated, isAdmin, adminController.p_changePM);
+router.post("/admin/change-dm", isAuthenticated, isAdmin, adminController.p_changeDM);
 
 // ANALYSIS ROUTES
 router.get('/analysis', isAuthenticated, analysisController.g_index);

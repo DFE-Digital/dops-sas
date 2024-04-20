@@ -7,11 +7,12 @@ const { UpsertUserNoToken, getBasicUserDetails, getBasicUserDetailsByEmail } = r
 const { getAllAdmins, addAdmin, getAdminByRoleID, deleteAdmin } = require('../models/userrole');
 const { getServiceStandards, getServiceStandardOutcomesByAssessmentID } = require('../models/standards');
 const { getActionsForAssessmentID } = require('../models/actions');
-const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact  } = require('../models/artefacts');
+const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact } = require('../models/artefacts');
 const { getTeamForAssessmentExtended } = require('../models/team');
 const { sendNotifyEmail } = require('../middleware/notify');
 const { getDepartments } = require('../models/departments');
 const { validateAddArtefact } = require('../validation/manage');
+const { validatePhase, validateType, validateName, validateDescription, validateCode, validateDate, validateEndDate, validateEndDates, validatePortfolio, validateDD, validatePM, validateDM } = require('../validation/book');
 
 const fs = require('fs');
 const PizZip = require('pizzip');
@@ -23,9 +24,9 @@ exports.g_index = async function (req, res) {
     try {
         const department = req.session.data.User.Department;
         const requests = await getAllAssessments(department);
-        const filter = req.params.filter || 'priority'; 
+        const filter = req.params.filter || 'priority';
 
-   
+
         const filterDefinitions = {
             'priority': {
                 conditions: ['New', 'Team Review', 'SA Review', 'SA Publish'],
@@ -325,6 +326,69 @@ exports.g_removeartefact = async function (req, res) {
     return res.render('admin/entry/remove-artefact', { assessment, artefact });
 }
 
+exports.g_changetype = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('admin/entry/change-type', { assessment });
+}
+
+exports.g_changePhase = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('admin/entry/change-phase', { assessment });
+}
+
+exports.g_changeName = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('admin/entry/change-name', { assessment });
+}
+
+exports.g_changeDescription = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('admin/entry/change-description', { assessment });
+}
+exports.g_changeCode = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('admin/entry/change-code', { assessment });
+}
+exports.g_changePortfolio = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('admin/entry/change-portfolio', { assessment });
+}
+exports.g_changeDD = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    let userDetails = {};
+    if (assessment.DD) {
+        userDetails = await getBasicUserDetails(assessment.DD);
+    }
+    return res.render('admin/entry/change-dd', { assessment, userDetails });
+}
+
+exports.g_changePM = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    let userDetails = {};
+    if (assessment.PM) {
+        userDetails = await getBasicUserDetails(assessment.PM);
+    }
+    return res.render('admin/entry/change-pm', { assessment, userDetails });
+}
+
+
+exports.g_changeDM = async function (req, res) {
+    const { assessmentID } = req.params;
+    const assessment = await getAssessmentById(assessmentID);
+    let userDetails = {};
+    if (assessment.DM) {
+        userDetails = await getBasicUserDetails(assessment.DM);
+    }
+    return res.render('admin/entry/change-dm', { assessment, userDetails });
+}
 
 
 // POSTS
@@ -766,3 +830,199 @@ exports.p_changePrimaryContact = async function (req, res) {
 
     return res.redirect(`/admin/request/${AssessmentID}`);
 }
+
+
+exports.p_changeType = async function (req, res) {
+    const { AssessmentID, Type } = req.body;
+    const userID = req.session.data.User.UserID;
+
+    const assessment = await getAssessmentById(AssessmentID);
+    assessment.Type = Type;
+    await updateAssessment(AssessmentID, assessment, userID);
+
+    return res.redirect(`/admin/request/${AssessmentID}`);
+}
+
+exports.p_changePhase = async function (req, res) {
+    const { AssessmentID, Phase } = req.body;
+    const userID = req.session.data.User.UserID;
+
+    const assessment = await getAssessmentById(AssessmentID);
+    assessment.Phase = Phase;
+    await updateAssessment(AssessmentID, assessment, userID);
+
+    return res.redirect(`/admin/request/${AssessmentID}`);
+}
+
+exports.p_changeName = async function (req, res) {
+    const { AssessmentID, Name } = req.body;
+    const userID = req.session.data.User.UserID;
+
+    const assessment = await getAssessmentById(AssessmentID);
+    assessment.Name = Name;
+    await updateAssessment(AssessmentID, assessment, userID);
+
+    return res.redirect(`/admin/request/${AssessmentID}`);
+}
+
+exports.p_changeDescription = async function (req, res) {
+    const { AssessmentID, Description } = req.body;
+    const userID = req.session.data.User.UserID;
+
+    const assessment = await getAssessmentById(AssessmentID);
+    assessment.Description = Description;
+    await updateAssessment(AssessmentID, assessment, userID);
+
+    return res.redirect(`/admin/request/${AssessmentID}`);
+}
+
+exports.p_changeCode = async function (req, res) {
+    const { AssessmentID, ProjectCode } = req.body;
+    const userID = req.session.data.User.UserID;
+
+    const assessment = await getAssessmentById(AssessmentID);
+    assessment.ProjectCode = ProjectCode;
+    await updateAssessment(AssessmentID, assessment, userID);
+
+    return res.redirect(`/admin/request/${AssessmentID}`);
+}
+
+exports.p_changePortfolio = async function (req, res) {
+    const { AssessmentID, Portfolio } = req.body;
+    const userID = req.session.data.User.UserID;
+
+    const assessment = await getAssessmentById(AssessmentID);
+    assessment.Portfolio = Portfolio;
+    await updateAssessment(AssessmentID, assessment, userID);
+
+    return res.redirect(`/admin/request/${AssessmentID}`);
+}
+
+exports.p_changeDD = [
+    validateDD,
+    async (req, res) => {
+        const { AssessmentID, ddemail } = req.body;
+        let model = await getAssessmentById(AssessmentID);
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.render('admin/entry/change-dd', {
+                errors: errors.array(), assessment: model
+            });
+        }
+
+        const userID = req.session.data.User.UserID;
+
+
+        let ddUserID = await UpsertUserNoToken(ddemail, '', '', userID, 'Edit request: ' + AssessmentID, req.session.data.User.Department);
+        model.DD = ddUserID;
+
+        await updateAssessment(AssessmentID, model, userID);
+        return res.redirect('/admin/request/' + AssessmentID);
+
+    }
+];
+
+
+
+exports.p_changePM = [
+    validatePM,
+    async (req, res) => {
+        const { AssessmentID, pm } = req.body;
+
+        const errors = validationResult(req);
+
+        let tempModel = await getAssessmentById(AssessmentID);
+
+        tempModel.PMYN = pm
+
+        if (!errors.isEmpty()) {
+            return res.render('admin/entry/change-pm', {
+                assessment: tempModel,
+                errors: errors.array()
+            });
+        }
+
+        const modelData = req.session.data && req.session.data.AssessmentID
+            ? { ...req.body, AssessmentID: req.session.data.AssessmentID }
+            : req.body;
+
+        let model = new AssessmentModel(modelData);
+
+        const userID = req.session.data.User.UserID;
+
+
+        model = await getAssessmentById(AssessmentID);
+
+        if (req.body.pm === "Yes") {
+            let pmUserID = await UpsertUserNoToken(req.body.pmemail, "", "", userID, 'Admin request: ' + AssessmentID);
+            model.PM = pmUserID;
+            model.PMYN = "Yes";
+        }
+        else {
+            model.PM = null;
+            model.PMYN = "No";
+        }
+
+        // Update existing assessment
+        await updateAssessment(AssessmentID, model, userID);
+
+
+
+
+        return res.redirect('/admin/request/' + AssessmentID);
+
+    }
+];
+
+
+exports.p_changeDM = [
+    validateDM,
+    async (req, res) => {
+        const { AssessmentID, dm } = req.body;
+
+        const errors = validationResult(req);
+
+        let tempModel = await getAssessmentById(AssessmentID);
+
+        tempModel.DMYN = dm
+
+        if (!errors.isEmpty()) {
+            return res.render('admin/entry/change-dm', {
+                assessment: tempModel,
+                errors: errors.array()
+            });
+        }
+
+        const modelData = req.session.data && req.session.data.AssessmentID
+            ? { ...req.body, AssessmentID: req.session.data.AssessmentID }
+            : req.body;
+
+        let model = new AssessmentModel(modelData);
+
+        const userID = req.session.data.User.UserID;
+
+
+        model = await getAssessmentById(AssessmentID);
+
+        if (req.body.dm === "Yes") {
+            let dmUserID = await UpsertUserNoToken(req.body.dmemail, "", "", userID, 'Admin request: ' + AssessmentID);
+            model.DM = dmUserID;
+            model.DMYN = "Yes";
+        }
+        else {
+            model.DM = null;
+            model.DMYN = "No";
+        }
+
+        // Update existing assessment
+        await updateAssessment(AssessmentID, model, userID);
+
+
+
+
+        return res.redirect('/admin/request/' + AssessmentID);
+
+    }
+];

@@ -1,0 +1,55 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change the name of the service" %}
+
+{% set view = 'request' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Type' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" action="/admin/change-name">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+            <div class="govuk-form-group {%if hasError%}govuk-form-group--error{% endif%}">
+                <h2 class="govuk-label-wrapper">
+                    <label class="govuk-label govuk-label--l" for="Name">{{pageName}}</label>
+                </h2>
+
+    
+                {%if hasError%}
+                <p id="event-name-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> Enter a name
+                </p>
+                {% endif%}
+
+                <input class="govuk-input {%if hasError%} govuk-input--error{% endif%}" id="Name" name="Name"
+                    type="text" value="{{assessment.Name}}">
+            </div>
+        
+
+              <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Change name</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/admin/request/{{assessment.AssessmentID}}">Cancel and return to request</a>
+            </div>
+   
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

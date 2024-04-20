@@ -1,0 +1,58 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change the description of the service" %}
+
+{% set view = 'request' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Type' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" action="/admin/change-description">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="2500">
+                <div class="govuk-form-group  {%if hasError%}govuk-form-group--error{% endif%}">
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--l" for="Description">{{pageName}}</label>
+                    </h1>
+            
+                    {%if hasError%}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Enter a description
+                    </p>
+                    {% endif%}
+                    <textarea
+                        class="govuk-textarea govuk-js-character-count  {%if hasError%} govuk-input--error{% endif%}"
+                        id="Description" name="Description" rows="10"
+                        aria-describedby="purpose-info purpose-hint">{{assessment.Description}}</textarea>
+                </div>
+                <div id="Description-info" class="govuk-hint govuk-character-count__message">You can enter up to 2500
+                    characters</div>
+            </div>
+
+              <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Change description</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/admin/request/{{assessment.AssessmentID}}">Cancel and return to request</a>
+            </div>
+   
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

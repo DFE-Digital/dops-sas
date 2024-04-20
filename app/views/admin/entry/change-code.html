@@ -1,0 +1,53 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change the project code" %}
+
+{% set view = 'request' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Type' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" action="/admin/change-code">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+            <div class="govuk-form-group {%if codeError%}govuk-form-group--error{% endif%}">
+                <h2 class="govuk-label-wrapper">
+                    <label class="govuk-label govuk-label--l" for="ProjectCode">{{pageName}}</label>
+                </h2>
+                {%if codeError%}
+                <p id="ProjectCode-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>What is your project code?
+                </p>
+                {% endif%}
+                <input
+                    class="govuk-input govuk-!-width-one-third {%if codeError%}govuk-input--error{% endif%}"
+                    id="ProjectCode" name="ProjectCode" type="text" value="{{assessment.ProjectCode}}">
+            </div>
+        
+
+              <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Change code</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/admin/request/{{assessment.AssessmentID}}">Cancel and return to request</a>
+            </div>
+   
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

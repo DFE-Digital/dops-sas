@@ -1,0 +1,93 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change the product manager email" %}
+
+{% set view = 'request' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasEmailError = false %}
+
+{% for error in errors %}
+{% if error.path === 'pmemail' %}
+{% set hasEmailError = true %}
+{% endif %}
+{% endfor %}
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+        <form method="post" action="/admin/change-pm">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+            <div class="govuk-form-group {%if pmError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="pm-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h2 class="govuk-fieldset__heading">Does the team have a product owner or product manager?</h2>
+                    </legend>
+                    <div id="pm-hint" class="govuk-hint">Select one option.</div>
+                    {%if pmError %}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>Select if the team has a product owner or
+                        product manager
+                    </p>
+                    {% endif%}
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="pm" name="pm" type="radio" value="Yes"
+                                data-aria-controls="conditional-pm" {% if assessment.PMYN==="Yes" %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="pm">Yes</label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-pm">
+
+                            <p class="govuk-heading-m">Email address of the product owner or product manager
+                            </p>
+                            <div
+                                class="govuk-form-group {%if hasEmailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="pmemail">Enter their email address</label>
+                                {%if hasEmailError%}
+                                <p id="event-name-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address
+                                </p>
+                                {% endif%}
+                                <input class="govuk-input {%if hasEmailError%} govuk-input--error{% endif%}"
+                                    id="pmemail" name="pmemail" type="email" spellcheck="false"
+                                    aria-describedby="email-hint" autocomplete="email"
+                                    value="{{userDetails.EmailAddress}}">
+                            </div>
+
+
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="pm-2" name="pm" type="radio" value="No" {% if
+                                assessment.PMYN==="No" %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="pm-2">No</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Change product manager</button>
+                <a class="govuk-link govuk-link--no-visited-state"
+                    href="/admin/request/{{assessment.AssessmentID}}">Cancel and return to request</a>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

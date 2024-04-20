@@ -1,0 +1,92 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change the delivery manager email" %}
+
+{% set view = 'request' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasEmailError = false %}
+
+{% for error in errors %}
+{% if error.path === 'dmemail' %}
+{% set hasEmailError = true %}
+{% endif %}
+{% endfor %}
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        {% include 'partials/errorSummary.html' %}
+
+        <form method="post" action="/admin/change-dm">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+            <div class="govuk-form-group {%if dmError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="dm-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h2 class="govuk-fieldset__heading">Does the team have a delivery manager?</h2>
+                    </legend>
+                    <div id="dm-hint" class="govuk-hint">Select one option.</div>
+                    {%if dmError %}
+                    <p id="event-name-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>Select if the team has a delivery manager
+                    </p>
+                    {% endif%}
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="dm" name="dm" type="radio" value="Yes"
+                                data-aria-controls="conditional-dm" {% if assessment.DMYN==="Yes" %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="dm">Yes</label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-dm">
+
+                            <p class="govuk-heading-m">Email address of the delivery manager
+                            </p>
+                            <div
+                                class="govuk-form-group {%if hasEmailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
+
+                                <label class="govuk-label" for="dmemail">Enter their email address</label>
+                                {%if hasEmailError%}
+                                <p id="event-name-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address
+                                </p>
+                                {% endif%}
+                                <input class="govuk-input {%if hasEmailError%} govuk-input--error{% endif%}"
+                                    id="dmemail" name="dmemail" type="email" spellcheck="false"
+                                    aria-describedby="email-hint" autocomplete="email"
+                                    value="{{userDetails.EmailAddress}}">
+                            </div>
+
+
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="dm-2" name="dm" type="radio" value="No" {% if
+                                assessment.DMYN==="No" %}checked{% endif %}>
+                            <label class="govuk-label govuk-radios__label" for="dm-2">No</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Change delivery manager</button>
+                <a class="govuk-link govuk-link--no-visited-state"
+                    href="/admin/request/{{assessment.AssessmentID}}">Cancel and return to request</a>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

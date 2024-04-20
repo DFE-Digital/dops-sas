@@ -1,0 +1,72 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Select the type of assurance you need" %}
+
+{% set view = 'request' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Type' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" action="/admin/change-type">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+        
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="Type-hint">
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h2 class="govuk-fieldset__heading">
+                      Change the type of assurance
+                    </h2>
+                  </legend>
+                  <div id="Type-hint" class="govuk-hint">
+                    The current type is already set.
+                  </div>
+                  <div class="govuk-radios " data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                      <input class="govuk-radios__input" id="Type" name="Type" type="radio" value="Peer review" {% if assessment.Type === 'Peer review'%}checked{% endif %}>
+                      <label class="govuk-label govuk-radios__label" for="Type">
+                        Peer review
+                      </label>
+                      <div id="Type-item-hint" class="govuk-hint govuk-radios__hint">
+                        The team will not be assessed against the Service Standard or get a RAG rating.
+                      </div>
+                    </div>
+                    <div class="govuk-radios__item">
+                      <input class="govuk-radios__input" id="Type-2" name="Type" type="radio" value="Service assessment" {% if assessment.Type === 'Service assessment'%}checked{% endif %}>
+                      <label class="govuk-label govuk-radios__label" for="Type-2">
+                        Service assessment
+                      </label>
+                      <div id="Type-item-hint-2" class="govuk-hint govuk-radios__hint">
+                        The team will be assessed against the Service Standard using RAG ratings.
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Change type</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/admin/request/{{assessment.AssessmentID}}">Cancel and return to request</a>
+            </div>
+   
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

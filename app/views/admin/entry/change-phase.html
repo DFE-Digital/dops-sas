@@ -1,0 +1,95 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Select the type of assurance you need" %}
+
+{% set view = 'request' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Type' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" action="/admin/change-phase">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+
+            <div class="govuk-form-group {%if hasError %}govuk-form-group--error{% endif%}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h2 class="govuk-fieldset__heading">
+                    Change the phase of delivery
+                </h2>
+            </legend>
+            <div id="Type-hint" class="govuk-hint">
+              The current phase is already set.
+            </div>
+            {%if hasError%}
+            <p id="event-name-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> Select a phase
+            </p>
+            {% endif%}
+            <div class="govuk-radios" data-module="govuk-radios">
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase" name="Phase" type="radio" value="Discovery" {% if
+                      assessment.Phase==="Discovery" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase">
+                        Discovery
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-2" name="Phase" type="radio" value="Alpha" {% if
+                      assessment.Phase==="Alpha" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-2">
+                        Alpha
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-3" name="Phase" type="radio" value="Private Beta" {% if
+                        assessment.Phase==="Private Beta" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-3">
+                        Private beta
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-4" name="Phase" type="radio" value="Public Beta" {% if
+                      assessment.Phase==="Public Beta" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-4">
+                        Public beta
+                    </label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Phase-5" name="Phase" type="radio" value="Live" {% if
+                      assessment.Phase==="Live" %}checked{%endif%}>
+                    <label class="govuk-label govuk-radios__label" for="Phase-5">
+                        Live
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+      
+
+              <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Change phase</button>
+                <a class="govuk-link govuk-link--no-visited-state" href="/admin/request/{{assessment.AssessmentID}}">Cancel and return to request</a>
+            </div>
+   
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}
