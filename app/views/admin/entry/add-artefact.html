@@ -1,0 +1,109 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = 'Add artefact' %}
+{% set view = 'artefacts' %}
+
+{% set titleError = false %}
+{% set descriptionError = false %}
+{% set urlError = false %}
+
+{% for error in errors %}
+    {% if error.path === 'Title' %}
+        {% set titleError = true %}
+    {% endif %}
+    {% if error.path === 'URL' %}
+        {% set urlError = true %}
+    {% endif %}
+{% endfor %}
+
+{% block hero %}
+
+    {% include './_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                {% include 'partials/errorSummary.html' %}
+
+                <div class="govuk-summary-card">
+                    <div class="govuk-summary-card__title-wrapper">
+                        <h2 class="govuk-summary-card__title">Add artefact</h2>
+                            <ul class="govuk-summary-card__actions">
+                                <li class="govuk-summary-card__action">
+                                    <a class="govuk-link govuk-link--no-visited-state" href="/admin/artefacts/{{assessment.AssessmentID}}">Cancel</a>
+                                </li>
+                            </ul>
+                    </div>
+                    <div class="govuk-summary-card__content">
+
+                        <form action="/admin/add-artefact" method="post" novalidate>
+                            <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+
+                            <div class="govuk-form-group {%if titleError%}govuk-form-group--error{% endif%}">
+                                <label class="govuk-label" for="title">Title of the artefact</label>
+                                {%if titleError%}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Enter a title</p>
+                                    {% endif%}
+                                    <input class="govuk-input {%if titleError%} govuk-input--error{% endif%}" id="Title" name="Title" type="text" value="{{data['Title']}}">
+                                </div>
+
+                                <div class="govuk-form-group {%if descriptionError%}govuk-form-group--error{% endif%}">
+                                    <label class="govuk-label" for="description">Additional information</label>
+                                    <div id="event-name-hint" class="govuk-hint">For example: the password for accessing a prototype</div>
+                                     {%if descriptionError%}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Enter a title</p>
+                                    {% endif%}
+                                    <input class="govuk-input {%if descriptionError%} govuk-input--error{% endif%}" id="Description" name="Description" type="text" value="{{data['Description']}}">
+                                </div>
+
+                                <div class="govuk-form-group {%if urlError%}govuk-form-group--error{% endif%}">
+                                    <label class="govuk-label" for="url">URL of the file or artefact</label>
+                                     {%if urlError%}
+                                    <p id="event-name-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Enter a URL</p>
+                                    {% endif%}
+                                    <input class="govuk-input  {%if urlError%} govuk-input--error{% endif%}" id="URL" name="URL" type="text"  value="{{data['URL']}}">
+                                </div>
+
+                                <div class="govuk-button-group">
+                                    <button  name="action" class="govuk-button"  data-module="govuk-button">Save and return</button>
+                                    <a href="/admin/artefacts/{{assessment.AssessmentID}}" class="govuk-link">Cancel and return to artefacts</a>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    <aside class="dfe-aside">
+                        <h2 class="govuk-heading-m">Related guidance</h2>
+            
+            <p>Add links to artefacts to show the work the team has done, such as:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>
+                                short slide decks
+                            </li>
+                            <li>
+                                prototypes on Heroku
+                            </li>
+                            <li>
+                                Figma files
+                            </li>
+                            <li>
+                                Lucid boards
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+    
+
+    {% endblock %}

@@ -121,6 +121,14 @@ exports.g_team = async function (req, res) {
     return res.render('manage/entry/team', { assessment, team });
 }
 
+exports.g_addteam = async function (req, res) {
+    const assessmentID = req.params.assessmentID;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('manage/entry/add-team', {
+        assessment
+    })
+}
+
 exports.g_addartefact = async function (req, res) {
     const assessmentID = req.params.assessmentID;
     const assessment = await getAssessmentById(assessmentID);
@@ -129,13 +137,7 @@ exports.g_addartefact = async function (req, res) {
     })
 }
 
-exports.g_addteam = async function (req, res) {
-    const assessmentID = req.params.assessmentID;
-    const assessment = await getAssessmentById(assessmentID);
-    return res.render('manage/entry/add-team', {
-        assessment
-    })
-}
+
 
 exports.g_removeartefact = async function (req, res) {
     const { artefactID, uniqueID } = req.params;

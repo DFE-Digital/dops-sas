@@ -151,6 +151,8 @@ router.get("/admin/remove-training/:trainingUniqueID", isAuthenticated, isAdmin,
 router.get("/admin/assessment-history/:assessorID", isAuthenticated, isAdmin, adminController.g_assessmentHistory);
 router.get("/admin/reporting/export-assessment-report", isAuthenticated, isAdmin, adminController.g_exportAssessmentReport);
 router.get("/admin/assessor-change-status/:assessorID", isAuthenticated, isAdmin, adminController.g_changeAssessorStatus);
+router.get("/admin/add-artefact/:assessmentID", isAuthenticated, isAdmin, adminController.g_addartefact);
+router.get("/admin/remove-artefact/:artefactID/:uniqueID", isAuthenticated, isAdmin, adminController.g_removeartefact);
 
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
@@ -165,6 +167,8 @@ router.post("/admin/add-training", isAuthenticated, isAdmin, adminController.p_a
 router.post("/admin/remove-training", isAuthenticated, isAdmin, adminController.p_removeTraining);
 router.post("/admin/assessor-change-status", isAuthenticated, isAdmin, adminController.p_changeAssessorStatus);
 router.post("/admin/change-primary-contact", isAuthenticated, isAdmin, adminController.p_changePrimaryContact);
+router.post("/admin/add-artefact", isAuthenticated, isAdmin, adminController.p_addartefact);
+router.post("/admin/remove-artefact", isAuthenticated, isAdmin, adminController.p_removeartefact);
 
 // ANALYSIS ROUTES
 router.get('/analysis', isAuthenticated, analysisController.g_index);

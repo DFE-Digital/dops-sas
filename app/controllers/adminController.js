@@ -7,10 +7,11 @@ const { UpsertUserNoToken, getBasicUserDetails, getBasicUserDetailsByEmail } = r
 const { getAllAdmins, addAdmin, getAdminByRoleID, deleteAdmin } = require('../models/userrole');
 const { getServiceStandards, getServiceStandardOutcomesByAssessmentID } = require('../models/standards');
 const { getActionsForAssessmentID } = require('../models/actions');
-const { getArtefactsForAssessment } = require('../models/artefacts');
+const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact  } = require('../models/artefacts');
 const { getTeamForAssessmentExtended } = require('../models/team');
 const { sendNotifyEmail } = require('../middleware/notify');
 const { getDepartments } = require('../models/departments');
+const { validateAddArtefact } = require('../validation/manage');
 
 const fs = require('fs');
 const PizZip = require('pizzip');
@@ -215,6 +216,8 @@ exports.g_artefacts = async function (req, res) {
 }
 
 
+
+
 exports.g_team = async function (req, res) {
     const { assessmentID } = req.params;
     const assessment = await getAssessmentById(assessmentID);
@@ -306,7 +309,75 @@ exports.g_exportAssessmentReport = async function (req, res) {
 
 
 
+exports.g_addartefact = async function (req, res) {
+    const assessmentID = req.params.assessmentID;
+    const assessment = await getAssessmentById(assessmentID);
+    return res.render('admin/entry/add-artefact', {
+        assessment
+    })
+}
+
+exports.g_removeartefact = async function (req, res) {
+    const { artefactID, uniqueID } = req.params;
+    const artefact = await getArtefactByIdAndUniqueID(artefactID, uniqueID);
+
+    const assessment = await getAssessmentById(artefact.AssessmentID);
+    return res.render('admin/entry/remove-artefact', { assessment, artefact });
+}
+
+
+
 // POSTS
+
+exports.p_addartefact = [
+    validateAddArtefact,
+    async (req, res) => {
+        const { Title, Description, URL, AssessmentID } = req.body;
+
+        var assessment = await getAssessmentById(AssessmentID);
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.render('admin/entry/add-artefact', {
+                assessment,
+                errors: errors.array()
+            });
+        }
+
+        await addArtefact(AssessmentID, Title, Description, URL, req.session.data.User.UserID);
+
+        // Clear the body and data for the fields
+        req.body = {};
+        req.session.data.Title = '';
+        req.session.data.Description = '';
+        req.session.data.URL = '';
+
+
+        return res.redirect(`/admin/artefacts/${AssessmentID}`);
+    }
+];
+
+
+exports.p_removeartefact = async function (req, res) {
+    const { ArtefactID, UniqueID } = req.body;
+
+    // ToDo: Validate the deletion request, can the user actually delete the request?
+
+    // If artefact isn't a number, redirect to the artefacts page
+    if (isNaN(ArtefactID)) {
+        return res.redirect('/admin');
+    }
+
+    const artefact = await getArtefactByIdAndUniqueID(ArtefactID, UniqueID);
+
+    if (artefact !== null) {
+        await deleteArtefact(ArtefactID);
+        return res.redirect(`/admin/artefacts/${artefact.AssessmentID}`);
+    }
+
+    return res.redirect('/admin');
+};
 
 exports.p_process = [
     validateRequest,

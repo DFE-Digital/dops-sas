@@ -40,7 +40,11 @@
                         </dt>
                         <dd class="govuk-summary-list__value">{{artefact.Description}}</dd>
                         <dd class="govuk-summary-list__actions">
-
+                            {% if assessment.Status !== "Published" %}
+                            <a class="govuk-link"
+                                href="/admin/remove-artefact/{{artefact.ArtefactID}}/{{artefact.UniqueID}}">Remove<span
+                                    class="govuk-visually-hidden"> artefact name, {{artefact.Title}}</span></a>
+                            {% endif %}
                         </dd>
                     </div>
                     {% endfor %}

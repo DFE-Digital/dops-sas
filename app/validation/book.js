@@ -9,7 +9,7 @@ exports.validatePhase = [
         .trim()
         .custom((value, { req }) => {
             if (value === '') {
-                throw new Error('Select an option');
+                throw new Error('Select an phase');
             }
             if (!['Discovery', 'Alpha', 'Private Beta', 'Public Beta', 'Live'].includes(value)) {
                 throw new Error('Invalid phase selected');
