@@ -4,7 +4,7 @@
 { "url": "/reports", "label": "Reports" }
 ] %}
 
-{% if data.IsAdmin == true %}
+{% if data.IsAssessor == true and data.IsAdmin == true %}
 {% set primaryLinks = [
   { "url": "/manage", "label": "Manage" },
   { "url": "/assess", "label": "Assess" },
@@ -22,6 +22,7 @@
   { "url": "/reports", "label": "Reports" }
   ] %}
 {% endif %}
+
 
 
 
