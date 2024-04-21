@@ -13,6 +13,7 @@ const analysisController = require('./controllers/analysisController');
 const reportsController = require('./controllers/reportsController');
 const assessController = require('./controllers/assessController');
 const profileController = require('./controllers/profileController');
+const surveyController = require('./controllers/surveyController');
 
 const rolesToCheck = ['Department lead', 'Administrator', 'Service Administrator'];
 
@@ -61,8 +62,13 @@ router.get('/accessibility', publicController.g_accessibility);
 router.get('/privacy', publicController.g_privacy);
 router.get('/cookies', publicController.g_cookies);
 
-
 router.get('/redirector/service-standard/:standard', publicController.g_assidfe);
+
+// Survey routes
+router.get('/survey/complete', surveyController.g_surveyComplete);
+router.get('/survey/:assessmentID', surveyController.g_survey);
+
+router.post('/survey', surveyController.p_submitSurvey);
 
 // Auth routes
 router.get('/sign-in', authController.g_signin);

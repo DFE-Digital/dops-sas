@@ -21,6 +21,10 @@
   <script>
     document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
   </script>
+  {% if staging %}
+  {% else %}
+  {% include 'layouts/_cookiebanner.html'%}
+  {% endif %}
   <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
   {% if staging %}
   <div class="govuk-!-padding-3" style="background: #fff200">
@@ -74,7 +78,7 @@
               </a>
             </li>
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/privacy">
+              <a class="govuk-footer__link" href="https://www.gov.uk/government/publications/privacy-information-department-for-education-workforce/privacy-information-department-for-education-workforce" target="_blank">
                 Privacy
               </a>
             </li>
@@ -110,6 +114,12 @@
       </div>
     </div>
   </footer>
+  
+  {% if staging %}
+  {% else %}
+  <script src="/assets/js/cookies.min.js"></script>
+  {% endif %}
+
   <script type="module" src="/assets/js/govuk-frontend.min.js"></script>
   <script src="/assets/js/dfefrontend-1.0.1.min.js"></script>
 

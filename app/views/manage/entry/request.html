@@ -11,8 +11,11 @@
 
         <h2 class="govuk-heading-l">Request details</h2>
 
-        {% if assessment.Status === "Published" %}
-        <p>The assessment is complete, and the report published. These details cannot be changed.</p>{% endif %}
+        
+        <p>It's not possible to change these details here at the moment. If you need to change anything contact the <a href="mailto:ServiceAssessment.PLUS@education.gov.uk?subject=Request info change&body=Change information in the request for: {{assessment.Name}}">Service Assessment Plus team</a>.</p>
+       
+
+
 
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
@@ -23,9 +26,7 @@
                     {{assessment.Type}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> name</span></a> {% endif
-                    %}
+                   
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -36,9 +37,7 @@
                     {{assessment.Phase}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> date of birth</span></a>
-                    {% endif %}
+                  
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -49,9 +48,7 @@
                     {{assessment.Name}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                  
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -62,9 +59,7 @@
                     {{assessment.Description}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                    
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -79,9 +74,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                  
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -94,9 +87,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                  
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -109,9 +100,7 @@
                     {% elseif assessment.EndDateYN === "No"%}End date not known{% endif%}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                   
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -128,9 +117,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                   
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -141,9 +128,7 @@
                     {{assessment.Portfolio}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                   
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -156,9 +141,7 @@
                     {{ddDetails.EmailAddress}}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                   
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -174,9 +157,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                 
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -192,9 +173,7 @@
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    {% if assessment.Status !== "Published" %}
-                    <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a> {%
-                    endif %}
+                   
                 </dd>
             </div>
 

@@ -1,0 +1,22 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Survey complete" %}
+{% set pageDescription = "" %}
+{% set setSelectedSideNav = "" %}
+{% set backlog_issue_id = "" %}
+
+{% block beforeContent %}{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-!-margin-bottom-5 govuk-panel--confirmation govuk-!-text-align-left">
+                <h1 class="govuk-panel__title">{{pageName}}</h1>
+                <div class="govuk-panel__body">
+                    <p class="govuk-!-margin-bottom-0">Thank you for your feedback.</p>
+
+                </div>
+            </div>           
+        </div>
+    </div>
+{% endblock %}

@@ -694,8 +694,41 @@ exports.p_publishReport = async function (req, res) {
 
     await updateAssessment(AssessmentID, assessment, user.UserID);
 
-    return res.redirect('/admin/report/' + AssessmentID);
+    // Send email to everyone for feedback, the assessors, the service team, requestor
 
+    try {
+         const templateParams = {
+        phase: assessment.Phase,
+        type: assessment.Type,
+        name: assessment.Name,
+        serviceURL: process.env.serviceURL,
+        id: AssessmentID
+    };
+
+    const panel = await assessmentPanelExtended(AssessmentID);
+
+    panel.forEach(async member => {
+        const memberDetails = await getBasicUserDetails(member.UserID);
+        sendNotifyEmail(process.env.email_Survey, memberDetails.EmailAddress, templateParams)
+    }
+    );
+
+    const submittor = await getBasicUserDetails(assessment.CreatedBy);
+    sendNotifyEmail(process.env.email_Survey, submittor.EmailAddress, templateParams)
+
+    const team = await getTeamForAssessmentExtended(AssessmentID);
+
+    team.forEach(async member => {
+        const memberDetails = await getBasicUserDetails(member.UserID);
+        sendNotifyEmail(process.env.email_Survey, memberDetails.EmailAddress, templateParams)
+    }
+    );
+    } catch (error) {
+        // Should log this error
+    }
+   
+
+    return res.redirect('/admin/report/' + AssessmentID);
 
 };
 

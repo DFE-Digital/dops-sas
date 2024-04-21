@@ -1,0 +1,197 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Survey" %}
+{% set pageDescription = "" %}
+{% set setSelectedSideNav = "" %}
+{% set backlog_issue_id = "" %}
+
+{% block beforeContent %}{% endblock %}
+
+{% block content %}
+<form action="/survey" method="post">
+    <input type="hidden" name="assessmentID" value="{{assessment.AssessmentID}}">
+
+    <h1 class="govuk-heading-l">Survey</h1>
+
+    <p>Your feedback helps us to improve the service assessment process.</p>
+
+    <div class="govuk-inset-text">
+        <p>You're giving feedback on the following assessment:</p>
+        <p>{{assessment.Name}}</p>
+        <p>Date of assessment: {{assessment.AssessmentDateTime | date('D MMMM YYYY')}}</p>
+    </div>
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset" aria-describedby="preass-hint">
+         
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h1 class="govuk-fieldset__heading">
+             How would you rate the pre-assessment process including any calls?
+            </h1>
+          </legend>
+          <div id="preass-hint" class="govuk-hint">
+           1 = Very poor, 5 = Excellent
+          </div>
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="preass" name="preass" type="radio" value="1">
+              <label class="govuk-label govuk-radios__label" for="preass">
+                1
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="preass-2" name="preass" type="radio" value="2">
+                <label class="govuk-label govuk-radios__label" for="preass-2">
+                  2
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="preass-3" name="preass" type="radio" value="3">
+                <label class="govuk-label govuk-radios__label" for="preass-3">
+                  3
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="preass-4" name="preass" type="radio" value="4">
+                <label class="govuk-label govuk-radios__label" for="preass-4">
+                  4
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="preass-5" name="preass" type="radio" value="5">
+                <label class="govuk-label govuk-radios__label" for="preass-5">
+                  5
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="preass-6" name="preass" type="radio" value="0">
+                <label class="govuk-label govuk-radios__label" for="preass-6">
+                  N/A
+                </label>
+              </div>
+           
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset" aria-describedby="org-hint">
+         
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h1 class="govuk-fieldset__heading">
+             How would you rate the organisation of your assessment?
+            </h1>
+          </legend>
+          <div id="org-hint" class="govuk-hint">
+           1 = Very poor, 5 = Excellent
+          </div>
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="org" name="org" type="radio" value="1">
+              <label class="govuk-label govuk-radios__label" for="org">
+                1
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="org-2" name="org" type="radio" value="2">
+                <label class="govuk-label govuk-radios__label" for="org-2">
+                  2
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="org-3" name="org" type="radio" value="3">
+                <label class="govuk-label govuk-radios__label" for="org-3">
+                  3
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="org-4" name="org" type="radio" value="4">
+                <label class="govuk-label govuk-radios__label" for="org-4">
+                  4
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="org-5" name="org" type="radio" value="5">
+                <label class="govuk-label govuk-radios__label" for="org-5">
+                  5
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="org-6" name="org" type="radio" value="0">
+                <label class="govuk-label govuk-radios__label" for="org-6">
+                  N/A
+                </label>
+              </div>
+           
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset" aria-describedby="ass-hint">
+         
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h1 class="govuk-fieldset__heading">
+             How would you rate the assessment itself?
+            </h1>
+          </legend>
+          <div id="ass-hint" class="govuk-hint">
+           1 = Very poor, 5 = Excellent
+          </div>
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="ass" name="ass" type="radio" value="1">
+              <label class="govuk-label govuk-radios__label" for="ass">
+                1
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ass-2" name="ass" type="radio" value="2">
+                <label class="govuk-label govuk-radios__label" for="ass-2">
+                  2
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ass-3" name="ass" type="radio" value="3">
+                <label class="govuk-label govuk-radios__label" for="ass-3">
+                  3
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ass-4" name="ass" type="radio" value="4">
+                <label class="govuk-label govuk-radios__label" for="ass-4">
+                  4
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ass-5" name="ass" type="radio" value="5">
+                <label class="govuk-label govuk-radios__label" for="ass-5">
+                  5
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ass-6" name="ass" type="radio" value="0">
+                <label class="govuk-label govuk-radios__label" for="ass-6">
+                  N/A
+                </label>
+              </div>
+           
+          </div>
+        </fieldset>
+      </div>
+  
+    <div class="govuk-form-group">
+        <label for="feedbackOnLowScores" class="govuk-label">Please elaborate on the items you have scored between 1 and 3</label>
+        <textarea class="govuk-textarea" id="feedbackOnLowScores" name="feedbackOnLowScores" rows="5"></textarea>
+    </div>
+    <div class="govuk-form-group">
+        <label for="specificFeedback" class="govuk-label">Do you have any specific feedback for the assessor panel?</label>
+        <textarea class="govuk-textarea" id="specificFeedback" name="specificFeedbackForAssessor" rows="5"></textarea>
+    </div>
+    <div class="govuk-form-group">
+        <label for="furtherComments" class="govuk-label">Do you have any further comments or suggestions?</label>
+        <textarea class="govuk-textarea" id="furtherComments" name="furtherComments" rows="5"></textarea>
+    </div>
+    <button class="govuk-button" data-module="govuk-button">Submit</button>
+</form>
+{% endblock %}

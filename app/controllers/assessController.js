@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 
 
 const { getAssessmentPanelByUserID, getRequestsByMixedStatus, getAssessmentById, updateReportComments, updateAssessment, checkSubmitStatus } = require('../models/assessmentModel');
-const { getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome } = require('../models/standards');
+const { getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome, canSubmit } = require('../models/standards');
 const { getActionsForAssessmentID, addAction, getActionByUniqueID, updateAction, deleteAction, getActionsForAssessmentIDAndStandard } = require('../models/actions');
 const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
 const { getArtefactsForAssessment } = require('../models/artefacts');
@@ -48,10 +48,11 @@ exports.g_report = async function (req, res) {
         const actions = await getActionsForAssessmentID(assessmentID);
         const panel = await assessmentPanel(assessmentID);
         const submitStatus = await checkSubmitStatus(assessmentID)
+        const canSubmitReport = await canSubmit(assessmentID, user.UserID);
 
         return res.render('assess/entry/report', {
             assessment, ratings, panel,
-            serviceStandards, actions, submitStatus
+            serviceStandards, actions, submitStatus, canSubmitReport
         })
     }
     else {

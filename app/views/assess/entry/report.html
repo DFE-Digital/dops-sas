@@ -29,6 +29,25 @@
 {% endif %}
 {% endfor %}
 
+{% set actionsRequired = false %}
+
+
+{% for standard in ratings %}
+{% if standard.Outcome == "Red" or standard.Outcome == "Amber" %}
+{% set actionExists = false %}
+
+{% for action in actions %}
+{% if action.Point == standard.Standard %}
+{% set actionExists = true %}
+{% endif %}
+{% endfor %}
+
+{% if not actionExists %}
+{% set actionsRequired = true %}
+{% endif %}
+{% endif %}
+{% endfor %}
+
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -86,7 +105,8 @@
                         aria-describedby="standard-details-{{standard.point}}-status">{{standard.Point}}.
                         {{standard.Title}}</a>
                     {% for rating in ratings %}
-                    {% if (rating.Standard === standard.Point) and (rating.Outcome != 'Green' and  rating.Outcome != 'NA') %}
+                    {% if (rating.Standard === standard.Point) and (rating.Outcome != 'Green' and rating.Outcome !=
+                    'NA') %}
 
 
 
@@ -111,7 +131,8 @@
                     {% for rating in ratings %}
                     {% if rating.Standard === standard.Point %}
                     {% set rated = true %}
-                    <strong class="govuk-tag govuk-tag--{{rating.Outcome | lower}}">{{rating.Outcome | NAToString }}</strong>
+                    <strong class="govuk-tag govuk-tag--{{rating.Outcome | lower}}">{{rating.Outcome | NAToString
+                        }}</strong>
                     {% endif %}
                     {% endfor %}
                     {% if rated == false%}
@@ -122,11 +143,31 @@
             {% endfor %}
         </ul>
 
-        {% set missingActions = false %}
 
-        {% if assessment.Status == "Active" %}
+
+        {% if canSubmitReport == true %}
 
         <h3 class="govuk-heading-l">Submit report</h3>
+        <p>You can submit the report to the Service Assessment Plus team who will forward the report on to the service team.</p>
+        <form action="/assess/submit-report" method="post">
+            <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Submit report</button>
+            </div>
+        </form>
+
+        {% else %}
+
+        <h3 class="govuk-heading-l">Cannot submit report</h3>
+
+        <p>The lead assessor can submit the report.</p>
+
+ 
+
+        {% if actionsRequired === true %}
+        <h3 class="govuk-heading-m">Actions required</h3>
+        <p>The following standards require actions to be added before the report can be submitted:</p>
+        {% endif %}
 
         {% for standard in ratings %}
         {% if standard.Outcome == "Red" or standard.Outcome == "Amber" %}
@@ -138,37 +179,25 @@
         {% endif %}
         {% endfor %}
 
+       
+
         {% if not actionExists %}
-        {% if loop.first %}
-        {% set missingActions = true %}
-        <p>You can't submit the report for the following reasons:</p>
-        {% endif %}
         <p>Standard {{ standard.Standard }} with outcome {{ standard.Outcome }} does not have any corresponding
             actions.</p>
         {% endif %}
         {% endif %}
         {% endfor %}
 
-
-        {% if ratings | length == 14 and missingActions == false %}
-
-        <p>You can submit the report to the Service Assessment Plus team to send on to the service team.</p>
-
-        <form action="/assess/submit-report" method="post">
-
-            <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
-            <div class="govuk-button-group">
-                <button name="action" class="govuk-button" data-module="govuk-button">Submit report</button>
-            </div>
-        </form>
-
-        {% else %}
-
-        <p>You can't submit the report as not all the standard points have a rating.</p>
-
         {% endif %}
 
-        {% endif %}
+
+    
+
+
+    
+
+      
+
 
     </div>
     <div class="govuk-grid-column-one-third">

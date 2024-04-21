@@ -15,6 +15,7 @@ async function getServiceStandards() {
         const result = await pool.query(`
             SELECT *
             FROM public."ServiceStandards"
+            ORDER BY "Point" ASC
         `);
 
         return result.rows;
@@ -128,6 +129,50 @@ async function updateServiceStandardOutcome(assessmentID, standard, outcome, use
     }
 }
 
+/**
+ * Check if the user can submit the assessment
+ * @param {number} assessmentID The unique identifier of the assessment.
+ * @param {number} userID The unique identifier of the user.
+ * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating if the user can submit the assessment.
+ */
+async function canSubmit(assessmentID, userID) {
+    try {
+        const { rows } = await pool.query(`
+            SELECT "UserID"
+            FROM public."AssessmentPanel"
+            WHERE "AssessmentID" = $1 AND "Role" = $2
+        `, [assessmentID, 'Lead assessor']);
+
+        // Check if user is part of the assessment team
+        const isUserAllowed = rows.some(row => row["UserID"] === userID);
+
+        // Additionally, check if all required actions have been completed for 'Red' or 'Amber' standards
+        const actionCheckResult = await pool.query(`
+            SELECT CASE 
+                WHEN NOT EXISTS (
+                    SELECT 1
+                    FROM public."ServiceStandardOutcomes" sso
+                    LEFT JOIN public."Actions" a 
+                        ON sso."Standard" = a."Point" 
+                        AND sso."AssessmentID" = a."AssessmentID"
+                    WHERE sso."AssessmentID" = $1
+                        AND sso."Outcome" IN ('Red', 'Amber')
+                        AND a."ActionID" IS NULL
+                )
+                THEN true
+                ELSE false
+            END AS "AllActionsComplete"
+        `, [assessmentID]);
+
+        // Final condition to submit: User must be allowed and all actions must be complete
+        return isUserAllowed && actionCheckResult.rows[0].AllActionsComplete;
+    } catch (error) {
+        console.error('Error in canSubmit:', error);
+        throw error; // Or handle it as needed
+    }
+}
+
+
 module.exports = {
-    getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome
+    getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome, canSubmit
 };

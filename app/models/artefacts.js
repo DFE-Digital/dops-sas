@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const { copy } = require('../routes');
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
