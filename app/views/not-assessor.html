@@ -1,0 +1,21 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Profile" %}
+{% set pageName = "Not an assessor" %}
+{% set view = "profile" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+<div class="govuk-grid-column-three-quarters">
+
+    <h1 class="govuk-heading-l">{{pageName}}</h1>
+
+    <p>You cannot access this page as the service couldn't verify you are an assessor.</p>
+    <p>If you think this is wrong, contact the <a href="mailto:serviceassessment.plus@education.gov.uk"
+            class="govuk-link">Service Assessment
+            Plus team</a> to get you set up.</p>
+
+</div>
+</div>
+{% endblock %}

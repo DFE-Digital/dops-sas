@@ -64,6 +64,12 @@ exports.g_cookies = (req, res) => {
     res.render('cookies')
 }
 
+exports.g_notAssessor = (req, res) => {
+    res.render('not-assessor')
+}
+
+
+
 /**
  * redirect to assidfe based on the parmeter
  * @param {standard} the specific standard to redirect to assidfe

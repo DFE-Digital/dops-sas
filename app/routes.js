@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { getRolesByUserID } = require('./models/userrole');
+const { getAssessorByUserID} = require('./models/assessors');
 
 const publicController = require('./controllers/publicController');
 const authController = require('./controllers/authController');
@@ -49,6 +50,34 @@ async function isAdmin(req, res, next) {
     }
 }
 
+/**
+ * Check routes to see if user is an assessor
+ */
+async function isAssessor(req, res, next) {
+    if (req.session && req.session.UserId && req.session.data.User) {
+        const userID = parseInt(req.session.data.User.UserID)
+        const assessor = await getAssessorByUserID(userID)
+
+        if (assessor) {
+            return next();
+        }
+        else{
+
+            // If they are an admin, they can get the admin views too
+            const userRoles = await getRolesByUserID(userID)
+            const userRolesList = userRoles.map(role => role.UserRole);
+
+            if (userRolesList.some(role => rolesToCheck.includes(role))) {
+                return next();
+            } else {
+                return res.redirect('/not-assessor');
+            }
+        }
+    } else {
+        return res.redirect('/sign-out');
+    }
+}
+
 router.get('/', publicController.g_home);
 router.get('/features', publicController.g_features);
 router.get('/features/book', publicController.g_features_book);
@@ -61,6 +90,7 @@ router.get('/support', publicController.g_support);
 router.get('/accessibility', publicController.g_accessibility);
 router.get('/privacy', publicController.g_privacy);
 router.get('/cookies', publicController.g_cookies);
+router.get('/not-assessor', publicController.g_notAssessor);
 
 router.get('/redirector/service-standard/:standard', publicController.g_assidfe);
 
@@ -204,26 +234,26 @@ router.get('/analysis', isAuthenticated, analysisController.g_index);
 router.get('/analysis/portfolio/:name', isAuthenticated, analysisController.g_portfolio);
 
 // ASSESS ROUTES
-router.get('/assess', isAuthenticated, assessController.g_index);
-router.get('/assess/previous', isAuthenticated, assessController.g_previous);
-router.get("/assess/overview/:assessmentID", isAuthenticated, assessController.g_overview);
-router.get("/assess/report/:assessmentID", isAuthenticated, assessController.g_report);
-router.get("/assess/panel/:assessmentID", isAuthenticated, assessController.g_panel);
-router.get("/assess/artefacts/:assessmentID", isAuthenticated, assessController.g_artefacts);
-router.get("/assess/team/:assessmentID", isAuthenticated, assessController.g_team);
-router.get("/assess/report-rating/:assessmentID", isAuthenticated, assessController.g_reportRating);
-router.get("/assess/report-panel-comments/:assessmentID", isAuthenticated, assessController.g_reportPanelComments);
-router.get("/assess/report-section/:assessmentID/:standard", isAuthenticated, assessController.g_reportSection);
-router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthenticated, assessController.g_reportSectionActions);
-router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, assessController.g_reportSectionActionsAdd);
-router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, assessController.g_reportSectionActionsManage);
+router.get('/assess', isAuthenticated, isAssessor, assessController.g_index);
+router.get('/assess/previous', isAuthenticated, isAssessor, assessController.g_previous);
+router.get("/assess/overview/:assessmentID", isAuthenticated, isAssessor, assessController.g_overview);
+router.get("/assess/report/:assessmentID", isAuthenticated, isAssessor, assessController.g_report);
+router.get("/assess/panel/:assessmentID", isAuthenticated, isAssessor, assessController.g_panel);
+router.get("/assess/artefacts/:assessmentID", isAuthenticated, isAssessor, assessController.g_artefacts);
+router.get("/assess/team/:assessmentID", isAuthenticated, isAssessor, assessController.g_team);
+router.get("/assess/report-rating/:assessmentID", isAuthenticated, isAssessor, assessController.g_reportRating);
+router.get("/assess/report-panel-comments/:assessmentID", isAuthenticated, isAssessor, assessController.g_reportPanelComments);
+router.get("/assess/report-section/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSection);
+router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSectionActions);
+router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSectionActionsAdd);
+router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, isAssessor, assessController.g_reportSectionActionsManage);
 
-router.post("/assess/report-section", isAuthenticated, assessController.p_reportSection);
-router.post("/assess/report-section-actions-add", isAuthenticated, assessController.p_reportSectionActionsAdd);
-router.post("/assess/report-section-actions-manage", isAuthenticated, assessController.p_reportSectionActionsManage);
-router.post("/assess/report-panel-comments", isAuthenticated, assessController.p_reportPanelComments);
-router.post("/assess/submit-report", isAuthenticated, assessController.p_submitReport);
-router.post("/assess/pr-report", isAuthenticated, assessController.p_submitPRReport);
+router.post("/assess/report-section", isAuthenticated, isAssessor, assessController.p_reportSection);
+router.post("/assess/report-section-actions-add", isAuthenticated, isAssessor, assessController.p_reportSectionActionsAdd);
+router.post("/assess/report-section-actions-manage", isAuthenticated, isAssessor, assessController.p_reportSectionActionsManage);
+router.post("/assess/report-panel-comments", isAuthenticated, isAssessor, assessController.p_reportPanelComments);
+router.post("/assess/submit-report", isAuthenticated, isAssessor, assessController.p_submitReport);
+router.post("/assess/pr-report", isAuthenticated, isAssessor, assessController.p_submitPRReport);
 
 // REPORTS ROUTES
 router.get('/reports', isAuthenticated, reportsController.g_index);
@@ -237,13 +267,13 @@ router.get('/service-admin/create-department', isAuthenticated, serviceAdminCont
 router.post('/service-admin/create-department', isAuthenticated, serviceAdminController.p_createDepartment);
 
 // Volunteer
-router.get('/volunteer', isAuthenticated, assessController.g_volunteer);
-router.get("/volunteer/get-data/:id", isAuthenticated, assessController.g_data);
-router.get("/volunteer/volunteer/:id/:role", isAuthenticated, assessController.g_volunteerA);
-router.get("/volunteer/detail/:id/", isAuthenticated, assessController.g_detail);
-router.get("/volunteer/submitted/:id/", isAuthenticated, assessController.g_submitted);
+router.get('/volunteer', isAuthenticated, isAssessor, assessController.g_volunteer);
+router.get("/volunteer/get-data/:id", isAuthenticated, isAssessor, assessController.g_data);
+router.get("/volunteer/volunteer/:id/:role", isAuthenticated, isAssessor, assessController.g_volunteerA);
+router.get("/volunteer/detail/:id/", isAuthenticated, isAssessor, assessController.g_detail);
+router.get("/volunteer/submitted/:id/", isAuthenticated, isAssessor, assessController.g_submitted);
 
-router.post("/volunteer", isAuthenticated, assessController.p_volunteer);
+router.post("/volunteer", isAuthenticated, isAssessor, assessController.p_volunteer);
 
 // PROFILE ROUTES
 router.get('/profile', isAuthenticated, profileController.g_profile);
