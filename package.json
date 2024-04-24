@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/eslint-parser": "^7.23.10",
+    "@nightwatch/browserstack": "^3.2.5",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "connect-pg-simple": "^9.0.1",
@@ -32,6 +33,7 @@
     "notifications-node-client": "^8.0.0",
     "nunjucks": "^3.2.4",
     "nunjucks-date-filter": "^0.1.1",
+    "openai": "^4.38.2",
     "pg": "^8.11.3",
     "pizzip": "^3.1.6",
     "pm2": "^5.3.1",

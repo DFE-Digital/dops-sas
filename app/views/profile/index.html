@@ -5,50 +5,44 @@
 {% set view = "profile" %}
 
 {% block hero %}
-<div class="dfe-page-header">
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
     <div class="govuk-width-container dfe-width-container ">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <span class="govuk-caption-l">Profile</span>
                 <h1 class="govuk-heading-l">Your profile</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='profile' %} aria-current="page" {% endif
+                                %} href="/profile">Profile</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='training' %} aria-current="page" {% endif
+                                %} href="/profile/training">Training</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='history' %} aria-current="page" {% endif
+                                %}href="/profile/history">History</a>
+                        </li>
+
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
-
-
 isAssessor
 
 {% block content %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter">
-
-        <nav class="dfe-vertical-nav">
-            <ul class="dfe-vertical-nav__section">
-                <li
-                    class="dfe-vertical-nav__section-item {% if view == 'profile' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <a class="dfe-vertical-nav__link" href="/profile">Profile</a>
-                </li>
-                <li
-                    class="dfe-vertical-nav__section-item {% if view == 'training' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <a class="dfe-vertical-nav__link" href="/profile/training">Training</a>
-                </li>
-                <li
-                    class="dfe-vertical-nav__section-item {% if view == 'history' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <a class="dfe-vertical-nav__link" href="/profile/history">History</a>
-                </li>
-
-            </ul>
-        </nav>
-
-
-    </div>
+   
 
     <div class="govuk-grid-column-three-quarters">
 
-        <h2 class="govuk-heading-l">Profile</h2>
+    
 
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">

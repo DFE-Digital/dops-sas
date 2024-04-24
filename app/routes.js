@@ -1,43 +1,44 @@
 const express = require('express');
 const router = express.Router();
 
+// Models
 const { getRolesByUserID } = require('./models/userrole');
-const { getAssessorByUserID} = require('./models/assessors');
+const { getAssessorByUserID } = require('./models/assessors');
 
-const publicController = require('./controllers/publicController');
-const authController = require('./controllers/authController');
+// Controllers
+// sort alphabetically
 const adminController = require('./controllers/adminController');
+const analysisController = require('./controllers/analysisController');
+const assessController = require('./controllers/assessController');
+const authController = require('./controllers/authController');
 const bookController = require('./controllers/bookController');
 const manageController = require('./controllers/manageController');
-const serviceAdminController = require('./controllers/serviceAdminController');
-const analysisController = require('./controllers/analysisController');
-const reportsController = require('./controllers/reportsController');
-const assessController = require('./controllers/assessController');
 const profileController = require('./controllers/profileController');
+const publicController = require('./controllers/publicController');
+const reportsController = require('./controllers/reportsController');
+const serviceAdminController = require('./controllers/serviceAdminController');
 const surveyController = require('./controllers/surveyController');
 
+
+// Roles to check for admin access
 const rolesToCheck = ['Department lead', 'Administrator', 'Service Administrator'];
 
 
-/**
- * Check routes that the user needs to be authenticated to access
- * */
+// Middleware for authentication
 function isAuthenticated(req, res, next) {
     if (req.session && req.session.UserId && req.session.data.User) {
         return next();
     } else {
+        req.session.originalUrl = req.originalUrl;
         return res.redirect('/sign-in');
     }
 }
 
-/**
- * Validates a route that only an admin should be able to access
- */
+// Middleware for admin access validation
 async function isAdmin(req, res, next) {
-
     if (req.session && req.session.UserId && req.session.data.User) {
-        const userID = parseInt(req.session.data.User.UserID)
-        const userRoles = await getRolesByUserID(userID)
+        const userID = parseInt(req.session.data.User.UserID);
+        const userRoles = await getRolesByUserID(userID);
         const userRolesList = userRoles.map(role => role.UserRole);
 
         if (userRolesList.some(role => rolesToCheck.includes(role))) {
@@ -50,21 +51,16 @@ async function isAdmin(req, res, next) {
     }
 }
 
-/**
- * Check routes to see if user is an assessor
- */
+// Middleware for assessor access validation
 async function isAssessor(req, res, next) {
     if (req.session && req.session.UserId && req.session.data.User) {
-        const userID = parseInt(req.session.data.User.UserID)
-        const assessor = await getAssessorByUserID(userID)
+        const userID = parseInt(req.session.data.User.UserID);
+        const assessor = await getAssessorByUserID(userID);
 
         if (assessor) {
             return next();
-        }
-        else{
-
-            // If they are an admin, they can get the admin views too
-            const userRoles = await getRolesByUserID(userID)
+        } else {
+            const userRoles = await getRolesByUserID(userID);
             const userRolesList = userRoles.map(role => role.UserRole);
 
             if (userRolesList.some(role => rolesToCheck.includes(role))) {
@@ -78,6 +74,7 @@ async function isAssessor(req, res, next) {
     }
 }
 
+// Public routes
 router.get('/', publicController.g_home);
 router.get('/features', publicController.g_features);
 router.get('/features/book', publicController.g_features_book);
@@ -91,13 +88,11 @@ router.get('/accessibility', publicController.g_accessibility);
 router.get('/privacy', publicController.g_privacy);
 router.get('/cookies', publicController.g_cookies);
 router.get('/not-assessor', publicController.g_notAssessor);
-
 router.get('/redirector/service-standard/:standard', publicController.g_assidfe);
 
 // Survey routes
 router.get('/survey/complete', surveyController.g_surveyComplete);
 router.get('/survey/:assessmentID', surveyController.g_survey);
-
 router.post('/survey', surveyController.p_submitSurvey);
 
 // Auth routes
@@ -105,7 +100,6 @@ router.get('/sign-in', authController.g_signin);
 router.get('/auth/t/:token', authController.g_checktoken);
 router.get('/sign-out', authController.g_signout);
 router.get('/check-email', authController.g_checkemail);
-
 router.post('/sign-in', authController.p_signin);
 
 // Book routes
@@ -127,7 +121,6 @@ router.get("/book/request/tasks", isAuthenticated, bookController.g_tasks);
 router.get("/book/request/delete", isAuthenticated, bookController.g_delete);
 router.get("/book/deleted", isAuthenticated, bookController.g_deleted);
 router.get("/book/submitted", isAuthenticated, bookController.g_submitted);
-
 router.post('/book/request/phase', bookController.p_phase);
 router.post('/book/request/type', bookController.p_type);
 router.post("/book/request/name", isAuthenticated, bookController.p_name);
@@ -156,7 +149,6 @@ router.get("/manage/add-artefact/:assessmentID", isAuthenticated, manageControll
 router.get("/manage/remove-artefact/:artefactID/:uniqueID", isAuthenticated, manageController.g_removeartefact);
 router.get("/manage/add-team/:assessmentID", isAuthenticated, manageController.g_addteam);
 router.get("/manage/remove-team/:teamID/:uniqueID", isAuthenticated, manageController.g_removeteam);
-
 router.post("/manage/add-artefact", isAuthenticated, manageController.p_addartefact);
 router.post("/manage/remove-artefact", isAuthenticated, manageController.p_removeartefact);
 router.post("/manage/add-team", isAuthenticated, manageController.p_addteam);
@@ -202,7 +194,6 @@ router.get('/admin/change-dd/:assessmentID', isAuthenticated, isAdmin, adminCont
 router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePM);
 router.get('/admin/change-dm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDM);
 router.get('/admin/create-reassessment/:assessmentID', isAuthenticated, isAdmin, adminController.g_createReassessment);
-
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
 router.post("/admin/remove-panel/", isAuthenticated, isAdmin, adminController.p_removepanel);
@@ -247,7 +238,6 @@ router.get("/assess/report-section/:assessmentID/:standard", isAuthenticated, is
 router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSectionActions);
 router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSectionActionsAdd);
 router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, isAssessor, assessController.g_reportSectionActionsManage);
-
 router.post("/assess/report-section", isAuthenticated, isAssessor, assessController.p_reportSection);
 router.post("/assess/report-section-actions-add", isAuthenticated, isAssessor, assessController.p_reportSectionActionsAdd);
 router.post("/assess/report-section-actions-manage", isAuthenticated, isAssessor, assessController.p_reportSectionActionsManage);
@@ -263,7 +253,6 @@ router.get("/report/generate-excel/:assessmentID", isAuthenticated, reportsContr
 
 // Service Admin routes
 router.get('/service-admin/create-department', isAuthenticated, serviceAdminController.g_createDepartment);
-
 router.post('/service-admin/create-department', isAuthenticated, serviceAdminController.p_createDepartment);
 
 // Volunteer
@@ -272,7 +261,6 @@ router.get("/volunteer/get-data/:id", isAuthenticated, isAssessor, assessControl
 router.get("/volunteer/volunteer/:id/:role", isAuthenticated, isAssessor, assessController.g_volunteerA);
 router.get("/volunteer/detail/:id/", isAuthenticated, isAssessor, assessController.g_detail);
 router.get("/volunteer/submitted/:id/", isAuthenticated, isAssessor, assessController.g_submitted);
-
 router.post("/volunteer", isAuthenticated, isAssessor, assessController.p_volunteer);
 
 // PROFILE ROUTES
@@ -281,12 +269,7 @@ router.get('/profile/change-name', isAuthenticated, profileController.g_changeNa
 router.get('/profile/change-email', isAuthenticated, profileController.g_changeEmail);
 router.get('/profile/training', isAuthenticated, profileController.g_training);
 router.get('/profile/history', isAuthenticated, profileController.g_history);
-
 router.post('/profile/change-name', isAuthenticated, profileController.p_changeName);
 router.post('/profile/change-email', isAuthenticated, profileController.p_changeEmail);
-
-
-// OTHER STUFF
-
 
 module.exports = router;

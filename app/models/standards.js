@@ -45,6 +45,23 @@ async function getServiceStandardOutcomesByAssessmentID(assessmentID) {
     }
 }
 
+/**
+ * get service standard outcomes
+ */
+async function getStandardOutcomes() {
+    try {
+        const result = await pool.query(`
+            SELECT *
+            FROM public."ServiceStandardOutcomes"
+        `);
+
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getStandardOutcomes:', error);
+        return []; // Return an empty array in case of error
+    }
+}
+
 
 /**
  * Count outcomes by standard and outcome type for a given year.
@@ -174,5 +191,5 @@ async function canSubmit(assessmentID, userID) {
 
 
 module.exports = {
-    getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome, canSubmit
+    getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome, canSubmit, getStandardOutcomes
 };

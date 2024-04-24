@@ -5,7 +5,7 @@ const { checkAndSetUserToken, checkToken } = require('../models/user'); // Adjus
 const { sendNotifyEmail } = require('../middleware/notify');
 const { getRoleByUserID } = require('../models/userrole');
 const { getAllAssessors, createAssessor, getAssessorByUserID } = require('../models/assessors');
-const {getDepartments, getDepartmentForUser } = require('../models/departments');
+const { getDepartments, getDepartmentForUser } = require('../models/departments');
 
 exports.g_signin = (req, res) => {
     res.render('auth/sign-in');
@@ -15,19 +15,18 @@ exports.g_checktoken = async (req, res) => {
 
     const { token } = req.params;
 
-    if(!token){
+    if (!token) {
         return res.redirect('/sign-in');
     }
 
-    try{
+    try {
 
         const user = await checkToken(token);
-        if(!req.session.data){
+        if (!req.session.data) {
             req.session.data = {};
-        }   
+        }
 
-        if(user === 0)
-        {
+        if (user === 0) {
             return res.redirect('/sign-out')
         }
 
@@ -40,7 +39,7 @@ exports.g_checktoken = async (req, res) => {
         if (roles) {
             req.session.data['IsAdmin'] = true;
         }
-        else {  
+        else {
             req.session.data['IsAdmin'] = false;
         }
 
@@ -50,12 +49,19 @@ exports.g_checktoken = async (req, res) => {
         if (assessor) {
             req.session.data['IsAssessor'] = true;
         }
-        else {  
+        else {
             req.session.data['IsAssessor'] = false;
         }
 
-        if(user.FirstName === '' || user.LastName === ''){
+        if (user.FirstName === '' || user.LastName === '') {
             return res.redirect('/profile/change-name')
+        }
+
+        // if req.session.originalUrl exists
+        if (req.session.originalUrl !== undefined) {
+            const redirectUrl = req.session.originalUrl
+            delete req.session.originalUrl; 
+            return res.redirect(redirectUrl);
         }
 
         const department = await getDepartmentForUser(user.Department);
@@ -63,7 +69,7 @@ exports.g_checktoken = async (req, res) => {
 
         return res.redirect('/manage')
 
-    }catch(error){
+    } catch (error) {
         console.error('Error:', error);
         return res.redirect('/error')
     }

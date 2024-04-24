@@ -5,7 +5,7 @@ const { getAssessmentPanelByUserID } = require('../models/assessmentModel');
 const { getAllAssessors, createAssessor, getAssessorByUserID, getTrainingForUser } = require('../models/assessors');
 const { getRoleByUserID } = require('../models/userrole');
 
-const {getDepartments, getDepartmentForUser } = require('../models/departments');
+const { getDepartments, getDepartmentForUser } = require('../models/departments');
 
 const e = require('express');
 
@@ -13,11 +13,11 @@ exports.g_profile = async (req, res) => {
 
     const user = req.session.data.User;
     const roles = await getRoleByUserID(user.UserID);
-   
+
     if (roles) {
         req.session.data['IsAdmin'] = true;
     }
-    else {  
+    else {
         req.session.data['IsAdmin'] = false;
     }
 
@@ -26,7 +26,7 @@ exports.g_profile = async (req, res) => {
     if (assessor) {
         req.session.data['IsAssessor'] = true;
     }
-    else {  
+    else {
         req.session.data['IsAssessor'] = false;
     }
 
@@ -47,7 +47,7 @@ exports.g_training = async (req, res) => {
     // Get assessor training for the UserID
     const training = await getTrainingForUser(req.session.data.User.UserID);
 
-    res.render('profile/training', {training})
+    res.render('profile/training', { training })
 }
 
 exports.g_history = async (req, res) => {
@@ -79,6 +79,15 @@ exports.p_changeName = [
         const model = await getBasicUserDetails(req.session.data.User.UserID);
 
         req.session.data.User = model;
+
+        // This could be the first time, and come from an email, so lets see if there is a redirect url
+
+        // if req.session.originalUrl exists
+        if (req.session.originalUrl !== undefined) {
+            const redirectUrl = req.session.originalUrl
+            delete req.session.originalUrl;
+            return res.redirect(redirectUrl);
+        }
 
 
         return res.redirect('/profile');

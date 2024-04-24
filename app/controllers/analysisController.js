@@ -1,5 +1,9 @@
+
+
 const { AssessmentModel, createAssessment, getAssessmentById, updateAssessment, getDraftsForUser, deleteAssessment, getRequestsByStatus, getRequestsByMixedStatus } = require('../models/assessmentModel');
-const { getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear } = require('../models/standards');
+const { getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, getStandardOutcomes } = require('../models/standards');
+
+
 
 exports.g_index = async function (req, res) {
 
@@ -44,5 +48,7 @@ exports.g_portfolio = async function (req, res) {
     }
 
     let currentYear = new Date().getFullYear();
-    return res.render('analysis/portfolio', {year, currentYear})
+    return res.render('analysis/portfolio', { year, currentYear })
 }
+
+
