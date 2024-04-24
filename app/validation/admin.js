@@ -56,6 +56,10 @@ exports.validateAddAdmin = [
             if (value === '') {
                 throw new Error('Enter an email address');
             }
+
+            if (value.endsWith('digital.education.gov.uk')) {
+                throw new Error('Use education.gov.uk instead of digital.education.gov.uk');
+            }
             return true;
         }),
     check('createAsLead')

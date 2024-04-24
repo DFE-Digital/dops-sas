@@ -205,6 +205,9 @@ exports.validateDD = [
             if (value === '') {
                 throw new Error('Enter an email address');
             }
+            if (value.endsWith('digital.education.gov.uk')) {
+              throw new Error('Use education.gov.uk instead of digital.education.gov.uk');
+            }
             if (!/\S+@\S+\.\S+/.test(value)) {
                 throw new Error('Please enter a valid email address.');
             }
@@ -247,6 +250,9 @@ exports.validatePM = [
             if (value === '') {
                 throw new Error('Enter an email address');
             }
+            if (value.endsWith('digital.education.gov.uk')) {
+              throw new Error('Use education.gov.uk instead of digital.education.gov.uk');
+            }
             if (!/\S+@\S+\.\S+/.test(value)) {
                 throw new Error('Please enter a valid email address.');
             }
@@ -287,6 +293,9 @@ exports.validateDM = [
         .custom((value, { req }) => {
             if (value === '') {
                 throw new Error('Enter an email address');
+            }
+            if (value.endsWith('digital.education.gov.uk')) {
+              throw new Error('Use education.gov.uk instead of digital.education.gov.uk');
             }
             if (!/\S+@\S+\.\S+/.test(value)) {
                 throw new Error('Please enter a valid email address.');

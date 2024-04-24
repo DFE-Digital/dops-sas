@@ -21,6 +21,14 @@ async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
     let res = await client.query('SELECT "UserID" FROM public."User" WHERE "EmailAddress" = $1', [emailAddress]);
     let userId;
 
+    const parts = emailAddress.split('@');
+    let domain = parts[parts.length - 1];
+
+    let dept = await client.query('SELECT "DepartmentID" FROM public."Department" WHERE "Domain" = $1', [domain]);
+    let departmentID = dept.rows[0].DepartmentID
+
+console.log(departmentID)
+
     if (res.rows.length === 0) {
       // User does not exist, create a new user with additional fields
       const query = `
@@ -32,10 +40,11 @@ async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
           "LastName", 
           "CreatedBy", 
           "CreatedByProcess", 
-          "AccountActive"
-        ) VALUES ($1, $2, $3, '', '', 0, 'Registration', true) RETURNING "UserID"
+          "AccountActive", 
+          "Department"
+        ) VALUES ($1, $2, $3, '', '', 0, 'Registration', true, $4) RETURNING "UserID"
       `;
-      res = await client.query(query, [emailAddress, token, tokenExpiry]);
+      res = await client.query(query, [emailAddress.toLowerCase(), token, tokenExpiry, departmentID]);
       userId = res.rows[0].UserID; // Assuming the table returns "UserID" upon insertion
     } else {
       // User exists, update their token and expiry
@@ -127,7 +136,7 @@ async function UpsertUserNoToken(emailAddress, firstName, lastName, createdBy, c
           "AccountActive", 
           "Department"
         ) VALUES ($1, $2, $3, $4, $5, true, $6) RETURNING "UserID"
-      `, [emailAddress, firstName, lastName, createdBy, createdByProcess, departmentID]);
+      `, [emailAddress.toLowerCase(), firstName, lastName, createdBy, createdByProcess, departmentID]);
       await client.query('COMMIT');
       return newUser.rows[0].UserID;
     }

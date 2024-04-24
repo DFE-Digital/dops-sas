@@ -23,6 +23,9 @@ exports.validateSignIn = [
       if (!domainWhiteList.some((domain) => value.endsWith(domain))) {
         throw new Error('Your email is not from an approved domain. Please contact us for help.');
       }
+      if (value.endsWith('digital.education.gov.uk')) {
+        throw new Error('Use education.gov.uk instead of digital.education.gov.uk');
+      }
       return true;
     })
 ];

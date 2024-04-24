@@ -492,11 +492,12 @@ exports.p_addpanel = [
         const { AssessmentID, Assessor, Role } = req.body;
 
         const errors = validationResult(req);
+        const assessment = await getAssessmentById(AssessmentID);
+        const assessors = await getActiveAssessors();
 
         if (!errors.isEmpty()) {
 
-            const assessment = await getAssessmentById(AssessmentID);
-            const assessors = await getActiveAssessors();
+
 
             return res.render('admin/entry/add-panel', {
                 assessment, assessors,
@@ -504,9 +505,43 @@ exports.p_addpanel = [
             });
         }
 
-        const panel = addPanelMember(AssessmentID, Assessor, Role);
+        const panel = await addPanelMember(AssessmentID, Assessor, Role);
 
-        //TODO: send email to the added panel member
+        const assessorInfo = await getAssessorByUserID(Assessor);
+
+        console.log(assessorInfo)
+
+        const assessmentDateTime = new Date(assessment.AssessmentDateTime);
+
+        // TODO: Put into a function
+
+        // Define arrays for weekdays and months
+        const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        // Get the weekday, day, month, and year components from the date
+        const weekday = weekdays[assessmentDateTime.getDay()];
+        const day = assessmentDateTime.getDate();
+        const month = months[assessmentDateTime.getMonth()];
+        const year = assessmentDateTime.getFullYear();
+
+        // Construct the formatted date string
+        const formattedDate = `${weekday} ${day} ${month} ${year}`;
+
+        const templateParams = {
+            phase: assessment.Phase.toLowerCase(),
+            type: assessment.Type.toLowerCase(),
+            name: assessment.Name,
+            time: assessment.AssessmentTime,
+            date: formattedDate,
+            serviceURL: process.env.serviceURL,
+            id: AssessmentID,
+            assessorName: assessorInfo.FirstName,
+            role: Role.toLowerCase()
+        };
+
+        sendNotifyEmail(process.env.email_AddedToPanel, assessorInfo.EmailAddress, templateParams)
+
 
         return res.redirect(`/admin/panel/${AssessmentID}`);
     }
@@ -613,6 +648,9 @@ exports.p_addassessor = async function (req, res) {
 
         const assessor = await createAssessor(userx, Role, xgov, lead, external, user.Department);
 
+
+
+
         // Clear the request body
         req.session.data.FirstName = '';
         req.session.data.LastName = '';
@@ -694,6 +732,8 @@ exports.p_publishReport = async function (req, res) {
 
     await updateAssessment(AssessmentID, assessment, user.UserID);
 
+   
+
     // Send email to everyone for feedback, the assessors, the service team, requestor
 
     try {
@@ -713,8 +753,12 @@ exports.p_publishReport = async function (req, res) {
         }
         );
 
-        const submittor = await getBasicUserDetails(assessment.CreatedBy);
+        const submittor = await getBasicUserDetails(assessment.CreatedBy); 
+        
+        sendNotifyEmail(process.env.email_ReportPublished, submittor.EmailAddress, templateParams)
+
         sendNotifyEmail(process.env.email_Survey, submittor.EmailAddress, templateParams)
+
 
         const team = await getTeamForAssessmentExtended(AssessmentID);
 
