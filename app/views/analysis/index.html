@@ -52,11 +52,12 @@
 <h2 class="govuk-heading-l">Analysis</h2>
 <p>Analysis of completed service assessments and individual service standard outcomes.</p>
 
+
+
 <div class="grid">
-    {# <div class="header-row">
-        <div class="header-cell assessment-name" style="width:60px;"></div>
-        <div class="header-cell-full">Standards</div>
-    </div> #}
+    <!-- Header row for question numbers -->
+  
+    
     <div class="header-row">
         <div class="header-cell assessment-name ">Service name</div>
         {% for i in range(1, 15) %}
@@ -66,8 +67,10 @@
 
     {% for item, group in heatmap %}
     <div class="row">
-        <div class="assessment-name"><a href="/reports/report/{{ item }}" class="govuk-link govuk-link--inverse"
-                title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a></div>
+        <div class="assessment-name">
+            <a href="/reports/report/{{ item }}" class="govuk-link govuk-link--inverse"
+                title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a>
+        </div>
 
         {% for item in group %}
         <a href="/reports/report/{{ item.AssessmentID }}/#point-{{ item.Standard }}"
@@ -78,6 +81,7 @@
     </div>
     {% endfor %}
 </div>
+
 
 
 

@@ -180,7 +180,7 @@ exports.validateEndDates = [
         .trim()
         .custom((value, { req }) => {
             if (value === '') {
-                throw new Error('Select some options');
+                throw new Error('Select all weeks that are suitable');
             }
             return true;
         })

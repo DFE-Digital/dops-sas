@@ -619,7 +619,7 @@ exports.p_dates = [
 
             return res.render('book/request/dates', {
                 errors: errors.array(),
-                model: req.body, hasdates: dates.length ? 'Yes' : 'No', dates: dates
+                model: model, hasdates: dates.length ? 'Yes' : 'No', dates: dates
             });
         }
 

@@ -65,7 +65,7 @@
                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         {%for xdate in dates %}
 
-                        <div class="govuk-checkboxes__item" id="ReviewWeek">
+                        <div class="govuk-checkboxes__item" id="ReviewWeek_{{loop.index}}">
                             <input class="govuk-checkboxes__input" id="date_{{loop.index}}" name="ReviewWeek"
                                 type="checkbox" value="{{xdate.week}}" {% if savedDates !=='' %} {% if xdate.week in
                                 model.RequestedWeeks%}checked{%endif%}{%endif%}>
