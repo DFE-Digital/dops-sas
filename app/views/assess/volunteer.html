@@ -38,7 +38,7 @@
     <div class="govuk-grid-column-one-quarter">
         <div class="govuk-summary-card">
             <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title">Filters</h2>
+                <h3 class="govuk-summary-card__title">Filters</h3>
                 <ul class="govuk-summary-card__actions">
                     <li class="govuk-summary-card__action">
                         <a class="govuk-link" href="/volunteer">Clear</a>
@@ -87,8 +87,8 @@
         </div>
     </div>
     <div class="govuk-grid-column-three-quarters">
-        <div id="count-of-items" class="govuk-heading-m govuk-!-padding-top-4 govuk-!-margin-bottom-3"
-            aria-live="polite">{{assessments | length}}</div>
+        <h2 id="count-of-items" class="govuk-heading-m govuk-!-padding-top-4 govuk-!-margin-bottom-3"
+            aria-live="polite">{{assessments | length}}</h2>
         <hr class="govuk-section-break  govuk-section-break--visible ">
         <ul class="dfe-items-list govuk-!-margin-top-2">
             {% for assessment in assessments %}

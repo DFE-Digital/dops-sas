@@ -60,13 +60,14 @@
                                 <td class="govuk-table__cell">
                                     {% if admin.UserID !== data.User.UserID %}
                                     <a href="/admin/remove-admin/{{admin.UserRoleID}}"
-                                    class="govuk-link govuk-link--no-visited-state">Remove <span class="govuk-visually-hidden">{{admin.FirstName}}
-                                        {{admin.LastName}}</span></a>
+                                        class="govuk-link govuk-link--no-visited-state">Remove <span
+                                            class="govuk-visually-hidden">{{admin.FirstName}}
+                                            {{admin.LastName}}</span></a>
                                     {% else %}
-                                      Cannot remove yourself      
+                                    Cannot remove yourself
                                     {% endif%}
-                                    </td>
-                              
+                                </td>
+
                             </tr>
                             {% endfor %}
                         </tbody>
