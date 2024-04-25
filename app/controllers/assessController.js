@@ -18,166 +18,225 @@ exports.g_index = async function (req, res) {
 
 //Overview
 exports.g_overview = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
 
-    if (assessment.Status === 'Published') {
-        return res.redirect('/reports/report/' + assessment.AssessmentID)
+        if (assessment.Status === 'Published') {
+            return res.redirect('/reports/report/' + assessment.AssessmentID)
+        }
+
+        return res.render('assess/entry/overview', { assessment });
     }
-
-    return res.render('assess/entry/overview', { assessment });
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_report = async function (req, res) {
-    const user = req.session.data.User;
-    const assessmentID = req.params.assessmentID;
-    const assessment = await getAssessmentById(assessmentID);
+    try {
+        const user = req.session.data.User;
+        const assessmentID = req.params.assessmentID;
+        const assessment = await getAssessmentById(assessmentID);
 
-    if (assessment.Status === 'Published') {
-        return res.redirect('/reports/report/' + assessment.AssessmentID)
+        if (assessment.Status === 'Published') {
+            return res.redirect('/reports/report/' + assessment.AssessmentID)
+        }
+
+
+        if (assessment.Type == 'Service assessment') {
+
+            const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+            const serviceStandards = await getServiceStandards();
+            const actions = await getActionsForAssessmentID(assessmentID);
+            const panel = await assessmentPanel(assessmentID);
+            const submitStatus = await checkSubmitStatus(assessmentID)
+            const canSubmitReport = await canSubmit(assessmentID, user.UserID);
+
+            return res.render('assess/entry/report', {
+                assessment, ratings, panel,
+                serviceStandards, actions, submitStatus, canSubmitReport
+            })
+        }
+        else {
+
+            return res.render('assess/entry/pr-report', {
+                assessment
+
+            })
+        }
     }
-
-
-    if (assessment.Type == 'Service assessment') {
-
-        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
-        const serviceStandards = await getServiceStandards();
-        const actions = await getActionsForAssessmentID(assessmentID);
-        const panel = await assessmentPanel(assessmentID);
-        const submitStatus = await checkSubmitStatus(assessmentID)
-        const canSubmitReport = await canSubmit(assessmentID, user.UserID);
-
-        return res.render('assess/entry/report', {
-            assessment, ratings, panel,
-            serviceStandards, actions, submitStatus, canSubmitReport
-        })
-    }
-    else {
-
-        return res.render('assess/entry/pr-report', {
-            assessment
-
-        })
+    catch (error) {
+        next(error)
     }
 
 }
 
 
 exports.g_panel = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const panel = await assessmentPanelExtended(assessmentID);
-    return res.render('assess/entry/panel', { assessment, panel });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const panel = await assessmentPanelExtended(assessmentID);
+        return res.render('assess/entry/panel', { assessment, panel });
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 
 exports.g_artefacts = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const artefacts = await getArtefactsForAssessment(assessmentID);
-    return res.render('assess/entry/artefacts', { assessment, artefacts });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const artefacts = await getArtefactsForAssessment(assessmentID);
+        return res.render('assess/entry/artefacts', { assessment, artefacts });
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 
 exports.g_team = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const team = await getTeamForAssessmentExtended(assessmentID);
-    return res.render('assess/entry/team', { assessment, team });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const team = await getTeamForAssessmentExtended(assessmentID);
+        return res.render('assess/entry/team', { assessment, team });
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_reportRating = async function (req, res) {
+    try {
 
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
-    const serviceStandards = await getServiceStandards();
-    const actions = await getActionsForAssessmentID(assessmentID);
-    return res.render('assess/entry/report-rating', {
-        assessment, ratings, serviceStandards, actions
-    })
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const actions = await getActionsForAssessmentID(assessmentID);
+        return res.render('assess/entry/report-rating', {
+            assessment, ratings, serviceStandards, actions
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 
 }
 
 exports.g_reportPanelComments = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    return res.render('assess/entry/report-panel-comments', { assessment });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        return res.render('assess/entry/report-panel-comments', { assessment });
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_reportSection = async function (req, res) {
-    const { assessmentID, standard } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
-    const serviceStandards = await getServiceStandards();
-    const actions = await getActionsForAssessmentID(assessmentID);
-    return res.render('assess/entry/report-section', {
-        assessment, ratings, serviceStandards, actions, standard
-    })
+    try {
+        const { assessmentID, standard } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const actions = await getActionsForAssessmentID(assessmentID);
+        return res.render('assess/entry/report-section', {
+            assessment, ratings, serviceStandards, actions, standard
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 
 exports.g_reportSectionActions = async function (req, res) {
-    const { assessmentID, standard } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
-    const serviceStandards = await getServiceStandards();
-    const actions = await getActionsForAssessmentIDAndStandard(assessmentID, standard);
-    return res.render('assess/entry/report-section-actions', {
-        assessment, ratings, serviceStandards, actions, standard
-    })
+    try {
+        const { assessmentID, standard } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const actions = await getActionsForAssessmentIDAndStandard(assessmentID, standard);
+        return res.render('assess/entry/report-section-actions', {
+            assessment, ratings, serviceStandards, actions, standard
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_reportSectionActionsAdd = async function (req, res) {
-    const { assessmentID, standard } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
-    const serviceStandards = await getServiceStandards();
-    const actions = await getActionsForAssessmentID(assessmentID);
-    return res.render('assess/entry/report-section-actions-add', {
-        assessment, ratings, serviceStandards, actions, standard
-    })
+    try {
+        const { assessmentID, standard } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const actions = await getActionsForAssessmentID(assessmentID);
+        return res.render('assess/entry/report-section-actions-add', {
+            assessment, ratings, serviceStandards, actions, standard
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_reportSectionActionsManage = async function (req, res) {
-    const { assessmentID, standard, uniqueID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
-    const serviceStandards = await getServiceStandards();
-    const action = await getActionByUniqueID(uniqueID);
+    try {
+        const { assessmentID, standard, uniqueID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const action = await getActionByUniqueID(uniqueID);
 
-    return res.render('assess/entry/report-section-actions-manage', {
-        assessment, ratings, serviceStandards, action, standard
-    })
+        return res.render('assess/entry/report-section-actions-manage', {
+            assessment, ratings, serviceStandards, action, standard
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_volunteer = async function (req, res) {
-    const department = req.session.data.User.Department;
-    const statuses = ['Active'];
-    const assessments = await getRequestsByMixedStatus(statuses, department);
+    try {
+        const department = req.session.data.User.Department;
+        const statuses = ['Active'];
+        const assessments = await getRequestsByMixedStatus(statuses, department);
 
-    // Get assessment panels for each assessment
-    // add to a new array of assessmentPanels to pass to the view
-    const assessmentPanels = [];
-    for (let i = 0; i < assessments.length; i++) {
-        const assessment = assessments[i];
-        const assessmentID = assessment.AssessmentID;
-        // Renamed variable to avoid naming conflict
-        const panel = await assessmentPanelExtended(assessmentID);
-        assessmentPanels.push(panel[0]);
+        // Get assessment panels for each assessment
+        // add to a new array of assessmentPanels to pass to the view
+        const assessmentPanels = [];
+        for (let i = 0; i < assessments.length; i++) {
+            const assessment = assessments[i];
+            const assessmentID = assessment.AssessmentID;
+            // Renamed variable to avoid naming conflict
+            const panel = await assessmentPanelExtended(assessmentID);
+            assessmentPanels.push(panel[0]);
+        }
+
+        return res.render('assess/volunteer', {
+            assessments: assessments,
+            assessmentPanels: assessmentPanels
+        });
     }
-
-    return res.render('assess/volunteer', {
-        assessments: assessments,
-        assessmentPanels: assessmentPanels
-    });
+    catch (error) {
+        next(error)
+    }
 };
 
 exports.g_data = async function (req, res) {
-    const assessmentID = req.params.id;
-
-
     try {
+        const assessmentID = req.params.id;
+
         const assessment = await getAssessmentById(assessmentID);
 
         // Prepare a response object
@@ -185,90 +244,113 @@ exports.g_data = async function (req, res) {
             assessment: assessment
         };
 
-        // Send the response back as JSON
         res.json(responseData);
+
     } catch (error) {
-        // Log the error and send a server error response
-        console.error('Error in get_assessment_data:', error);
-        res.status(500).send('Server error');
+        next(error)
     }
-};
+}
 
 
 exports.g_volunteerA = async function (req, res) {
-    const assessmentID = req.params.id;
-    const role = req.params.role;
+    try {
+        const assessmentID = req.params.id;
+        const role = req.params.role;
 
-    const assessment = await getAssessmentById(assessmentID);
+        const assessment = await getAssessmentById(assessmentID);
 
-    return res.render('assess/volunteerAssess', {
-        assessment, role
-    })
+        return res.render('assess/volunteerAssess', {
+            assessment, role
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_detail = async function (req, res) {
-    const assessmentID = req.params.id;
+    try {
+        const assessmentID = req.params.id;
 
-    const assessment = await getAssessmentById(assessmentID);
-    const panelDetails = await assessmentPanelExtended(assessmentID);
+        const assessment = await getAssessmentById(assessmentID);
+        const panelDetails = await assessmentPanelExtended(assessmentID);
 
-    return res.render('assess/detail', {
-        assessment: assessment,
-        assessmentPanel: panelDetails
-    })
+        return res.render('assess/detail', {
+            assessment: assessment,
+            assessmentPanel: panelDetails
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_submitted = async function (req, res) {
-    const assessmentID = req.params.id;
+    try {
+        const assessmentID = req.params.id;
 
-    const assessment = await getAssessmentById(assessmentID);
+        const assessment = await getAssessmentById(assessmentID);
 
-    return res.render('assess/submitted', {
-        assessment: assessment
-    })
+        return res.render('assess/submitted', {
+            assessment: assessment
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 exports.g_previous = async function (req, res) {
-    const user = req.session.data.User;
-    const userOnPanels = await getAssessmentPanelByUserID(user.UserID);
-    return res.render('assess/previous', {
-        userOnPanels
-    })
+    try {
+        const user = req.session.data.User;
+        const userOnPanels = await getAssessmentPanelByUserID(user.UserID);
+        return res.render('assess/previous', {
+            userOnPanels
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 
 // POSTS //
 
 exports.p_volunteer = async function (req, res) {
+    try {
 
-    const { assessmentID, role } = req.body;
-    const user = req.session.data.User;
-    const assessment = await getAssessmentById(assessmentID);
+        const { assessmentID, role } = req.body;
+        const user = req.session.data.User;
+        const assessment = await getAssessmentById(assessmentID);
 
-    // Send email to SA+ team
+        // Send email to SA+ team
 
-    const templateParamsSA = {
-        FirstName: user.FirstName,
-        LastName: user.LastName,
-        Email: user.EmailAddress,
-        ServiceName: assessment.Name,
-        Role: role.toLowerCase(),
-        ServiceURL: process.env.serviceURL,
-        ID: assessmentID
-    };
+        const templateParamsSA = {
+            FirstName: user.FirstName,
+            LastName: user.LastName,
+            Email: user.EmailAddress,
+            ServiceName: assessment.Name,
+            Role: role.toLowerCase(),
+            ServiceURL: process.env.serviceURL,
+            ID: assessmentID
+        };
 
-    sendNotifyEmail(process.env.email_Volunteer_SA, process.env.saPlusEmail, templateParamsSA);
+        sendNotifyEmail(process.env.email_Volunteer_SA, process.env.saPlusEmail, templateParamsSA);
 
-    const templateParamsUser = {
-        ServiceName: assessment.Name,
-        Role: role.toLowerCase()
-    };
+        const templateParamsUser = {
+            ServiceName: assessment.Name,
+            Role: role.toLowerCase()
+        };
 
-    // Send email to volunteer
-    sendNotifyEmail(process.env.email_Volunteer_User, user.EmailAddress, templateParamsUser);
+        // Send email to volunteer
+        sendNotifyEmail(process.env.email_Volunteer_User, user.EmailAddress, templateParamsUser);
 
 
-    return res.redirect('/volunteer/submitted/' + assessmentID);
+        return res.redirect('/volunteer/submitted/' + assessmentID);
+    }
+    catch (error) {
+        next(error)
+    }
 
 }
 
@@ -282,34 +364,40 @@ exports.p_volunteer = async function (req, res) {
 exports.p_reportSection = [
     validateAddRating,
     async (req, res) => {
-        const errors = validationResult(req);
+        try {
+            const errors = validationResult(req);
 
-        const { AssessmentID, Standard } = req.body;
-        const user = req.session.data.User;
+            const { AssessmentID, Standard } = req.body;
+            const user = req.session.data.User;
 
-        if (!errors.isEmpty()) {
+            if (!errors.isEmpty()) {
 
-            const assessment = await getAssessmentById(AssessmentID);
-            const serviceStandards = await getServiceStandards();
+                const assessment = await getAssessmentById(AssessmentID);
+                const serviceStandards = await getServiceStandards();
 
-            return res.render('assess/entry/report-section', {
-                assessment, serviceStandards, standard: Standard,
-                errors: errors.array()
-            });
+                return res.render('assess/entry/report-section', {
+                    assessment, serviceStandards, standard: Standard,
+                    errors: errors.array()
+                });
+            }
+
+            const { outcomerag } = req.body;
+
+            const result = await updateServiceStandardOutcome(AssessmentID,
+                Standard,
+                outcomerag,
+                user.UserID
+            )
+
+            if (outcomerag === 'Green' || outcomerag === 'NA') {
+                return res.redirect('/assess/report/' + AssessmentID)
+            } else {
+                return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard)
+            }
+
         }
-
-        const { outcomerag } = req.body;
-
-        const result = await updateServiceStandardOutcome(AssessmentID,
-            Standard,
-            outcomerag,
-            user.UserID
-        )
-
-        if (outcomerag === 'Green' || outcomerag === 'NA') {
-            return res.redirect('/assess/report/' + AssessmentID)
-        } else {
-            return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard)
+        catch (error) {
+            next(error)
         }
     }
 ]
@@ -324,26 +412,32 @@ exports.p_reportSection = [
 exports.p_reportSectionActionsAdd = [
     validateAddAction,
     async (req, res) => {
-        const { AssessmentID, Standard, actionPlanItem } = req.body;
-        const user = req.session.data.User;
+        try {
+            const { AssessmentID, Standard, actionPlanItem } = req.body;
+            const user = req.session.data.User;
 
-        const errors = validationResult(req);
+            const errors = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            const assessment = await getAssessmentById(AssessmentID);
-            const serviceStandards = await getServiceStandards();
-            const actions = await getActionsForAssessmentID(AssessmentID);
+            if (!errors.isEmpty()) {
+                const assessment = await getAssessmentById(AssessmentID);
+                const serviceStandards = await getServiceStandards();
+                const actions = await getActionsForAssessmentID(AssessmentID);
 
-            return res.render('assess/entry/report-section-actions-add', {
-                assessment, serviceStandards, actions, standard: Standard,
-                errors: errors.array()
-            });
+                return res.render('assess/entry/report-section-actions-add', {
+                    assessment, serviceStandards, actions, standard: Standard,
+                    errors: errors.array()
+                });
+            }
+
+
+            await addAction(AssessmentID, Standard, actionPlanItem, user.UserID);
+
+            return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard);
+
         }
-
-
-        await addAction(AssessmentID, Standard, actionPlanItem, user.UserID);
-
-        return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard)
+        catch (error) {
+            next(error)
+        }
     }
 ]
 
@@ -355,29 +449,35 @@ exports.p_reportSectionActionsAdd = [
 exports.p_reportSectionActionsManage = [
     validateAddAction,
     async (req, res) => {
-        const { AssessmentID, Standard, UniqueID, action, actionPlanItem } = req.body;
-        const user = req.session.data.User;
+        try {
+            const { AssessmentID, Standard, UniqueID, action, actionPlanItem } = req.body;
+            const user = req.session.data.User;
 
-        const errors = validationResult(req);
+            const errors = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            const assessment = await getAssessmentById(AssessmentID);
-            const serviceStandards = await getServiceStandards();
-            const actions = await getActionsForAssessmentID(AssessmentID);
+            if (!errors.isEmpty()) {
+                const assessment = await getAssessmentById(AssessmentID);
+                const serviceStandards = await getServiceStandards();
+                const actions = await getActionsForAssessmentID(AssessmentID);
 
-            return res.render('assess/entry/report-section-actions-manage', {
-                assessment, serviceStandards, actions, standard: Standard,
-                errors: errors.array()
-            });
+                return res.render('assess/entry/report-section-actions-manage', {
+                    assessment, serviceStandards, actions, standard: Standard,
+                    errors: errors.array()
+                });
+            }
+
+            if (action === 'save') {
+                await updateAction(UniqueID, actionPlanItem);
+            } else if (action === 'delete') {
+                await deleteAction(UniqueID);
+            }
+
+            return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard);
+
         }
-
-        if (action === 'save') {
-            await updateAction(UniqueID, actionPlanItem);
-        } else if (action === 'delete') {
-            await deleteAction(UniqueID);
+        catch (error) {
+            next(error)
         }
-
-        return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard)
     }
 ]
 
@@ -388,87 +488,105 @@ exports.p_reportSectionActionsManage = [
 exports.p_reportPanelComments = [
     validateAddComments,
     async (req, res) => {
-        const { AssessmentID, PanelComments } = req.body;
+        try {
+            const { AssessmentID, PanelComments } = req.body;
 
-        const assessment = await getAssessmentById(AssessmentID);
+            const assessment = await getAssessmentById(AssessmentID);
 
-        assessment.PanelComments = PanelComments;
-        assessment.PanelCommentsComplete = true;
+            assessment.PanelComments = PanelComments;
+            assessment.PanelCommentsComplete = true;
 
-        await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
+            await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
 
-        return res.redirect('/assess/report/' + AssessmentID);
+            return res.redirect('/assess/report/' + AssessmentID);
+
+        }
+        catch (error) {
+            next(error)
+        }
     }
 ]
 
 
 exports.p_submitReport = async function (req, res) {
-    const { AssessmentID } = req.body;
-    const assessment = await getAssessmentById(AssessmentID);
+    try {
+        const { AssessmentID } = req.body;
+        const assessment = await getAssessmentById(AssessmentID);
 
-    const outcomes = await getServiceStandardOutcomesByAssessmentID(AssessmentID);
+        const outcomes = await getServiceStandardOutcomesByAssessmentID(AssessmentID);
 
-    let outcome = "Green";
+        let outcome = "Green";
 
-    //  If there is a single red outcome, the overall outcome is red
-    // If no red, and a single amber, the overall outcome is amber
-    // Otherwise it stays green
+        //  If there is a single red outcome, the overall outcome is red
+        // If no red, and a single amber, the overall outcome is amber
+        // Otherwise it stays green
 
-    for (let i = 0; i < outcomes.length; i++) {
-        if (outcomes[i].Outcome === "Red") {
-            outcome = "Red";
-            break;
+        for (let i = 0; i < outcomes.length; i++) {
+            if (outcomes[i].Outcome === "Red") {
+                outcome = "Red";
+                break;
+            }
+            if (outcomes[i].Outcome === "Amber") {
+                outcome = "Amber";
+            }
         }
-        if (outcomes[i].Outcome === "Amber") {
-            outcome = "Amber";
-        }
+
+
+        const userID = req.session.data.User.UserID;
+        const now = new Date();
+
+        assessment.Status = "SA Review";
+        assessment.SubmittedBy = userID
+        assessment.SubmittedDate = now;
+        assessment.Outcome = outcome;
+
+        await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
+
+        // ToDo: Send email to SA team
+
+        return res.redirect('/assess/overview/' + AssessmentID);
+
     }
-
-
-    const userID = req.session.data.User.UserID;
-    const now = new Date();
-
-    assessment.Status = "SA Review";
-    assessment.SubmittedBy = userID
-    assessment.SubmittedDate = now;
-    assessment.Outcome = outcome;
-
-    await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
-
-    // ToDo: Send email to SA team
-
-    return res.redirect('/assess/overview/' + AssessmentID);
+    catch (error) {
+        next(error)
+    }
 }
 
 
 exports.p_submitPRReport = async function (req, res) {
-    const { AssessmentID, PanelComments, PanelCommentsImprove } = req.body;
-    const assessment = await getAssessmentById(AssessmentID);
+    try {
+        const { AssessmentID, PanelComments, PanelCommentsImprove } = req.body;
+        const assessment = await getAssessmentById(AssessmentID);
 
-    const userID = req.session.data.User.UserID;
-    const now = new Date();
+        const userID = req.session.data.User.UserID;
+        const now = new Date();
 
-    // If button value 'action' is save, save the action
-    if (req.body.action === 'save') {
-        assessment.PanelComments = PanelComments;
-        assessment.PanelCommentsComplete = true;
-        assessment.PanelCommentsImprove = PanelCommentsImprove;
+        // If button value 'action' is save, save the action
+        if (req.body.action === 'save') {
+            assessment.PanelComments = PanelComments;
+            assessment.PanelCommentsComplete = true;
+            assessment.PanelCommentsImprove = PanelCommentsImprove;
+        }
+
+
+        if (req.body.action === 'submit') {
+            assessment.Status = "SA Review";
+            assessment.SubmittedBy = userID
+            assessment.SubmittedDate = now;
+            assessment.PanelComments = PanelComments;
+            assessment.PanelCommentsComplete = true;
+            assessment.PanelCommentsImprove = PanelCommentsImprove;
+        }
+
+        await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
+
+        // ToDo: Send email to SA team
+
+        return res.redirect('/assess/overview/' + AssessmentID);
+
     }
-
-
-    if (req.body.action === 'submit') {
-        assessment.Status = "SA Review";
-        assessment.SubmittedBy = userID
-        assessment.SubmittedDate = now;
-        assessment.PanelComments = PanelComments;
-        assessment.PanelCommentsComplete = true;
-        assessment.PanelCommentsImprove = PanelCommentsImprove;
+    catch (error) {
+        next(error)
     }
-
-    await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
-
-    // ToDo: Send email to SA team
-
-    return res.redirect('/assess/overview/' + AssessmentID);
 }
 

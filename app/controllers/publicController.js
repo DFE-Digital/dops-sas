@@ -13,59 +13,109 @@
 
 const { getServiceStandards } = require('../models/standards');
 
-
-
 exports.g_home = (req, res) => {
+    try {
 
-    if (req.session && req.session.data) {
-        return res.redirect('/manage')
+        if (req.session && req.session.data) {
+            return res.redirect('/manage')
+        }
+
+        res.render('index')
+    } catch (error) {
+        next(error)
     }
-
-    res.render('index')
 }
 
 exports.g_features = (req, res) => {
-    res.render('features/index')
+    try {
+        res.render('features/index')
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_features_book = (req, res) => {
-    res.render('features/book')
+    try {
+        res.render('features/book')
+    } catch (error) {
+        next(error)
+    }
 }
 exports.g_features_manage = (req, res) => {
-    res.render('features/manage')
+    try {
+        res.render('features/manage')
+    } catch (error) {
+        next(error)
+    }
 }
 exports.g_features_assess = (req, res) => {
-    res.render('features/assess')
+    try {
+        res.render('features/assess')
+    } catch (error) {
+        next(error)
+    }
 }
 exports.g_features_reports = (req, res) => {
-    res.render('features/reports')
+    try {
+        res.render('features/reports')
+    } catch (error) {
+        next(error)
+    }
 }
 exports.g_features_admin = (req, res) => {
-    res.render('features/admin')
+    try {
+        res.render('features/admin')
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_features_installation = (req, res) => {
-    res.render('features/installation/index')
+    try {
+        res.render('features/installation/index')
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_support = (req, res) => {
-    res.render('support')
+    try {
+        res.render('support')
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_accessibility = (req, res) => {
-    res.render('accessibility')
+    try {
+        res.render('accessibility')
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_privacy = (req, res) => {
-    res.render('privacy')
+    try {
+        res.render('privacy')
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_cookies = (req, res) => {
-    res.render('cookies')
+    try {
+        res.render('cookies')
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_notAssessor = (req, res) => {
-    res.render('not-assessor')
+    try {
+        res.render('not-assessor')
+    } catch (error) {
+        next(error)
+    }
 }
 
 
@@ -75,9 +125,13 @@ exports.g_notAssessor = (req, res) => {
  * @param {standard} the specific standard to redirect to assidfe
  */
 exports.g_assidfe = async (req, res) => {
-    const { standard } = req.params
-    const serviceStandards = await getServiceStandards()
-    const standardData = serviceStandards.find(s => s.Point == standard)
-    return res.redirect(standardData.Url);
+    try {
+        const { standard } = req.params
+        const serviceStandards = await getServiceStandards()
+        const standardData = serviceStandards.find(s => s.Point == standard)
+        return res.redirect(standardData.Url);
+    } catch (error) {
+        next(error)
+    }
 }
 

@@ -6,7 +6,6 @@ exports.g_createDepartment = (req, res) => {
     res.render('service-admin/create-department');
 }   
 
-
 exports.p_createDepartment = async (req, res) => {
     const { Name, Domain, SelfRegistrationAllowed } = req.body;
 

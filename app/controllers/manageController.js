@@ -21,134 +21,181 @@ const { validateAddArtefact, validateAddTeam } = require('../validation/manage')
 
 
 exports.g_manage = async (req, res) => {
+    try {
+        const user = req.session.data.User;
+        const assessments = await getAssessmentsUserCanAccess(user.UserID);
 
-    const user = req.session.data.User;
-    const assessments = await getAssessmentsUserCanAccess(user.UserID);
+        // Filter them where the status is not Published
+        const filteredAssessments = assessments.filter(assessment => assessment.Status !== 'Published')
 
-    // Filter them where the status is not Published
-    const filteredAssessments = assessments.filter(assessment => assessment.Status !== 'Published')
-
-    res.render('manage/index', { assessments: filteredAssessments })
+        res.render('manage/index', { assessments: filteredAssessments })
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_previous = async (req, res) => {
-    const user = req.session.data.User;
-    const assessments = await getAssessmentsUserCanAccess(user.UserID);
+    try {
+        const user = req.session.data.User;
+        const assessments = await getAssessmentsUserCanAccess(user.UserID);
 
-    // Filter them where the status is Published
-    const filteredAssessments = assessments.filter(assessment => assessment.Status === 'Published')
+        // Filter them where the status is Published
+        const filteredAssessments = assessments.filter(assessment => assessment.Status === 'Published')
 
-    res.render('manage/previous', { assessments: filteredAssessments })
+        res.render('manage/previous', { assessments: filteredAssessments })
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_overview = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const team = await getTeamForAssessmentExtended(assessmentID);
-    const artefacts = await getArtefactsForAssessment(assessmentID);
-    return res.render('manage/entry/overview', { assessment, artefacts, team });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const team = await getTeamForAssessmentExtended(assessmentID);
+        const artefacts = await getArtefactsForAssessment(assessmentID);
+        return res.render('manage/entry/overview', { assessment, artefacts, team });
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_panel = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const panel = await assessmentPanelExtended(assessmentID);
-    return res.render('manage/entry/panel', { assessment, panel });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const panel = await assessmentPanelExtended(assessmentID);
+        return res.render('manage/entry/panel', { assessment, panel });
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_request = async function (req, res) {
-    const assessmentID = req.params.assessmentID;
-    const assessment = await getAssessmentById(assessmentID);
-    let { ddDetails, pmDetails, dmDetails } = "";
+    try {
+        const assessmentID = req.params.assessmentID;
+        const assessment = await getAssessmentById(assessmentID);
+        let { ddDetails, pmDetails, dmDetails } = "";
 
-    if (assessment.DD) {
-        // Get basic user details
-        ddDetails = await getBasicUserDetails(assessment.DD);
-    }
+        if (assessment.DD) {
+            // Get basic user details
+            ddDetails = await getBasicUserDetails(assessment.DD);
+        }
 
-    if (assessment.PM) {
-        pmDetails = await getBasicUserDetails(assessment.PM);
-    }
+        if (assessment.PM) {
+            pmDetails = await getBasicUserDetails(assessment.PM);
+        }
 
-    if (assessment.DM) {
-        dmDetails = await getBasicUserDetails(assessment.DM);
+        if (assessment.DM) {
+            dmDetails = await getBasicUserDetails(assessment.DM);
+        }
+        return res.render('manage/entry/request', {
+            assessment, ddDetails, pmDetails, dmDetails
+        })
+    } catch (error) {
+        next(error)
     }
-    return res.render('manage/entry/request', {
-        assessment, ddDetails, pmDetails, dmDetails
-    })
 }
 
 exports.g_report = async function (req, res) {
-    const user = req.session.data.userDetails;
-    const assessmentID = req.params.assessmentID;
-    const assessment = await getAssessmentById(assessmentID);
+    try {
+        const user = req.session.data.userDetails;
+        const assessmentID = req.params.assessmentID;
+        const assessment = await getAssessmentById(assessmentID);
 
-    if (assessment.Status == 'Team Review' || assessment.Status == 'SA Publish' || assessment.Status == 'Published') {
-        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
-        const serviceStandards = await getServiceStandards();
-        const actions = await getActionsForAssessmentID(assessmentID);
+        if (assessment.Status == 'Team Review' || assessment.Status == 'SA Publish' || assessment.Status == 'Published') {
+            const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+            const serviceStandards = await getServiceStandards();
+            const actions = await getActionsForAssessmentID(assessmentID);
 
-        return res.render('manage/entry/report-complete', {
-            assessment, ratings, serviceStandards, actions
+            return res.render('manage/entry/report-complete', {
+                assessment, ratings, serviceStandards, actions
+            })
+        }
+
+        return res.render('manage/entry/report', {
+            assessment
         })
+    } catch (error) {
+        next(error)
     }
-
-    return res.render('manage/entry/report', {
-        assessment
-    })
 
 
 }
 
 
 exports.g_artefacts = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const artefacts = await getArtefactsForAssessment(assessmentID);
-    return res.render('manage/entry/artefacts', { assessment, artefacts });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const artefacts = await getArtefactsForAssessment(assessmentID);
+        return res.render('manage/entry/artefacts', { assessment, artefacts });
+    } catch (error) {
+        next(error)
+    }
 }
 
 
 exports.g_team = async function (req, res) {
-    const { assessmentID } = req.params;
-    const assessment = await getAssessmentById(assessmentID);
-    const team = await getTeamForAssessmentExtended(assessmentID);
-    return res.render('manage/entry/team', { assessment, team });
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const team = await getTeamForAssessmentExtended(assessmentID);
+        return res.render('manage/entry/team', { assessment, team });
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_addteam = async function (req, res) {
-    const assessmentID = req.params.assessmentID;
-    const assessment = await getAssessmentById(assessmentID);
-    return res.render('manage/entry/add-team', {
-        assessment
-    })
+    try {
+        const assessmentID = req.params.assessmentID;
+        const assessment = await getAssessmentById(assessmentID);
+        return res.render('manage/entry/add-team', {
+            assessment
+        })
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_addartefact = async function (req, res) {
-    const assessmentID = req.params.assessmentID;
-    const assessment = await getAssessmentById(assessmentID);
-    return res.render('manage/entry/add-artefact', {
-        assessment
-    })
+    try {
+        const assessmentID = req.params.assessmentID;
+        const assessment = await getAssessmentById(assessmentID);
+        return res.render('manage/entry/add-artefact', {
+            assessment
+        })
+    } catch (error) {
+        next(error)
+    }
 }
 
 
 
 exports.g_removeartefact = async function (req, res) {
-    const { artefactID, uniqueID } = req.params;
-    const artefact = await getArtefactByIdAndUniqueID(artefactID, uniqueID);
+    try {
+        const { artefactID, uniqueID } = req.params;
+        const artefact = await getArtefactByIdAndUniqueID(artefactID, uniqueID);
 
-    const assessment = await getAssessmentById(artefact.AssessmentID);
-    return res.render('manage/entry/remove-artefact', { assessment, artefact });
+        const assessment = await getAssessmentById(artefact.AssessmentID);
+        return res.render('manage/entry/remove-artefact', { assessment, artefact });
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.g_removeteam = async function (req, res) {
-    const { teamID, uniqueID } = req.params;
+    try {
+        const { teamID, uniqueID } = req.params;
 
-    const team = await getTeamMemberForIdAndUniqueID(teamID, uniqueID);
+        const team = await getTeamMemberForIdAndUniqueID(teamID, uniqueID);
 
-    const assessment = await getAssessmentById(team.AssessmentID);
-    return res.render('manage/entry/remove-team', { assessment, team });
+        const assessment = await getAssessmentById(team.AssessmentID);
+        return res.render('manage/entry/remove-team', { assessment, team });
+    } catch (error) {
+        next(error)
+    }
 }
 
 
@@ -158,111 +205,132 @@ exports.g_removeteam = async function (req, res) {
 exports.p_addartefact = [
     validateAddArtefact,
     async (req, res) => {
-        const { Title, Description, URL, AssessmentID } = req.body;
+        try {
+            const { Title, Description, URL, AssessmentID } = req.body;
 
-        var assessment = await getAssessmentById(AssessmentID);
+            var assessment = await getAssessmentById(AssessmentID);
 
-        const errors = validationResult(req);
+            const errors = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            return res.render('manage/entry/add-artefact', {
-                assessment,
-                errors: errors.array()
-            });
+            if (!errors.isEmpty()) {
+                return res.render('manage/entry/add-artefact', {
+                    assessment,
+                    errors: errors.array()
+                });
+            }
+
+            await addArtefact(AssessmentID, Title, Description, URL, req.session.data.User.UserID);
+
+            // Clear the body and data for the fields
+            req.body = {};
+            req.session.data.Title = '';
+            req.session.data.Description = '';
+            req.session.data.URL = '';
+
+
+            return res.redirect(`/manage/artefacts/${AssessmentID}`);
+        } catch (error) {
+            next(error)
         }
-
-        await addArtefact(AssessmentID, Title, Description, URL, req.session.data.User.UserID);
-
-        // Clear the body and data for the fields
-        req.body = {};
-        req.session.data.Title = '';
-        req.session.data.Description = '';
-        req.session.data.URL = '';
-
-
-        return res.redirect(`/manage/artefacts/${AssessmentID}`);
     }
 ];
 
 
 exports.p_removeartefact = async function (req, res) {
-    const { ArtefactID, UniqueID } = req.body;
 
-    // ToDo: Validate the deletion request, can the user actually delete the request?
+    try {
+        const { ArtefactID, UniqueID } = req.body;
 
-    // If artefact isn't a number, redirect to the artefacts page
-    if (isNaN(ArtefactID)) {
+        // ToDo: Validate the deletion request, can the user actually delete the request?
+
+        // If artefact isn't a number, redirect to the artefacts page
+        if (isNaN(ArtefactID)) {
+            return res.redirect('/manage');
+        }
+
+        const artefact = await getArtefactByIdAndUniqueID(ArtefactID, UniqueID);
+
+        if (artefact !== null) {
+            await deleteArtefact(ArtefactID);
+            return res.redirect(`/manage/artefacts/${artefact.AssessmentID}`);
+        }
+
         return res.redirect('/manage');
+    } catch (error) {
+        next(error)
     }
-
-    const artefact = await getArtefactByIdAndUniqueID(ArtefactID, UniqueID);
-
-    if (artefact !== null) {
-        await deleteArtefact(ArtefactID);
-        return res.redirect(`/manage/artefacts/${artefact.AssessmentID}`);
-    }
-
-    return res.redirect('/manage');
 };
 
 
 exports.p_addteam = [
     validateAddTeam,
     async (req, res) => {
-        const { EmailAddress, FirstName, LastName, Role, AssessmentID } = req.body;
+        try {
+            const { EmailAddress, FirstName, LastName, Role, AssessmentID } = req.body;
 
-        var assessment = await getAssessmentById(AssessmentID);
+            var assessment = await getAssessmentById(AssessmentID);
 
-        const errors = validationResult(req);
+            const errors = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            return res.render('manage/entry/add-team', {
-                assessment,
-                errors: errors.array()
-            });
+            if (!errors.isEmpty()) {
+                return res.render('manage/entry/add-team', {
+                    assessment,
+                    errors: errors.array()
+                });
+            }
+
+            let userID = await UpsertUserNoToken(EmailAddress, FirstName, LastName, req.session.data.User.UserID, 'Add team member request: ' + AssessmentID);
+
+            await addTeam(AssessmentID, userID, Role);
+
+            // Clear the body and data for the fields
+            req.body = {};
+            req.session.data.EmailAddress = '';
+            req.session.data.FirstName = '';
+            req.session.data.LastName = '';
+            req.session.data.Role = '';
+
+
+            return res.redirect(`/manage/team/${AssessmentID}`);
+        } catch (error) {
+            next(error)
         }
-
-        let userID = await UpsertUserNoToken(EmailAddress, FirstName, LastName, req.session.data.User.UserID, 'Add team member request: ' + AssessmentID);
-
-        await addTeam(AssessmentID, userID, Role);
-
-        // Clear the body and data for the fields
-        req.body = {};
-        req.session.data.EmailAddress = '';
-        req.session.data.FirstName = '';
-        req.session.data.LastName = '';
-        req.session.data.Role = '';
-
-
-        return res.redirect(`/manage/team/${AssessmentID}`);
     }
 ];
 
 
 exports.p_removeteam = async function (req, res) {
-    const { ID, UniqueID } = req.body;
+    try {
+        const { ID, UniqueID } = req.body;
 
 
 
-    const team = await getTeamMemberForIdAndUniqueID(ID, UniqueID);
+        const team = await getTeamMemberForIdAndUniqueID(ID, UniqueID);
 
-    if (team !== null) {
-        await deleteTeamMemberByID(team.ID);
-        return res.redirect(`/manage/team/${team.AssessmentID}`);
+        if (team !== null) {
+            await deleteTeamMemberByID(team.ID);
+            return res.redirect(`/manage/team/${team.AssessmentID}`);
+        }
+
+        return res.redirect('/manage');
+    } catch (error) {
+        next(error)
     }
-
-    return res.redirect('/manage');
 };
 
 
 exports.p_acceptReport = async function (req, res) {
+    try {
 
-    const { AssessmentID } = req.body;
-    const user = req.session.data.User;
-    const assessment = await getAssessmentById(AssessmentID);
-    assessment.Status = 'SA Publish'
+        const { AssessmentID } = req.body;
+        const user = req.session.data.User;
+        const assessment = await getAssessmentById(AssessmentID);
+        assessment.Status = 'SA Publish'
 
-    await updateAssessment(AssessmentID, assessment, user.UserID);
-    return res.redirect('/manage/report/' + AssessmentID);
+        await updateAssessment(AssessmentID, assessment, user.UserID);
+        return res.redirect('/manage/report/' + AssessmentID);
+    } catch (error) {
+        next(error)
+    }
 };
 

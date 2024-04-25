@@ -12,14 +12,14 @@ exports.g_signin = (req, res) => {
 };
 
 exports.g_checktoken = async (req, res) => {
-
-    const { token } = req.params;
-
-    if (!token) {
-        return res.redirect('/sign-in');
-    }
-
     try {
+        const { token } = req.params;
+
+        if (!token) {
+            return res.redirect('/sign-in');
+        }
+
+
 
         const user = await checkToken(token);
         if (!req.session.data) {
@@ -60,7 +60,7 @@ exports.g_checktoken = async (req, res) => {
         // if req.session.originalUrl exists
         if (req.session.originalUrl !== undefined) {
             const redirectUrl = req.session.originalUrl
-            delete req.session.originalUrl; 
+            delete req.session.originalUrl;
             return res.redirect(redirectUrl);
         }
 
@@ -70,25 +70,32 @@ exports.g_checktoken = async (req, res) => {
         return res.redirect('/manage')
 
     } catch (error) {
-        console.error('Error:', error);
-        return res.redirect('/error')
+        next(error)
     }
 };
 
 exports.g_signout = (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error("Session error:", err);
-            return res.status(500).send("Could not sign out, please try again.");
-        }
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Session error:", err);
+                return res.status(500).send("Could not sign out, please try again.");
+            }
 
-        res.clearCookie('connect.sid'); // Adjust cookie name if different
-        res.redirect('/sign-in');
-    });
+            res.clearCookie('connect.sid'); // Adjust cookie name if different
+            res.redirect('/sign-in');
+        });
+    } catch (error) {
+        next(error)
+    }
 };
 
 exports.g_checkemail = (req, res) => {
-    res.render('auth/check-email');
+    try {
+        res.render('auth/check-email');
+    } catch (error) {
+        next(error)
+    }
 };
 
 
@@ -103,18 +110,19 @@ exports.g_checkemail = (req, res) => {
 exports.p_signin = [
     validateSignIn,
     async (req, res) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.render('auth/sign-in', {
-                errors: errors.array()
-            });
-        }
-
-        // Get the user's email address from the form
-        const { EmailAddress } = req.body;
-
         try {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return res.render('auth/sign-in', {
+                    errors: errors.array()
+                });
+            }
+
+            // Get the user's email address from the form
+            const { EmailAddress } = req.body;
+
+
             const token = uuidv4();
             const tokenExpiry = new Date()
             tokenExpiry.setMinutes(tokenExpiry.getMinutes() + 30);
