@@ -14,6 +14,7 @@ const pgSession = require('connect-pg-simple')(session);
 const app = express();
 
 const { saveFormDataToSession, makeFormDataGlobal } = require('./app/middleware/session');
+const { sendNotifyEmail } = require("./app/middleware/notify");
 
 const pgPool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -68,7 +69,6 @@ nunjuckEnv.addFilter('NAToString', function (str) {
 })
 
 nunjuckEnv.addFilter('blankToNA', function (str) {
-  console.log(str)
   return str === null ? '-' : str
 })
 
@@ -101,9 +101,9 @@ app.set('view engine', 'html');
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(expressWinston.logger({
-  winstonInstance: logger,
-}));
+// app.use(expressWinston.logger({
+//   winstonInstance: logger,
+// }));
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -129,19 +129,11 @@ app.use(expressWinston.errorLogger({
 // Generic Error handling
 app.use((err, req, res, next) => {
   logger.error(err.stack);
-  console.log(err);
-
-  notify
-  .sendEmail(process.env.email_error, 'design.ops@education.gov.uk', {
-    personalisation: {
-      error: error.stack
-    },
-  })
-  .then((response) => {})
-  .catch((err) => console.log(err))
-
   res.status(500).send(err);
 });
+
+
+
 
 // Start server
 const port = process.env.PORT || 3000;

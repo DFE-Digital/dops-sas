@@ -81,7 +81,6 @@ exports.g_doc = async function (req, res) {
             return { comment: action.Comments }; // Each action is an object with a comment property
         });
 
-        console.log(data)
     });
 
     // Set the data for Docxtemplater

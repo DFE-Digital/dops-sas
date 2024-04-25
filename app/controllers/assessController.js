@@ -1,7 +1,4 @@
 const { check, validationResult } = require('express-validator');
-
-
-
 const { getAssessmentPanelByUserID, getRequestsByMixedStatus, getAssessmentById, updateReportComments, updateAssessment, checkSubmitStatus } = require('../models/assessmentModel');
 const { getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome, canSubmit } = require('../models/standards');
 const { getActionsForAssessmentID, addAction, getActionByUniqueID, updateAction, deleteAction, getActionsForAssessmentIDAndStandard } = require('../models/actions');
@@ -67,7 +64,6 @@ exports.g_report = async function (req, res) {
 
 
 exports.g_panel = async function (req, res) {
-    console.log('panel')
     const { assessmentID } = req.params;
     const assessment = await getAssessmentById(assessmentID);
     const panel = await assessmentPanelExtended(assessmentID);
@@ -241,17 +237,12 @@ exports.g_previous = async function (req, res) {
 }
 
 
-
-
 // POSTS //
 
 exports.p_volunteer = async function (req, res) {
 
     const { assessmentID, role } = req.body;
     const user = req.session.data.User;
-
-    console.log('assessmentsController.post_assessment_volunteer')
-
     const assessment = await getAssessmentById(assessmentID);
 
     // Send email to SA+ team

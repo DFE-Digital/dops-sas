@@ -63,7 +63,6 @@ async function getTeamMemberForIdAndUniqueID(id, uniqueID) {
         if (result.rows.length > 0) {
             return result.rows[0];
         } else {
-            console.log(`No team member found with ID: ${id}`);
             return null;
         }
     } catch (error) {

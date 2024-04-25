@@ -27,8 +27,6 @@ async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
     let dept = await client.query('SELECT "DepartmentID" FROM public."Department" WHERE "Domain" = $1', [domain]);
     let departmentID = dept.rows[0].DepartmentID
 
-console.log(departmentID)
-
     if (res.rows.length === 0) {
       // User does not exist, create a new user with additional fields
       const query = `

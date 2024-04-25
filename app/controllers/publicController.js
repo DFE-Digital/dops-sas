@@ -76,17 +76,8 @@ exports.g_notAssessor = (req, res) => {
  */
 exports.g_assidfe = async (req, res) => {
     const { standard } = req.params
-    console.log(standard)
-
     const serviceStandards = await getServiceStandards()
-
-    console.log(serviceStandards)   
-
     const standardData = serviceStandards.find(s => s.Point == standard)
-
-    console.log(standardData)
-
     return res.redirect(standardData.Url);
-
 }
 

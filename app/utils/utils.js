@@ -1,11 +1,7 @@
 function getDates(startWeek, endWeek, endDateEstimated) {
     let dates = [];
   
-    console.log('getDates')
-    console.log(startWeek)
-    console.log(endWeek)
-    console.log(endDateEstimated)
-  
+   
     endWeek = endDateEstimated === undefined ? 12 : endWeek;
   
     for (let week = startWeek; week <= endWeek; week++) {
@@ -22,8 +18,7 @@ function getDates(startWeek, endWeek, endDateEstimated) {
       }
     }
   
-    console.log(dates)
-  
+
     return dates;
   }
   
@@ -35,8 +30,7 @@ function getDates(startWeek, endWeek, endDateEstimated) {
   }
   
   function addWeeksToDate(date, weeks) {
-    //console.log('Adding ' + weeks + ' weeks to ' + date);
-    //console.log(date);
+  
     date.setDate(date.getDate() + 7 * weeks);
     return date;
   }

@@ -99,7 +99,6 @@ async function getAssessorByUserID(userID) {
  * @param {number} userID The unique identifier of the user.
  */
 async function getTrainingForUser(userID) {
-    console.log('userID:', userID);
     try {
         const result = await pool.query(`
             SELECT *

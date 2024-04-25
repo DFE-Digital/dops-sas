@@ -7,7 +7,6 @@
 const NotifyClient = require('notifications-node-client').NotifyClient
 const notify = new NotifyClient(process.env.notifyKey)
 
-
 /**
  * Send email using Notify
  * @param {string} template - template ID from Notify
@@ -18,18 +17,7 @@ const notify = new NotifyClient(process.env.notifyKey)
  */
 function sendNotifyEmail(template, recipient, templateParams) {
 
-    console.log('Send email to:', recipient);
     try {
-
-        // const safeList = process.env.EmailSafeList.split(',');
-
-        // if (!safeList.includes(recipient)) {
-        //     console.log(`Recipient ${recipient} is not in the safe list.`);
-        //     return false;
-        // }
-
-
-        console.log('Sending');
 
         return notify
             .sendEmail(template, recipient, {
@@ -46,8 +34,8 @@ function sendNotifyEmail(template, recipient, templateParams) {
                 return false;
             });
 
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        next(error)
     }
 }
 

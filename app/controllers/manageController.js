@@ -50,7 +50,6 @@ exports.g_overview = async function (req, res) {
 }
 
 exports.g_panel = async function (req, res) {
-    console.log('panel')
     const { assessmentID } = req.params;
     const assessment = await getAssessmentById(assessmentID);
     const panel = await assessmentPanelExtended(assessmentID);
@@ -83,10 +82,6 @@ exports.g_report = async function (req, res) {
     const user = req.session.data.userDetails;
     const assessmentID = req.params.assessmentID;
     const assessment = await getAssessmentById(assessmentID);
-
-    // We need to render a view based on the user.
-
-    console.log(assessment.SubStatusCode)
 
     if (assessment.Status == 'Team Review' || assessment.Status == 'SA Publish' || assessment.Status == 'Published') {
         const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
