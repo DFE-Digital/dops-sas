@@ -1,10 +1,4 @@
-const { Pool } = require('pg');
-
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
-});
-
+const pool = require('./pool.js');
 
 /**
  * Get actions for an assessment
@@ -21,8 +15,8 @@ async function getActionsForAssessmentID(assessmentID) {
         // Return all rows (roles) instead of a single role
         return result.rows;
     } catch (error) {
-        console.error('Error in getActionsForAssessmentID:', error);
-        return []; // Return an empty array in case of error
+        next('Error in getActionsForAssessmentID: ' + error);
+        return []; 
     }
 }
 

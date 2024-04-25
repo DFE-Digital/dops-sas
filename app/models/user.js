@@ -1,9 +1,4 @@
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
+const pool = require('./pool.js');
 
 /**
  * Checks for a user by email and updates or sets their token and token expiry if they exist.
