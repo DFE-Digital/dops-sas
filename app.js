@@ -130,6 +130,16 @@ app.use(expressWinston.errorLogger({
 app.use((err, req, res, next) => {
   logger.error(err.stack);
   console.log(err);
+
+  notify
+  .sendEmail(process.env.email_error, 'design.ops@education.gov.uk', {
+    personalisation: {
+      error: error.stack
+    },
+  })
+  .then((response) => {})
+  .catch((err) => console.log(err))
+
   res.status(500).send(err);
 });
 
