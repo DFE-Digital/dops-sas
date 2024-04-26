@@ -4,9 +4,8 @@ const bodyParser = require('body-parser')
 const compression = require('compression');
 const appRoutes = require('./app/routes');
 const nunjucks = require('nunjucks');
-const expressWinston = require('express-winston');
+const winston = require('winston');
 const dateFilter = require('nunjucks-date-filter');
-const logger = require('./config/winston');
 const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
@@ -101,10 +100,6 @@ app.set('view engine', 'html');
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(expressWinston.logger({
-//   winstonInstance: logger,
-// }));
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -122,13 +117,17 @@ app.use('/assets', express.static('public/assets'));
 // Routes
 app.use('/', appRoutes);
 
-app.use(expressWinston.errorLogger({
-  winstonInstance: logger,
-}));
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.json(),
+  transports: [new winston.transports.Console()],
+});
+
+
 
 // Generic Error handling
 app.use((err, req, res, next) => {
-  logger.error(err.stack);
+  logger.message(err.stack);
   res.status(500).send(err);
 });
 
