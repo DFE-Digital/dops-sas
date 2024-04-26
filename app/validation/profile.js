@@ -5,7 +5,7 @@ exports.validateChangeName = [
         .trim()
         .custom((value, { req }) => {
             if (value === '') {
-                throw new Error('Enter your first name');
+                throw new Error('Enter a first name');
             }
             return true;
         }),
@@ -13,7 +13,7 @@ exports.validateChangeName = [
         .trim()
         .custom((value, { req }) => {
             if (value === '') {
-                throw new Error('Enter your last name');
+                throw new Error('Enter a last name');
             }
             return true;
         })
@@ -24,10 +24,10 @@ exports.validateChangeEmail = [
       .trim()
       .custom((value, { req }) => {
         if (value === '') {
-          throw new Error('Please enter your email address.');
+          throw new Error('Enter an email address.');
         }
         if (!/\S+@\S+\.\S+/.test(value)) {
-          throw new Error('Please enter a valid email address.');
+          throw new Error('Enter a valid email address.');
         }
         if (!value.endsWith('@education.gov.uk')) {
           throw new Error('Email must be an education.gov.uk address.');

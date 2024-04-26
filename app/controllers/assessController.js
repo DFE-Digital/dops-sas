@@ -8,7 +8,7 @@ const { getTeamForAssessmentExtended } = require('../models/team');
 const { validateAddRating, validateAddAction, validateAddComments } = require('../validation/assess');
 const { sendNotifyEmail } = require('../middleware/notify');
 
-exports.g_index = async function (req, res) {
+exports.g_index = async function (req, res, next) {
     const user = req.session.data.User;
     const userOnPanels = await getAssessmentPanelByUserID(user.UserID);
     return res.render('assess/index', {
@@ -17,7 +17,7 @@ exports.g_index = async function (req, res) {
 }
 
 //Overview
-exports.g_overview = async function (req, res) {
+exports.g_overview = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -33,7 +33,7 @@ exports.g_overview = async function (req, res) {
     }
 }
 
-exports.g_report = async function (req, res) {
+exports.g_report = async function (req, res, next) {
     try {
         const user = req.session.data.User;
         const assessmentID = req.params.assessmentID;
@@ -73,7 +73,7 @@ exports.g_report = async function (req, res) {
 }
 
 
-exports.g_panel = async function (req, res) {
+exports.g_panel = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -86,7 +86,7 @@ exports.g_panel = async function (req, res) {
 }
 
 
-exports.g_artefacts = async function (req, res) {
+exports.g_artefacts = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -99,7 +99,7 @@ exports.g_artefacts = async function (req, res) {
 }
 
 
-exports.g_team = async function (req, res) {
+exports.g_team = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -111,7 +111,7 @@ exports.g_team = async function (req, res) {
     }
 }
 
-exports.g_reportRating = async function (req, res) {
+exports.g_reportRating = async function (req, res, next) {
     try {
 
         const { assessmentID } = req.params;
@@ -129,7 +129,7 @@ exports.g_reportRating = async function (req, res) {
 
 }
 
-exports.g_reportPanelComments = async function (req, res) {
+exports.g_reportPanelComments = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -140,7 +140,7 @@ exports.g_reportPanelComments = async function (req, res) {
     }
 }
 
-exports.g_reportSection = async function (req, res) {
+exports.g_reportSection = async function (req, res, next) {
     try {
         const { assessmentID, standard } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -157,7 +157,7 @@ exports.g_reportSection = async function (req, res) {
 }
 
 
-exports.g_reportSectionActions = async function (req, res) {
+exports.g_reportSectionActions = async function (req, res, next) {
     try {
         const { assessmentID, standard } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -173,7 +173,7 @@ exports.g_reportSectionActions = async function (req, res) {
     }
 }
 
-exports.g_reportSectionActionsAdd = async function (req, res) {
+exports.g_reportSectionActionsAdd = async function (req, res, next) {
     try {
         const { assessmentID, standard } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -189,7 +189,7 @@ exports.g_reportSectionActionsAdd = async function (req, res) {
     }
 }
 
-exports.g_reportSectionActionsManage = async function (req, res) {
+exports.g_reportSectionActionsManage = async function (req, res, next) {
     try {
         const { assessmentID, standard, uniqueID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -206,7 +206,7 @@ exports.g_reportSectionActionsManage = async function (req, res) {
     }
 }
 
-exports.g_volunteer = async function (req, res) {
+exports.g_volunteer = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
         const statuses = ['Active'];
@@ -233,7 +233,7 @@ exports.g_volunteer = async function (req, res) {
     }
 };
 
-exports.g_data = async function (req, res) {
+exports.g_data = async function (req, res, next) {
     try {
         const assessmentID = req.params.id;
 
@@ -252,7 +252,7 @@ exports.g_data = async function (req, res) {
 }
 
 
-exports.g_volunteerA = async function (req, res) {
+exports.g_volunteerA = async function (req, res, next) {
     try {
         const assessmentID = req.params.id;
         const role = req.params.role;
@@ -268,7 +268,7 @@ exports.g_volunteerA = async function (req, res) {
     }
 }
 
-exports.g_detail = async function (req, res) {
+exports.g_detail = async function (req, res, next) {
     try {
         const assessmentID = req.params.id;
 
@@ -285,7 +285,7 @@ exports.g_detail = async function (req, res) {
     }
 }
 
-exports.g_submitted = async function (req, res) {
+exports.g_submitted = async function (req, res, next) {
     try {
         const assessmentID = req.params.id;
 
@@ -300,7 +300,7 @@ exports.g_submitted = async function (req, res) {
     }
 }
 
-exports.g_previous = async function (req, res) {
+exports.g_previous = async function (req, res, next) {
     try {
         const user = req.session.data.User;
         const userOnPanels = await getAssessmentPanelByUserID(user.UserID);
@@ -316,7 +316,7 @@ exports.g_previous = async function (req, res) {
 
 // POSTS //
 
-exports.p_volunteer = async function (req, res) {
+exports.p_volunteer = async function (req, res, next) {
     try {
 
         const { assessmentID, role } = req.body;
@@ -508,7 +508,7 @@ exports.p_reportPanelComments = [
 ]
 
 
-exports.p_submitReport = async function (req, res) {
+exports.p_submitReport = async function (req, res, next) {
     try {
         const { AssessmentID } = req.body;
         const assessment = await getAssessmentById(AssessmentID);
@@ -553,7 +553,7 @@ exports.p_submitReport = async function (req, res) {
 }
 
 
-exports.p_submitPRReport = async function (req, res) {
+exports.p_submitPRReport = async function (req, res, next) {
     try {
         const { AssessmentID, PanelComments, PanelCommentsImprove } = req.body;
         const assessment = await getAssessmentById(AssessmentID);

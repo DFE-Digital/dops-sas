@@ -65,17 +65,17 @@
             <td class="govuk-table__cell">{{record.Type}}</td>
             <td class="govuk-table__cell">{{record.Phase}}</td>
 
-          
+
             <td class="govuk-table__cell">{{record.AssessmentDateTime|date('D MMM YYYY')}}
-            </td>  
+            </td>
             <td class="govuk-table__cell">
-            {% if record.Status == "Team Review" or record.Status
-                                == "SA Publish" or record.Status == "Published" %}
-                                <strong
-                                    class="govuk-tag govuk-tag--{{record.Outcome | lower}}">{{record.Outcome}}</strong>
-                                {% else %}
-                                <strong class="govuk-tag">Not rated</strong>
-                                {% endif %}</td>
+                {% if record.Status == "Team Review" or record.Status
+                == "SA Publish" or record.Status == "Published" %}
+                <strong class="govuk-tag govuk-tag--{{record.Outcome | lower}}">{{record.Outcome}}</strong>
+                {% else %}
+                <strong class="govuk-tag">Unrated</strong>
+                {% endif %}
+            </td>
         </tr>
         {% endif %}
         {% endfor %}

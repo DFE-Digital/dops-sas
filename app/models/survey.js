@@ -54,6 +54,60 @@ async function addSurvey(
     }
 }
 
+/**
+ * Add a survey record to the SurveyData table
+ * @param {number} departmentID - The ID of the department to get survey data for.
+ */
+async function getSurveyData(
+    departmentID
+) {
+    try {
+        const { rows } = await pool.query(`
+            SELECT a.*, s.*
+            FROM 
+                public."SurveyData" s
+            INNER JOIN public."Assessment" a ON s."AssessmentID" = a."AssessmentID"
+            WHERE 
+               a."Department" = $1
+            ORDER BY 
+                s."id" DESC
+        `, [
+            departmentID
+        ]);
+        return rows; 
+    } catch (error) {
+        console.error('Error in getSurveyData:', error);
+        throw error;
+    }
+}
+
+/**
+ * Add a survey record to the SurveyData table
+ * @param {number} surveyID - The ID of the survey to get survey data for.
+ */
+async function getSurvey(
+    surveyID
+) {
+    try {
+        const { rows } = await pool.query(`
+            SELECT a.*, s.*
+            FROM 
+                public."SurveyData" s
+            INNER JOIN public."Assessment" a ON s."AssessmentID" = a."AssessmentID"
+            WHERE 
+               s."id" = $1
+        `, [
+            surveyID
+        ]);
+        return rows[0]; 
+    } catch (error) {
+        console.error('Error in getSurveyData:', error);
+        throw error;
+    }
+}
+
+
+
 module.exports = {
-    addSurvey
+    addSurvey, getSurveyData, getSurvey
 };

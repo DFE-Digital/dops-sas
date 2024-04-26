@@ -1,7 +1,7 @@
 const { getRequestsByStatus } = require('../models/assessmentModel');
 const { countOutcomesByStandard, getAssessmentDetailsByYear } = require('../models/standards');
 
-exports.g_index = async function (req, res) {
+exports.g_index = async function (req, res, next) {
     try {
         let year;
 
@@ -38,7 +38,7 @@ exports.g_index = async function (req, res) {
     }
 }
 
-exports.g_portfolio = async function (req, res) {
+exports.g_portfolio = async function (req, res, next) {
     try {
         let year;
 

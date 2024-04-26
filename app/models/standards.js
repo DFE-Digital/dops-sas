@@ -75,7 +75,7 @@ async function countOutcomesByStandard(department) {
                 public."ServiceStandardOutcomes" sso
             INNER JOIN public."Assessment" a ON sso."AssessmentID" = a."AssessmentID"
             WHERE 
-                AND a."Status" = 'Published' 
+                a."Status" = 'Published' 
                 AND a."Department" = $1
             GROUP BY 
                 "Standard"

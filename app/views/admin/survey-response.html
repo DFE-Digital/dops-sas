@@ -1,0 +1,173 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Survey response" %}
+{% set view = "surveys" %}
+
+{% block hero %}
+<div class="dfe-page-header dfe-page-header--with-sub-nav">
+    <div class="govuk-width-container dfe-width-container ">
+        <div class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+            <a href="/admin/surveys" class="govuk-back-link">Back</a>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <span class="govuk-caption-l">Admin</span>
+                <h1 class="govuk-heading-l">{{pageName}}</h1>
+                <nav class="app-sub-navigation" aria-label="Application menu">
+                    <ul class="app-sub-navigation__list">
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='dashboard' %} aria-current="page" {% endif
+                                %} href="/admin">Dashboard</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='assessments' %} aria-current="page" {%
+                                endif %} href="/admin/assessments">Assessments</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='assessors' %} aria-current="page" {% endif
+                                %}href="/admin/assessors">Assessors</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='admins' %} aria-current="page" {% endif
+                                %}href="/admin/admins">Administrators</a>
+                        </li>   
+                         <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='surveys' %} aria-current="page" {% endif
+                                %}href="/admin/surveys">Surveys</a>
+                        </li>
+
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='reporting' %} aria-current="page" {% endif
+                                %}href="/admin/reporting">Reporting</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h2 class="govuk-heading-l">Assessment information</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Service
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{survey.Name}}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Outcome
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <strong class="govuk-tag govuk-!-font-size-16 govuk-tag--{{survey.Outcome | lower}}">{% if survey.Outcome === 'Not rated' %} Unrated {% else %} {{survey.Outcome }} {% endif %}</strong>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Date
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{survey.AssessmentDateTime | date('dddd, D MMMM YYYY')}}
+                </dd>
+            </div>
+        </dl>
+
+        <h3 class="govuk-heading-m">Assessors</h3>
+
+        {% if assessors | length > 0 %}
+
+        <dl class="govuk-summary-list">
+            {% for assessor in assessors %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{assessor.FirstName}}   {{assessor.LastName}}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessor.Role}}
+                </dd>
+            </div>
+            {% endfor %}
+            
+        </dl>
+
+        {% else %}
+<p>Assessor information not available.</p>
+        {% endif %}
+
+
+
+        <h2 class="govuk-heading-l govuk-!-margin-top-9">Scores</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Pre-assessment
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{survey.preAssessmentCall}} out of 5
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Organisation
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{survey.organisationOfServiceAssessment}} out of 5
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Assessment
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{survey.runningOfAssessment}} out of 5
+                </dd>
+            </div>
+        </dl>
+
+  
+
+        <h2 class="govuk-heading-m">Feedback on low scores</h2>
+
+        {% if survey.feedbackOnLowScores %}
+        <p>{{survey.feedbackOnLowScores}}</p>
+
+        {% else %}
+        <p>No feedback given.</p>
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Assessor feedback</h2>
+
+        {% if survey.specificFeedbackForAssessor %}
+        <p>{{survey.specificFeedbackForAssessor}}</p>
+
+        {% else %}
+        <p>No feedback given.</p>
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Other feedback</h2>
+
+        {% if survey.furtherComments %}
+        <p>{{survey.furtherComments}}</p>
+
+        {% else %}
+        <p>No feedback given.</p>
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+{% endblock %}

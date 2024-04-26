@@ -79,22 +79,18 @@ async function isAssessor(req, res, next) {
 
 function validateParamIsInteger(paramName) {
     return function(req, res, next) {
-        const value = parseInt(req.params[paramName], 10);
+        const value = parseInt(req.params[paramName], 10); 
+
         // Check if value is an integer and within the int range
-
         if (!Number.isInteger(value) || value < -2147483648 || value > 2147483647) {
-
             if(paramName === 'assessmentID')
             {
                 paramName = "The assessment reference number"
             }
-
             if(paramName === 'assessorID')
             {
                 paramName = "The assessor reference number"
             }
-
-
             const error = `${paramName} must be a valid number`;
             return res.render('error', { error }); 
         }
@@ -103,8 +99,6 @@ function validateParamIsInteger(paramName) {
 }
 
 module.exports = validateParamIsInteger;
-
-
 
 // Public routes
 router.get('/', publicController.g_home);
@@ -172,14 +166,14 @@ router.post("/book/request/confirm-delete", isAuthenticated, bookController.p_co
 router.get('/manage', isAuthenticated, manageController.g_manage);
 router.get("/manage/previous", isAuthenticated, manageController.g_previous);
 router.get("/manage/overview/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_overview);
-router.get("/manage/panel/:assessmentID", isAuthenticated, manageController.g_panel);
-router.get("/manage/request/:assessmentID", isAuthenticated, manageController.g_request);
-router.get("/manage/report/:assessmentID", isAuthenticated, manageController.g_report);
-router.get("/manage/artefacts/:assessmentID", isAuthenticated, manageController.g_artefacts);
-router.get("/manage/team/:assessmentID", isAuthenticated, manageController.g_team);
-router.get("/manage/add-artefact/:assessmentID", isAuthenticated, manageController.g_addartefact);
+router.get("/manage/panel/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_panel);
+router.get("/manage/request/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_request);
+router.get("/manage/report/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_report);
+router.get("/manage/artefacts/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_artefacts);
+router.get("/manage/team/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_team);
+router.get("/manage/add-artefact/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_addartefact);
 router.get("/manage/remove-artefact/:artefactID/:uniqueID", isAuthenticated, manageController.g_removeartefact);
-router.get("/manage/add-team/:assessmentID", isAuthenticated, manageController.g_addteam);
+router.get("/manage/add-team/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_addteam);
 router.get("/manage/remove-team/:teamID/:uniqueID", isAuthenticated, manageController.g_removeteam);
 router.post("/manage/add-artefact", isAuthenticated, manageController.p_addartefact);
 router.post("/manage/remove-artefact", isAuthenticated, manageController.p_removeartefact);
@@ -190,20 +184,20 @@ router.post("/manage/accept-report", isAuthenticated, manageController.p_acceptR
 // Admin routes
 router.get('/admin', isAuthenticated, isAdmin, adminController.g_index);
 router.get('/admin/tasks/:filter', isAuthenticated, isAdmin, adminController.g_index);
-router.get("/admin/overview/:assessmentID", isAuthenticated, isAdmin, adminController.g_overview);
-router.get("/admin/process/:assessmentID", isAuthenticated, isAdmin, adminController.g_process);
-router.get("/admin/request/:assessmentID", isAuthenticated, isAdmin, adminController.g_process);
-router.get("/admin/panel/:assessmentID", isAuthenticated, isAdmin, adminController.g_panel);
-router.get("/admin/add-panel/:assessmentID", isAuthenticated, isAdmin, adminController.g_addpanel);
+router.get("/admin/overview/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_overview);
+router.get("/admin/process/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_process);
+router.get("/admin/request/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_process);
+router.get("/admin/panel/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_panel);
+router.get("/admin/add-panel/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_addpanel);
 router.get("/admin/remove-panel/:assessmentPanelID/:uniqueID", isAuthenticated, isAdmin, adminController.g_removepanel);
-router.get("/admin/add-date/:assessmentID", isAuthenticated, isAdmin, adminController.g_adddate);
+router.get("/admin/add-date/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_adddate);
 router.get("/admin/assessments", isAuthenticated, isAdmin, adminController.g_assessments);
 router.get("/admin/assessors", isAuthenticated, isAdmin, adminController.g_assessors);
 router.get("/admin/assessor/:assessorID", isAuthenticated, isAdmin, adminController.g_assessor);
 router.get("/admin/add-assessor", isAuthenticated, isAdmin, adminController.g_addassessor);
-router.get("/admin/report/:assessmentID", isAuthenticated, isAdmin, adminController.g_report);
-router.get("/admin/artefacts/:assessmentID", isAuthenticated, isAdmin, adminController.g_artefacts);
-router.get("/admin/team/:assessmentID", isAuthenticated, isAdmin, adminController.g_team);
+router.get("/admin/report/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_report);
+router.get("/admin/artefacts/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_artefacts);
+router.get("/admin/team/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_team);
 router.get("/admin/reporting", isAuthenticated, isAdmin, adminController.g_reporting);
 router.get("/admin/reporting/assessments", isAuthenticated, isAdmin, adminController.g_reportingAssessmentsAndPanels);
 router.get("/admin/admins", isAuthenticated, isAdmin, adminController.g_admins);
@@ -217,20 +211,23 @@ router.get("/admin/assessor-change-status/:assessorID", isAuthenticated, isAdmin
 router.get('/admin/assessor-change-cross-gov/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorCrossgov);
 router.get('/admin/assessor-change-lead/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorLead);
 router.get('/admin/assessor-change-role/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorRole);
+router.get('/admin/assessor-change-role/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorRole);
 router.get('/admin/assessor-change-external/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorExternal);
-router.get("/admin/add-artefact/:assessmentID", isAuthenticated, isAdmin, adminController.g_addartefact);
+router.get('/admin/assessor-change-name/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorName);
+router.get("/admin/add-artefact/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_addartefact);
 router.get("/admin/remove-artefact/:artefactID/:uniqueID", isAuthenticated, isAdmin, adminController.g_removeartefact);
-router.get('/admin/change-type/:assessmentID', isAuthenticated, isAdmin, adminController.g_changetype);
-router.get('/admin/change-phase/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePhase);
-router.get('/admin/change-name/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeName);
-router.get('/admin/change-description/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDescription);
-router.get('/admin/change-code/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeCode);
-router.get('/admin/change-portfolio/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePortfolio);
-router.get('/admin/change-dd/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDD);
-router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePM);
-router.get('/admin/change-dm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDM);
-router.get('/admin/create-reassessment/:assessmentID', isAuthenticated, isAdmin, adminController.g_createReassessment);
-
+router.get('/admin/change-type/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changetype);
+router.get('/admin/change-phase/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changePhase);
+router.get('/admin/change-name/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeName);
+router.get('/admin/change-description/:assessmentID', isAuthenticated, validateParamIsInteger('assessmentID'), isAdmin, adminController.g_changeDescription);
+router.get('/admin/change-code/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeCode);
+router.get('/admin/change-portfolio/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changePortfolio);
+router.get('/admin/change-dd/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeDD);
+router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changePM);
+router.get('/admin/change-dm/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeDM);
+router.get('/admin/create-reassessment/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_createReassessment);
+router.get("/admin/surveys", isAuthenticated, isAdmin, adminController.g_surveys);
+router.get("/admin/survey/:surveyID", isAuthenticated, isAdmin, adminController.g_surveyResponse);
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
 router.post("/admin/remove-panel/", isAuthenticated, isAdmin, adminController.p_removepanel);
@@ -247,6 +244,7 @@ router.post('/admin/assessor-change-cross-gov', isAuthenticated, isAdmin, adminC
 router.post('/admin/assessor-change-lead', isAuthenticated, isAdmin, adminController.p_changeAssessorLead);
 router.post('/admin/assessor-change-role', isAuthenticated, isAdmin, adminController.p_changeAssessorRole);
 router.post('/admin/assessor-change-external', isAuthenticated, isAdmin, adminController.p_changeAssessorExternal);
+router.post('/admin/assessor-change-name', isAuthenticated, isAdmin, adminController.p_changeAssessorName);
 router.post("/admin/change-primary-contact", isAuthenticated, isAdmin, adminController.p_changePrimaryContact);
 router.post("/admin/add-artefact", isAuthenticated, isAdmin, adminController.p_addartefact);
 router.post("/admin/remove-artefact", isAuthenticated, isAdmin, adminController.p_removeartefact);
@@ -268,17 +266,17 @@ router.get('/analysis/portfolio/:name', isAuthenticated, analysisController.g_po
 // ASSESS ROUTES
 router.get('/assess', isAuthenticated, isAssessor, assessController.g_index);
 router.get('/assess/previous', isAuthenticated, isAssessor, assessController.g_previous);
-router.get("/assess/overview/:assessmentID", isAuthenticated, isAssessor, assessController.g_overview);
-router.get("/assess/report/:assessmentID", isAuthenticated, isAssessor, assessController.g_report);
-router.get("/assess/panel/:assessmentID", isAuthenticated, isAssessor, assessController.g_panel);
-router.get("/assess/artefacts/:assessmentID", isAuthenticated, isAssessor, assessController.g_artefacts);
-router.get("/assess/team/:assessmentID", isAuthenticated, isAssessor, assessController.g_team);
-router.get("/assess/report-rating/:assessmentID", isAuthenticated, isAssessor, assessController.g_reportRating);
-router.get("/assess/report-panel-comments/:assessmentID", isAuthenticated, isAssessor, assessController.g_reportPanelComments);
-router.get("/assess/report-section/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSection);
-router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSectionActions);
-router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, isAssessor, assessController.g_reportSectionActionsAdd);
-router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, isAssessor, assessController.g_reportSectionActionsManage);
+router.get("/assess/overview/:assessmentID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_overview);
+router.get("/assess/report/:assessmentID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_report);
+router.get("/assess/panel/:assessmentID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_panel);
+router.get("/assess/artefacts/:assessmentID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_artefacts);
+router.get("/assess/team/:assessmentID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_team);
+router.get("/assess/report-rating/:assessmentID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportRating);
+router.get("/assess/report-panel-comments/:assessmentID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportPanelComments);
+router.get("/assess/report-section/:assessmentID/:standard", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSection);
+router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionActions);
+router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionActionsAdd);
+router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, isAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionActionsManage);
 router.post("/assess/report-section", isAuthenticated, isAssessor, assessController.p_reportSection);
 router.post("/assess/report-section-actions-add", isAuthenticated, isAssessor, assessController.p_reportSectionActionsAdd);
 router.post("/assess/report-section-actions-manage", isAuthenticated, isAssessor, assessController.p_reportSectionActionsManage);
@@ -288,9 +286,9 @@ router.post("/assess/pr-report", isAuthenticated, isAssessor, assessController.p
 
 // REPORTS ROUTES
 router.get('/reports', isAuthenticated, reportsController.g_index);
-router.get('/reports/report/:assessmentID', isAuthenticated, reportsController.g_report);
-router.get("/report/generate-doc/:assessmentID", isAuthenticated, reportsController.g_doc);
-router.get("/report/generate-excel/:assessmentID", isAuthenticated, reportsController.g_excel);
+router.get('/reports/report/:assessmentID', isAuthenticated, validateParamIsInteger('assessmentID'), reportsController.g_report);
+router.get("/report/generate-doc/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), reportsController.g_doc);
+router.get("/report/generate-excel/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), reportsController.g_excel);
 
 // Service Admin routes
 router.get('/service-admin/create-department', isAuthenticated, serviceAdminController.g_createDepartment);

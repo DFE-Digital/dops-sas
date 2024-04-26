@@ -43,9 +43,10 @@ isAssessor
 
     <div class="govuk-grid-column-full">
 
-   
 
-        <p>As an assessor, you can <a href="/volunteer">view and volunteer</a> for an upcoming assessment or peer review.</p>
+
+        <p>As an assessor, you can <a href="/volunteer">view and volunteer</a> for an upcoming assessment or peer
+            review.</p>
 
 
         {% if assessments | length > 0 %}
@@ -69,18 +70,18 @@ isAssessor
                     </th>
                     <td class="govuk-table__cell">{{record.Phase}}</td>
                     <td class="govuk-table__cell">{{record.Type}}</td>
-        
-                  
+
+
                     <td class="govuk-table__cell">{{record.AssessmentDateTime|date('D MMM YYYY')}}
-                    </td>  
+                    </td>
                     <td class="govuk-table__cell">
-                    {% if record.Status == "Team Review" or record.Status
-                                        == "SA Publish" or record.Status == "Published" %}
-                                        <strong
-                                            class="govuk-tag govuk-tag--{{record.Outcome | lower}}">{{record.Outcome}}</strong>
-                                        {% else %}
-                                        <strong class="govuk-tag">Not rated</strong>
-                                        {% endif %}</td>
+                        {% if record.Status == "Team Review" or record.Status
+                        == "SA Publish" or record.Status == "Published" %}
+                        <strong class="govuk-tag govuk-tag--{{record.Outcome | lower}}">{{record.Outcome}}</strong>
+                        {% else %}
+                        <strong class="govuk-tag">Unrated</strong>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endif %}
                 {% endfor %}
@@ -90,7 +91,7 @@ isAssessor
         <p>You've not completed any assessments.</p>
         <p><a href="/volunteer">Volunteer for an upcoming assessment or peer review</a>.</p>
         {% endif %}
-        
+
 
 
     </div>

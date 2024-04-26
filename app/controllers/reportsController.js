@@ -12,7 +12,7 @@ const { getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutc
 const { getActionsForAssessmentID } = require('../models/actions');
 const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
 
-exports.g_index = async function (req, res) {
+exports.g_index = async function (req, res, next) {
 
     try {
         const assessments = await getRequestsByStatus('Published', req.session.data.User.Department);
@@ -26,7 +26,7 @@ exports.g_index = async function (req, res) {
 }
 
 
-exports.g_report = async function (req, res) {
+exports.g_report = async function (req, res, next) {
     try {
 
         const { assessmentID } = req.params;
@@ -45,7 +45,7 @@ exports.g_report = async function (req, res) {
 }
 
 
-exports.g_doc = async function (req, res) {
+exports.g_doc = async function (req, res, next) {
     try {
         const assessmentID = req.params.assessmentID;
         const assessment = await getAssessmentById(assessmentID);
@@ -126,7 +126,7 @@ exports.g_doc = async function (req, res) {
 
 
 
-exports.g_excel = async function (req, res) {
+exports.g_excel = async function (req, res, next) {
     try {
         const assessmentID = req.params.assessmentID;
 

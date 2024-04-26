@@ -46,7 +46,7 @@ const {
 const {
     UpsertUserNoToken,
     getBasicUserDetails,
-    getBasicUserDetailsByEmail,
+    getBasicUserDetailsByEmail,updateName, updateEmail 
 } = require("../models/user");
 const {
     getAllAdmins,
@@ -85,12 +85,38 @@ const {
     validateDM,
 } = require("../validation/book");
 
+
+const {
+    getSurveyData, getSurvey
+} = require("../models/survey");
+
+
+const { validateChangeName, validateChangeEmail } = require('../validation/profile');
+
 const fs = require("fs");
 const PizZip = require("pizzip");
 const Docxtemplater = require("docxtemplater");
 const ExcelJS = require("exceljs");
 
-exports.g_index = async function (req, res) {
+function calculateSurveyAverages(surveys) {
+    const filterScores = (scores) => scores.filter(score => score >= 1 && score <= 5);
+    const calculateAverage = (scores) => {
+        const validScores = filterScores(scores);
+        return validScores.length ? validScores.reduce((acc, score) => acc + score, 0) / validScores.length : 0;
+    };
+
+    const preAssessmentScores = surveys.map(survey => survey.preAssessmentCall);
+    const organisationScores = surveys.map(survey => survey.organisationOfServiceAssessment);
+    const runningScores = surveys.map(survey => survey.runningOfAssessment);
+
+    return {
+        avgPreAssessment: calculateAverage(preAssessmentScores),
+        avgOrganisation: calculateAverage(organisationScores),
+        avgRunning: calculateAverage(runningScores)
+    };
+}
+
+exports.g_index = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
         const requests = await getAllAssessments(department);
@@ -163,7 +189,7 @@ exports.g_index = async function (req, res) {
     }
 };
 
-exports.g_overview = async function (req, res) {
+exports.g_overview = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -174,7 +200,7 @@ exports.g_overview = async function (req, res) {
     }
 };
 
-exports.g_process = async function (req, res) {
+exports.g_process = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -197,7 +223,7 @@ exports.g_process = async function (req, res) {
     }
 };
 
-exports.g_panel = async function (req, res) {
+exports.g_panel = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -208,7 +234,7 @@ exports.g_panel = async function (req, res) {
     }
 };
 
-exports.g_addpanel = async function (req, res) {
+exports.g_addpanel = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -220,7 +246,7 @@ exports.g_addpanel = async function (req, res) {
     }
 };
 
-exports.g_removepanel = async function (req, res) {
+exports.g_removepanel = async function (req, res, next) {
     try {
         const { assessmentPanelID, uniqueID } = req.params;
         const assessor = await findAssessmentPanelByIdAndUniqueID(
@@ -234,7 +260,7 @@ exports.g_removepanel = async function (req, res) {
     }
 };
 
-exports.g_adddate = async function (req, res) {
+exports.g_adddate = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -244,7 +270,7 @@ exports.g_adddate = async function (req, res) {
     }
 };
 
-exports.g_assessments = async function (req, res) {
+exports.g_assessments = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
         const statuses = [
@@ -261,7 +287,7 @@ exports.g_assessments = async function (req, res) {
     }
 };
 
-exports.g_assessors = async function (req, res) {
+exports.g_assessors = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
         const assessors = await getAllAssessors(department);
@@ -271,7 +297,7 @@ exports.g_assessors = async function (req, res) {
     }
 };
 
-exports.g_assessor = async function (req, res) {
+exports.g_assessor = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         const parsedId = parseInt(assessorID,10); 
@@ -289,7 +315,7 @@ exports.g_assessor = async function (req, res) {
     }
 };
 
-exports.g_changeAssessorStatus = async function (req, res) {
+exports.g_changeAssessorStatus = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         const assessor = await getAssessor(assessorID);
@@ -301,7 +327,7 @@ exports.g_changeAssessorStatus = async function (req, res) {
     }
 };
 
-exports.g_changeAssessorCrossgov = async function (req, res) {
+exports.g_changeAssessorCrossgov = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         const assessor = await getAssessor(assessorID);
@@ -312,7 +338,7 @@ exports.g_changeAssessorCrossgov = async function (req, res) {
     }
 };
 
-exports.g_changeAssessorLead = async function (req, res) {
+exports.g_changeAssessorLead = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         const assessor = await getAssessor(assessorID);
@@ -324,7 +350,7 @@ exports.g_changeAssessorLead = async function (req, res) {
 };
 
 
-exports.g_changeAssessorRole = async function (req, res) {
+exports.g_changeAssessorRole = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         const assessor = await getAssessor(assessorID);
@@ -334,7 +360,7 @@ exports.g_changeAssessorRole = async function (req, res) {
         next(error);
     }
 };
-exports.g_changeAssessorExternal = async function (req, res) {
+exports.g_changeAssessorExternal = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         const assessor = await getAssessor(assessorID);
@@ -345,8 +371,19 @@ exports.g_changeAssessorExternal = async function (req, res) {
     }
 };
 
+exports.g_changeAssessorName = async function (req, res, next) {
+    try {
+        const { assessorID } = req.params;
+        const assessor = await getAssessor(assessorID);
 
-exports.g_admins = async function (req, res) {
+        return res.render("admin/change-assessor-name", { assessor });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+exports.g_admins = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
 
@@ -357,7 +394,7 @@ exports.g_admins = async function (req, res) {
     }
 };
 
-exports.g_removeadmin = async function (req, res) {
+exports.g_removeadmin = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
         const { userRoleID } = req.params;
@@ -368,7 +405,7 @@ exports.g_removeadmin = async function (req, res) {
     }
 };
 
-exports.g_addassessor = async function (req, res) {
+exports.g_addassessor = async function (req, res, next) {
     try {
         const departments = await getDepartments();
         return res.render("admin/add-assessor", { departments });
@@ -377,7 +414,7 @@ exports.g_addassessor = async function (req, res) {
     }
 };
 
-exports.g_assessmentHistory = async function (req, res) {
+exports.g_assessmentHistory = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         const assessor = await getAssessor(assessorID);
@@ -389,7 +426,7 @@ exports.g_assessmentHistory = async function (req, res) {
     }
 };
 
-exports.g_addadmin = async function (req, res) {
+exports.g_addadmin = async function (req, res, next) {
     try {
         return res.render("admin/add-admin");
     } catch (error) {
@@ -397,7 +434,7 @@ exports.g_addadmin = async function (req, res) {
     }
 };
 
-exports.g_addtraining = async function (req, res) {
+exports.g_addtraining = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
         return res.render("admin/add-training", { assessorID });
@@ -406,7 +443,7 @@ exports.g_addtraining = async function (req, res) {
     }
 };
 
-exports.g_removetraining = async function (req, res) {
+exports.g_removetraining = async function (req, res, next) {
     try {
         const { trainingUniqueID } = req.params;
         const training = await getTrainingByUniqueID(trainingUniqueID);
@@ -417,7 +454,7 @@ exports.g_removetraining = async function (req, res) {
     }
 };
 
-exports.g_report = async function (req, res) {
+exports.g_report = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -436,7 +473,7 @@ exports.g_report = async function (req, res) {
     }
 };
 
-exports.g_artefacts = async function (req, res) {
+exports.g_artefacts = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -447,7 +484,7 @@ exports.g_artefacts = async function (req, res) {
     }
 };
 
-exports.g_team = async function (req, res) {
+exports.g_team = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -458,7 +495,7 @@ exports.g_team = async function (req, res) {
     }
 };
 
-exports.g_reporting = async function (req, res) {
+exports.g_reporting = async function (req, res, next) {
     try {
         return res.render("admin/reporting/index");
     } catch (error) {
@@ -466,7 +503,7 @@ exports.g_reporting = async function (req, res) {
     }
 };
 
-exports.g_reportingAssessmentsAndPanels = async function (req, res) {
+exports.g_reportingAssessmentsAndPanels = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
         const assessments = await getActiveAssessmentsWithAssessorData(department);
@@ -479,7 +516,7 @@ exports.g_reportingAssessmentsAndPanels = async function (req, res) {
     }
 };
 
-exports.g_exportAssessmentReport = async function (req, res) {
+exports.g_exportAssessmentReport = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
         // Assuming getActiveAssessmentsWithAssessorData returns data in the structure matching the HTML table
@@ -554,7 +591,7 @@ exports.g_exportAssessmentReport = async function (req, res) {
     }
 };
 
-exports.g_addartefact = async function (req, res) {
+exports.g_addartefact = async function (req, res, next) {
     try {
         const assessmentID = req.params.assessmentID;
         const assessment = await getAssessmentById(assessmentID);
@@ -566,7 +603,7 @@ exports.g_addartefact = async function (req, res) {
     }
 };
 
-exports.g_removeartefact = async function (req, res) {
+exports.g_removeartefact = async function (req, res, next) {
     try {
         const { artefactID, uniqueID } = req.params;
         const artefact = await getArtefactByIdAndUniqueID(artefactID, uniqueID);
@@ -578,7 +615,7 @@ exports.g_removeartefact = async function (req, res) {
     }
 };
 
-exports.g_changetype = async function (req, res) {
+exports.g_changetype = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -588,7 +625,7 @@ exports.g_changetype = async function (req, res) {
     }
 };
 
-exports.g_changePhase = async function (req, res) {
+exports.g_changePhase = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -598,7 +635,7 @@ exports.g_changePhase = async function (req, res) {
     }
 };
 
-exports.g_changeName = async function (req, res) {
+exports.g_changeName = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -608,7 +645,7 @@ exports.g_changeName = async function (req, res) {
     }
 };
 
-exports.g_changeDescription = async function (req, res) {
+exports.g_changeDescription = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -617,7 +654,7 @@ exports.g_changeDescription = async function (req, res) {
         next(error);
     }
 };
-exports.g_changeCode = async function (req, res) {
+exports.g_changeCode = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -626,7 +663,7 @@ exports.g_changeCode = async function (req, res) {
         next(error);
     }
 };
-exports.g_changePortfolio = async function (req, res) {
+exports.g_changePortfolio = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -635,7 +672,7 @@ exports.g_changePortfolio = async function (req, res) {
         next(error);
     }
 };
-exports.g_changeDD = async function (req, res) {
+exports.g_changeDD = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -649,7 +686,7 @@ exports.g_changeDD = async function (req, res) {
     }
 };
 
-exports.g_changePM = async function (req, res) {
+exports.g_changePM = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -663,7 +700,7 @@ exports.g_changePM = async function (req, res) {
     }
 };
 
-exports.g_changeDM = async function (req, res) {
+exports.g_changeDM = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -677,7 +714,7 @@ exports.g_changeDM = async function (req, res) {
     }
 };
 
-exports.g_createReassessment = async function (req, res) {
+exports.g_createReassessment = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -695,6 +732,52 @@ exports.g_createReassessment = async function (req, res) {
         next(error);
     }
 };
+
+
+exports.g_surveys = async function (req, res, next) {
+    try {
+        // Extract department ID from the user session
+        const departmentID = req.session.data.User.Department;
+        
+        if (!departmentID) {
+            const error = new Error("Department ID is required but was not found in the session.");
+            error.status = 400; // Bad Request
+            throw error;
+        }
+
+        const surveys = await getSurveyData(departmentID);
+      
+        const { avgPreAssessment, avgOrganisation, avgRunning } = calculateSurveyAverages(surveys);
+
+        return res.render('admin/surveys', { 
+            surveys,
+            avgPreAssessment,
+            avgOrganisation,
+            avgRunning
+        });
+      
+    } catch (error) {
+        return next(error);
+    }
+};
+
+
+exports.g_surveyResponse = async function (req, res, next) {
+    try {
+        // Extract department ID from the user session
+        const {surveyID } = req.params;
+        const survey = await getSurvey(surveyID);
+        const assessors = await assessmentPanelExtended(survey.AssessmentID)
+        return res.render('admin/survey-response', { 
+            survey, assessors
+        });
+      
+    } catch (error) {
+        return next(error);
+    }
+};
+
+
 
 // POSTS
 
@@ -736,7 +819,7 @@ exports.p_addartefact = [
     },
 ];
 
-exports.p_removeartefact = async function (req, res) {
+exports.p_removeartefact = async function (req, res, next) {
     try {
         const { ArtefactID, UniqueID } = req.body;
 
@@ -873,7 +956,7 @@ exports.p_addpanel = [
     },
 ];
 
-exports.p_removepanel = async function (req, res) {
+exports.p_removepanel = async function (req, res, next) {
     try {
         const { AssessmentPanelID, UniqueID, AssessmentID } = req.body;
         await deleteAssessmentPanelMember(UniqueID);
@@ -883,7 +966,7 @@ exports.p_removepanel = async function (req, res) {
     }
 };
 
-exports.p_adddate = async function (req, res) {
+exports.p_adddate = async function (req, res, next) {
     try {
         const userID = req.session.data.User.UserID;
         const {
@@ -913,7 +996,7 @@ exports.p_adddate = async function (req, res) {
     }
 };
 
-exports.p_addassessor = async function (req, res) {
+exports.p_addassessor = async function (req, res, next) {
     try {
         const user = req.session.data.User;
 
@@ -1035,7 +1118,7 @@ exports.p_addassessor = async function (req, res) {
     }
 };
 
-exports.p_sendReport = async function (req, res) {
+exports.p_sendReport = async function (req, res, next) {
     try {
         const { AssessmentID } = req.body;
         const assessment = await getAssessmentById(AssessmentID);
@@ -1086,7 +1169,7 @@ exports.p_sendReport = async function (req, res) {
     }
 };
 
-exports.p_publishReport = async function (req, res) {
+exports.p_publishReport = async function (req, res, next) {
     try {
         const { AssessmentID } = req.body;
         const user = req.session.data.User;
@@ -1187,7 +1270,7 @@ exports.p_addadmin = [
     },
 ];
 
-exports.p_removeadmin = async function (req, res) {
+exports.p_removeadmin = async function (req, res, next) {
     try {
         const { userRoleID } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1257,7 +1340,7 @@ exports.p_addTraining = [
     },
 ];
 
-exports.p_removeTraining = async function (req, res) {
+exports.p_removeTraining = async function (req, res, next) {
     try {
         const { uniqueID } = req.body;
         const training = await getTrainingByUniqueID(uniqueID);
@@ -1272,7 +1355,7 @@ exports.p_removeTraining = async function (req, res) {
     }
 };
 
-exports.p_changeAssessorStatus = async function (req, res) {
+exports.p_changeAssessorStatus = async function (req, res, next) {
     try {
         const { AssessorID, changeStatus } = req.body;
 
@@ -1286,7 +1369,7 @@ exports.p_changeAssessorStatus = async function (req, res) {
     }
 };
 
-exports.p_changeAssessorCrossgov = async function (req, res) {
+exports.p_changeAssessorCrossgov = async function (req, res, next) {
     try {
         const { AssessorID, crossGovAssessor } = req.body;
 
@@ -1300,7 +1383,7 @@ exports.p_changeAssessorCrossgov = async function (req, res) {
     }
 };
 
-exports.p_changeAssessorLead = async function (req, res) {
+exports.p_changeAssessorLead = async function (req, res, next) {
     try {
         const { AssessorID, leadAssessor } = req.body;
 
@@ -1314,7 +1397,7 @@ exports.p_changeAssessorLead = async function (req, res) {
     }
 };
 
-exports.p_changeAssessorRole = async function (req, res) {
+exports.p_changeAssessorRole = async function (req, res, next) {
     try {
         const { AssessorID, Role } = req.body;
 
@@ -1327,7 +1410,7 @@ exports.p_changeAssessorRole = async function (req, res) {
     }
 };
 
-exports.p_changeAssessorExternal = async function (req, res) {
+exports.p_changeAssessorExternal = async function (req, res, next) {
     try {
         const { AssessorID, externalAssessor } = req.body;
 
@@ -1342,9 +1425,36 @@ exports.p_changeAssessorExternal = async function (req, res) {
 };
 
 
+exports.p_changeAssessorName = [
+    validateChangeName,
+    async (req, res, next) => {
+        try {
+            const errors = validationResult(req);
+            const { AssessorID, firstName, lastName } = req.body;
+
+            console.log(errors)
+  const assessor = await getAssessor(AssessorID);
+            if (!errors.isEmpty()) {
+              
+                return res.render('admin/change-assessor-name', {
+                    errors: errors.array(), assessor
+                });
+            }
+
+        
+            // Update existing assessment
+            await updateName(firstName, lastName, assessor.UserID);
+
+            return res.redirect(`/admin/assessor/${AssessorID}`);
+        } catch (error) {
+            next(error)
+        }
+
+    }
+];
 
 //Save change primary contact email
-exports.p_changePrimaryContact = async function (req, res) {
+exports.p_changePrimaryContact = async function (req, res, next) {
     try {
         const { AssessmentID, primaryContactEmail } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1390,7 +1500,7 @@ exports.p_changePrimaryContact = async function (req, res) {
     }
 };
 
-exports.p_changeType = async function (req, res) {
+exports.p_changeType = async function (req, res, next) {
     try {
         const { AssessmentID, Type } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1405,7 +1515,7 @@ exports.p_changeType = async function (req, res) {
     }
 };
 
-exports.p_changePhase = async function (req, res) {
+exports.p_changePhase = async function (req, res, next) {
     try {
         const { AssessmentID, Phase } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1420,7 +1530,7 @@ exports.p_changePhase = async function (req, res) {
     }
 };
 
-exports.p_changeName = async function (req, res) {
+exports.p_changeName = async function (req, res, next) {
     try {
         const { AssessmentID, Name } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1435,7 +1545,7 @@ exports.p_changeName = async function (req, res) {
     }
 };
 
-exports.p_changeDescription = async function (req, res) {
+exports.p_changeDescription = async function (req, res, next) {
     try {
         const { AssessmentID, Description } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1450,7 +1560,7 @@ exports.p_changeDescription = async function (req, res) {
     }
 };
 
-exports.p_changeCode = async function (req, res) {
+exports.p_changeCode = async function (req, res, next) {
     try {
         const { AssessmentID, ProjectCode } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1465,7 +1575,7 @@ exports.p_changeCode = async function (req, res) {
     }
 };
 
-exports.p_changePortfolio = async function (req, res) {
+exports.p_changePortfolio = async function (req, res, next) {
     try {
         const { AssessmentID, Portfolio } = req.body;
         const userID = req.session.data.User.UserID;
@@ -1626,7 +1736,7 @@ exports.p_changeDM = [
     },
 ];
 
-exports.p_createReassessment = async function (req, res) {
+exports.p_createReassessment = async function (req, res, next) {
     try {
         const { AssessmentID } = req.body;
         const userID = req.session.data.User.UserID;

@@ -52,132 +52,85 @@
 <h2 class="govuk-heading-l">Analysis</h2>
 <p>Analysis of completed service assessments and individual service standard outcomes.</p>
 
-
-
-<div class="grid">
-    <!-- Header row for question numbers -->
-  
-    
-    <div class="header-row">
-        <div class="header-cell assessment-name ">Service name</div>
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">Assessments and outcomes by Service Standard</caption>
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header govuk-!-width-one-third">Service</th>
         {% for i in range(1, 15) %}
-        <a class="header-cell" target="_blank" href="/redirector/service-standard/{{i}}">{{ i }}</a>
+        <th scope="col" class="govuk-table__header"><a class="govuk-link headercell" target="_blank" href="/redirector/service-standard/{{i}}"><span class="govuk-visually-hidden">Service Standard </span> {{ i }}</a></th>
         {% endfor %}
-    </div>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
 
-    {% for item, group in heatmap %}
-    <div class="row">
-        <div class="assessment-name">
-            <a href="/reports/report/{{ item }}" class="govuk-link govuk-link--inverse"
-                title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a>
-        </div>
+        {% for item, group in heatmap %}
 
-        {% for item in group %}
-        <a href="/reports/report/{{ item.AssessmentID }}/#point-{{ item.Standard }}"
-            class="cell {{ item.Outcome | lower }}"
+
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">  <a href="/reports/report/{{ item }}" class="govuk-link"
+            title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a></th>
+
+            {% for item in group %}
+        <td class="govuk-table__cell">
+            <a href="/reports/report/{{ item.AssessmentID }}/#point-{{ item.Standard }}"
+            class="govuk-link {{ item.Outcome | lower }}"
             aria-label="{{ group[0].Name}} outcome:{{ item.Outcome }} for standard {{ item.Standard }}" tabindex="0">{{
             item.Outcome | OutcomeForGrid  }}</a>
+        </td>
         {% endfor %}
-    </div>
-    {% endfor %}
-</div>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 
 
 
 
 <style>
-    .grid {
-        display: flex;
-        flex-direction: column;
-    }
 
-    .header-row,
-    .row {
-        display: flex;
-        margin-bottom: 5px;
-        /* Adds gap between rows */
-    }
 
-    .header-cell,
-    .assessment-name,
-    .cell {
-        background-color: #505a5f;
-        /* or any color of your choice */
+
+
+    thead > tr > th.govuk-govuk-table__header, tbody > tr > td.govuk-table__cell{
         min-width: 42px;
-        width: 50px;
-        height: 46px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none;
-        color: white;
-        font-size: 16px;
-        margin-right: 5px;
-        /* Adds gap between cells */
+        text-align: center !important;
 
     }
 
-    .header-cell {
-        font-weight: 700;
-        color: white !important;
-    }
-
-    a.header-cell:hover {
-        background-color: #737b7f;
-    }
-
-    .header-cell:focus {
-        font-weight: 700;
-        color: black !important;
-    }
-
-    .header-cell-full {
+    .headercell{
         background-color: #505a5f;
-        /* or any color of your choice */
-        color: white;
-        font-size: 16px;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: calc(70px * 14 + 5px * 13);
-        /* Width to span 14 cells */
-        margin-right: 0;
-        /* No margin on the right */
-    }
-
-    .header-cell:last-child,
-    .cell:last-child {
-        margin-right: 0;
-        /* Removes margin for the last cell in a row */
-    }
-
-    .assessment-name {
-        background-color: #505a5f;
-        /* or any color of your choice */
-        color: ffffff;
-        /* Adjust text color as needed */
-        margin-right: 5px;
-        /* Maintain gap between name and first cell */
-        flex: auto !important;
-        justify-content: left;
-        padding-left: 15px;
+        color: #ffffff !important;
         font-weight: 600;
-
+        display: block;
+        text-align: center;
+        padding: 8px 12px;
+        text-decoration: none;
     }
-
-
+    .headercell:focus,  .green:focus,  .red:focus,  .amber:focus{
+        color: #0b0c0c !important;
+    }
 
     .green {
         background-color: #00703c;
         color: #ffffff !important;
         font-weight: 600;
+        display: block;
+        text-align: center;
+        padding: 8px 12px;
+        text-decoration: none;
     }
 
     .amber {
         background-color: #f47738;
         color: #ffffff !important;
         font-weight: 600;
+        display: block;
+        text-align: center;
+        padding: 8px 12px;
+        text-decoration: none;
         /* Amber color */
     }
 
@@ -185,12 +138,20 @@
         background-color: #d4351c;
         color: #ffffff !important;
         font-weight: 600;
+        display: block;
+        text-align: center;
+        padding: 8px 12px;
+        text-decoration: none;
     }
 
     .na {
         background-color: #505a5f;
         color: #ffffff !important;
         font-weight: 600;
+        display: block;
+        text-align: center;
+        padding: 8px 12px;
+        text-decoration: none;
     }
 
     .cell:focus {

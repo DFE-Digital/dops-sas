@@ -1,0 +1,100 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Surveys" %}
+{% set view = "surveys" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <h2 class="govuk-!-heading-l">Survey response data</h2>
+
+        <div class="dfe-grid-container dfe-grid-container--wider govuk-!-margin-top-5">
+
+
+
+            <div class="dfe-card">
+                <div class="dfe-card-container">
+                    <p>Pre-assessment</p>
+                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgPreAssessment}}</h3>
+                    <p class="govuk-!-margin-bottom-0 govuk-body-s">Out of 5</p>
+                </div>
+            </div>
+            <div class="dfe-card">
+                <div class="dfe-card-container">     <p>Organisation</p>
+                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgOrganisation}}</h3>
+               
+                    <p class="govuk-!-margin-bottom-0 govuk-body-s">Out of 5</p>
+                </div>
+            </div>
+            <div class="dfe-card">
+                <div class="dfe-card-container">   <p>Assessment</p>
+                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgRunning}}</h3>
+                 
+                    <p class="govuk-!-margin-bottom-0 govuk-body-s">Out of 5</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+              <h2 class="govuk-summary-card__title">
+                Responses
+              </h2>
+              <ul class="govuk-summary-card__actions">
+                <li class="govuk-summary-card__action">
+                  <a class="govuk-link" href="/admin/surveys/download">Download<span class="govuk-visually-hidden">all survey responses in Excel</span></a>
+                </li>
+              </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Showing 20 of the most recent responses</caption>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Assessment</th>
+                <th scope="col" class="govuk-table__header">Outcome</th>
+                <th scope="col" class="govuk-table__header">Pre-assessment</th>
+                <th scope="col" class="govuk-table__header">Organisation</th>
+                <th scope="col" class="govuk-table__header">Assessment</th>
+                <th scope="col" class="govuk-table__header">Rating feedback</th>
+                <th scope="col" class="govuk-table__header">Assessor feedback</th>
+                <th scope="col" class="govuk-table__header">Other feedback</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for survey in surveys %}
+                {% if loop.index < 21 %}
+              <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header"><a href="/reports/report/{{survey.AssessmentID}}">{{survey.Name}}</a></th>
+                <td class="govuk-table__cell"><strong class="govuk-tag govuk-!-font-size-16 govuk-tag--{{survey.Outcome | lower}}">{% if survey.Outcome === 'Not rated' %} Unrated {% else %} {{survey.Outcome }} {% endif %}</strong></td>
+                <td class="govuk-table__cell">{{survey.preAssessmentCall}}</td>
+                <td class="govuk-table__cell">{{survey.organisationOfServiceAssessment}}</td>
+                <td class="govuk-table__cell">{{survey.runningOfAssessment}}</td>
+                <td class="govuk-table__cell">{% if survey.feedbackOnLowScores %}<a href="/admin/survey/{{survey.id}}">Comments</a>{% else %}No comments{% endif %}</td>
+                <td class="govuk-table__cell">{% if survey.specificFeedbackForAssessor %}<a href="/admin/survey/{{survey.id}}">Comments</a>{% else %}No comments{% endif %}</td>
+                <td class="govuk-table__cell">{% if survey.furtherComments %}<a href="/admin/survey/{{survey.id}}">Comments</a>{% else %}No comments{% endif %}</td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+   
+    </div>
+
+       
+    </div>
+   
+</div>
+
+{% endblock %}

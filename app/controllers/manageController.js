@@ -60,7 +60,7 @@ exports.g_overview = async function (req, res, next) {
     }
 }
 
-exports.g_panel = async function (req, res) {
+exports.g_panel = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -71,7 +71,7 @@ exports.g_panel = async function (req, res) {
     }
 }
 
-exports.g_request = async function (req, res) {
+exports.g_request = async function (req, res, next) {
     try {
         const assessmentID = req.params.assessmentID;
         const assessment = await getAssessmentById(assessmentID);
@@ -97,7 +97,7 @@ exports.g_request = async function (req, res) {
     }
 }
 
-exports.g_report = async function (req, res) {
+exports.g_report = async function (req, res, next) {
     try {
         const user = req.session.data.userDetails;
         const assessmentID = req.params.assessmentID;
@@ -124,7 +124,7 @@ exports.g_report = async function (req, res) {
 }
 
 
-exports.g_artefacts = async function (req, res) {
+exports.g_artefacts = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -136,7 +136,7 @@ exports.g_artefacts = async function (req, res) {
 }
 
 
-exports.g_team = async function (req, res) {
+exports.g_team = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
@@ -147,7 +147,7 @@ exports.g_team = async function (req, res) {
     }
 }
 
-exports.g_addteam = async function (req, res) {
+exports.g_addteam = async function (req, res, next) {
     try {
         const assessmentID = req.params.assessmentID;
         const assessment = await getAssessmentById(assessmentID);
@@ -159,7 +159,7 @@ exports.g_addteam = async function (req, res) {
     }
 }
 
-exports.g_addartefact = async function (req, res) {
+exports.g_addartefact = async function (req, res, next) {
     try {
         const assessmentID = req.params.assessmentID;
         const assessment = await getAssessmentById(assessmentID);
@@ -173,7 +173,7 @@ exports.g_addartefact = async function (req, res) {
 
 
 
-exports.g_removeartefact = async function (req, res) {
+exports.g_removeartefact = async function (req, res, next) {
     try {
         const { artefactID, uniqueID } = req.params;
         const artefact = await getArtefactByIdAndUniqueID(artefactID, uniqueID);
@@ -185,7 +185,7 @@ exports.g_removeartefact = async function (req, res) {
     }
 }
 
-exports.g_removeteam = async function (req, res) {
+exports.g_removeteam = async function (req, res, next) {
     try {
         const { teamID, uniqueID } = req.params;
 
@@ -236,7 +236,7 @@ exports.p_addartefact = [
 ];
 
 
-exports.p_removeartefact = async function (req, res) {
+exports.p_removeartefact = async function (req, res, next) {
 
     try {
         const { ArtefactID, UniqueID } = req.body;
@@ -299,7 +299,7 @@ exports.p_addteam = [
 ];
 
 
-exports.p_removeteam = async function (req, res) {
+exports.p_removeteam = async function (req, res, next) {
     try {
         const { ID, UniqueID } = req.body;
 
@@ -319,7 +319,7 @@ exports.p_removeteam = async function (req, res) {
 };
 
 
-exports.p_acceptReport = async function (req, res) {
+exports.p_acceptReport = async function (req, res, next) {
     try {
 
         const { AssessmentID } = req.body;
