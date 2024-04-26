@@ -81,6 +81,7 @@ function validateParamIsInteger(paramName) {
     return function(req, res, next) {
         const value = parseInt(req.params[paramName], 10);
         // Check if value is an integer and within the int range
+
         if (!Number.isInteger(value) || value < -2147483648 || value > 2147483647) {
 
             if(paramName === 'assessmentID')
