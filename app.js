@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression');
 const appRoutes = require('./app/routes');
 const nunjucks = require('nunjucks');
+const expressWinston = require('express-winston');
 const winston = require('winston');
 const dateFilter = require('nunjucks-date-filter');
 const session = require('express-session');
@@ -117,21 +118,44 @@ app.use('/assets', express.static('public/assets'));
 // Routes
 app.use('/', appRoutes);
 
-const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
-  format: winston.format.json(),
-  transports: [new winston.transports.Console()],
-});
 
+
+
+app.use(expressWinston.logger({
+  transports: [
+      new winston.transports.Console({
+          json: true,
+          colorize: true
+      })
+  ],
+  format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.json()
+  ),
+  meta: true, // optional: control whether you want to log the meta data about the request (default to true)
+  msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. 
+  expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true.
+  colorize: false,
+  ignoreRoute: function (req, res) { return req.url.startsWith('/assets'); } // Function to determine if logging is skipped
+}));
+
+const logger = winston.createLogger({
+  level: 'error',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 
 // Generic Error handling
 app.use((err, req, res, next) => {
-  logger.message(err.stack);
-  res.status(500).send(err);
+  logger.error(err.stack);  // Log the error stack
+  res.status(500).send('Something went wrong, DesignOps have been notified!');
 });
-
-
 
 
 // Start server
