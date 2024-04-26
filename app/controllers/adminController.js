@@ -32,6 +32,10 @@ const {
     getAssessorByUserID,
     deleteTraining,
     updateAssessor,
+    updateAssessorXGov,
+    updateAssessorLead,
+    updateAssessorRole,
+    updateAssessorExternal
 } = require("../models/assessors");
 const {
     validateRequest,
@@ -290,6 +294,51 @@ exports.g_changeAssessorStatus = async function (req, res) {
         next(error);
     }
 };
+
+exports.g_changeAssessorCrossgov = async function (req, res) {
+    try {
+        const { assessorID } = req.params;
+        const assessor = await getAssessor(assessorID);
+
+        return res.render("admin/change-assessor-cross-gov", { assessor });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.g_changeAssessorLead = async function (req, res) {
+    try {
+        const { assessorID } = req.params;
+        const assessor = await getAssessor(assessorID);
+
+        return res.render("admin/change-assessor-lead", { assessor });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+exports.g_changeAssessorRole = async function (req, res) {
+    try {
+        const { assessorID } = req.params;
+        const assessor = await getAssessor(assessorID);
+
+        return res.render("admin/change-assessor-role", { assessor });
+    } catch (error) {
+        next(error);
+    }
+};
+exports.g_changeAssessorExternal = async function (req, res) {
+    try {
+        const { assessorID } = req.params;
+        const assessor = await getAssessor(assessorID);
+
+        return res.render("admin/change-assessor-external", { assessor });
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 exports.g_admins = async function (req, res) {
     try {
@@ -1230,6 +1279,63 @@ exports.p_changeAssessorStatus = async function (req, res) {
         next(error);
     }
 };
+
+exports.p_changeAssessorCrossgov = async function (req, res) {
+    try {
+        const { AssessorID, crossGovAssessor } = req.body;
+
+        // Update assessor Active status
+        const status = crossGovAssessor === "Yes" ? 1 : 0;
+        await updateAssessorXGov(AssessorID, status);
+
+        return res.redirect(`/admin/assessor/${AssessorID}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.p_changeAssessorLead = async function (req, res) {
+    try {
+        const { AssessorID, leadAssessor } = req.body;
+
+        // Update assessor Active status
+        const status = leadAssessor === "Yes" ? 1 : 0;
+        await updateAssessorLead(AssessorID, status);
+
+        return res.redirect(`/admin/assessor/${AssessorID}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.p_changeAssessorRole = async function (req, res) {
+    try {
+        const { AssessorID, Role } = req.body;
+
+        // Update assessor Active status
+        await updateAssessorRole(AssessorID, Role);
+
+        return res.redirect(`/admin/assessor/${AssessorID}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.p_changeAssessorExternal = async function (req, res) {
+    try {
+        const { AssessorID, externalAssessor } = req.body;
+
+        // Update assessor Active status
+        const status = externalAssessor === "Yes" ? 1 : 0;
+        await updateAssessorExternal(AssessorID, status);
+
+        return res.redirect(`/admin/assessor/${AssessorID}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 
 //Save change primary contact email
 exports.p_changePrimaryContact = async function (req, res) {

@@ -182,6 +182,10 @@ router.get("/admin/remove-training/:trainingUniqueID", isAuthenticated, isAdmin,
 router.get("/admin/assessment-history/:assessorID", isAuthenticated, isAdmin, adminController.g_assessmentHistory);
 router.get("/admin/reporting/export-assessment-report", isAuthenticated, isAdmin, adminController.g_exportAssessmentReport);
 router.get("/admin/assessor-change-status/:assessorID", isAuthenticated, isAdmin, adminController.g_changeAssessorStatus);
+router.get('/admin/assessor-change-cross-gov/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorCrossgov);
+router.get('/admin/assessor-change-lead/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorLead);
+router.get('/admin/assessor-change-role/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorRole);
+router.get('/admin/assessor-change-external/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorExternal);
 router.get("/admin/add-artefact/:assessmentID", isAuthenticated, isAdmin, adminController.g_addartefact);
 router.get("/admin/remove-artefact/:artefactID/:uniqueID", isAuthenticated, isAdmin, adminController.g_removeartefact);
 router.get('/admin/change-type/:assessmentID', isAuthenticated, isAdmin, adminController.g_changetype);
@@ -194,6 +198,7 @@ router.get('/admin/change-dd/:assessmentID', isAuthenticated, isAdmin, adminCont
 router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changePM);
 router.get('/admin/change-dm/:assessmentID', isAuthenticated, isAdmin, adminController.g_changeDM);
 router.get('/admin/create-reassessment/:assessmentID', isAuthenticated, isAdmin, adminController.g_createReassessment);
+
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
 router.post("/admin/remove-panel/", isAuthenticated, isAdmin, adminController.p_removepanel);
@@ -206,6 +211,10 @@ router.post("/admin/remove-admin", isAuthenticated, isAdmin, adminController.p_r
 router.post("/admin/add-training", isAuthenticated, isAdmin, adminController.p_addTraining);
 router.post("/admin/remove-training", isAuthenticated, isAdmin, adminController.p_removeTraining);
 router.post("/admin/assessor-change-status", isAuthenticated, isAdmin, adminController.p_changeAssessorStatus);
+router.post('/admin/assessor-change-cross-gov', isAuthenticated, isAdmin, adminController.p_changeAssessorCrossgov);
+router.post('/admin/assessor-change-lead', isAuthenticated, isAdmin, adminController.p_changeAssessorLead);
+router.post('/admin/assessor-change-role', isAuthenticated, isAdmin, adminController.p_changeAssessorRole);
+router.post('/admin/assessor-change-external', isAuthenticated, isAdmin, adminController.p_changeAssessorExternal);
 router.post("/admin/change-primary-contact", isAuthenticated, isAdmin, adminController.p_changePrimaryContact);
 router.post("/admin/add-artefact", isAuthenticated, isAdmin, adminController.p_addartefact);
 router.post("/admin/remove-artefact", isAuthenticated, isAdmin, adminController.p_removeartefact);

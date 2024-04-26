@@ -55,35 +55,27 @@
           
       </dl>
      
-        <form action="/admin/assessor-change-status" method="post">
+        <form action="/admin/assessor-change-role" method="post">
             <input type="hidden" name="AssessorID" value="{{assessor.AssessorID}}">
 
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="changeStatus-hint">
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    <h2 class="govuk-fieldset__heading">
-                        Change assessor status
-                    </h2>
-                  </legend>
-                  <div id="changeStatus-hint" class="govuk-hint">
-                    Setting the status to disabled will prevent the assessor from being assigned to any new assessments.
-                  </div>
-                  <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                    <div class="govuk-radios__item">
-                      <input class="govuk-radios__input" id="changeStatus" name="changeStatus" type="radio" value="true" {% if assessor.Active === true%}checked{% endif %}>
-                      <label class="govuk-label govuk-radios__label" for="changeStatus">
-                        Active
-                      </label>
-                    </div>
-                    <div class="govuk-radios__item">
-                      <input class="govuk-radios__input" id="changeStatus-2" name="changeStatus" type="radio" value="false" {% if assessor.Active === false%}checked{% endif %}>
-                      <label class="govuk-label govuk-radios__label" for="changeStatus-2">
-                        Disabled
-                      </label>
-                    </div>
-                  </div>
-                </fieldset>
-              </div>
+       
+            <div class="govuk-form-group {%if roleError%}govuk-form-group--error {% endif%}">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h2 class="govuk-fieldset__heading">
+                   What is their role?
+                </h2>
+              </legend>
+              {%if roleError %}
+              <p id="event-role-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span>Select a role
+              </p>
+              {% endif %}
+              <select
+                  class="govuk-select govuk-!-width-one-half role {%if roleError%}govuk-select--error govuk-input--error{% endif%} "
+                  id="Role" name="Role">
+                  {% include "./_panelroles.html" %}
+              </select>
+          </div>
             
 
             <div class="govuk-button-group">
@@ -97,4 +89,11 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    accessibleAutocomplete.enhanceSelectElement({ defaultValue: "", selectElement: document.querySelector(".role") });
+</script>
 {% endblock %}

@@ -54,38 +54,51 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            Cross-Gov assessor
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{assessor.CrossGovAssessor | BoolToYesNo }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class="govuk-link" href="/admin/assessor-change-cross-gov">Change<span
-                                    class="govuk-visually-hidden"> cross-gov assessor status</span></a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Is a lead assessor
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{assessor.LeadAssessor | BoolToYesNo }}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <a class="govuk-link" href="/admin/assessor-change-lead-assessor">Change<span
-                                    class="govuk-visually-hidden"> lead assessor status</span></a>
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
                             Profession or assessor role
                         </dt>
                         <dd class="govuk-summary-list__value">
                             {{assessor.PrimaryRole }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <a class="govuk-link" href="/admin/assessor-change-role">Change<span
+                            <a class="govuk-link" href="/admin/assessor-change-role/{{assessor.AssessorID}}">Change<span
                                     class="govuk-visually-hidden"> assessor role</span></a>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Cross-Gov assessor
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.CrossGovAssessor | BoolToYesNo }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/assessor-change-cross-gov/{{assessor.AssessorID}}">Change<span
+                                    class="govuk-visually-hidden"> cross-gov assessor status</span></a>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Can lead an assessment
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.LeadAssessor | BoolToYesNo }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/assessor-change-lead/{{assessor.AssessorID}}">Change<span
+                                    class="govuk-visually-hidden"> lead assessor status</span></a>
+                        </dd>
+                    </div>
+                   
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            External to DfE
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{assessor.ExternalAssessor | BoolToYesNo }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/assessor-change-external/{{assessor.AssessorID}}">Change<span
+                                    class="govuk-visually-hidden"> external assessor status</span></a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">

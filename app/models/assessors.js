@@ -164,7 +164,7 @@ async function deleteTraining(uniqueID) {
 /**
  * Update assessor
  * @param {number} assessorID The unique
- * @param {string} Status The status
+ * @param {boolean} Status The status
  */
 async function updateAssessor(assessorID, Status) {
     try {
@@ -179,7 +179,80 @@ async function updateAssessor(assessorID, Status) {
     }
 }
 
+/**
+ * Update assessor
+ * @param {number} assessorID The unique
+ * @param {boolean} Status The status
+ */
+async function updateAssessorXGov(assessorID, Status) {
+    try {
+        await pool.query(`
+            UPDATE public."Assessor"
+            SET "CrossGovAssessor" = $2
+            WHERE "AssessorID" = $1
+        `, [assessorID, Status]);
+    } catch (error) {
+        console.error('Error in updateAssessorXGov:', error);
+        throw error;
+    }
+}
+
+/**
+ * Update assessor
+ * @param {number} assessorID The unique
+ * @param {boolean} Status The status
+ */
+async function updateAssessorLead(assessorID, Status) {
+    try {
+        await pool.query(`
+            UPDATE public."Assessor"
+            SET "LeadAssessor" = $2
+            WHERE "AssessorID" = $1
+        `, [assessorID, Status]);
+    } catch (error) {
+        console.error('Error in updateAssessorLead:', error);
+        throw error;
+    }
+}
+
+/**
+ * Update assessor
+ * @param {number} assessorID The unique
+ * @param {string} Role The role
+ */
+async function updateAssessorRole(assessorID, Role) {
+    try {
+        await pool.query(`
+            UPDATE public."Assessor"
+            SET "PrimaryRole" = $2
+            WHERE "AssessorID" = $1
+        `, [assessorID, Role]);
+    } catch (error) {
+        console.error('Error in updateAssessorRole:', error);
+        throw error;
+    }
+}
+
+/**
+* Update assessor
+* @param {number} assessorID The unique
+* @param {boolean} Status The status
+*/
+async function updateAssessorExternal(assessorID, Status) {
+   try {
+       await pool.query(`
+           UPDATE public."Assessor"
+           SET "ExternalAssessor" = $2
+           WHERE "AssessorID" = $1
+       `, [assessorID, Status]);
+   } catch (error) {
+       console.error('Error in updateAssessorExternal:', error);
+       throw error;
+   }
+}
+
+
 
 module.exports = {
-    getAllAssessors, createAssessor, getAssessor, getAssessorByUserID, getTrainingForUser, createTraining, getTrainingByUniqueID, deleteTraining, updateAssessor
+    getAllAssessors, createAssessor, getAssessor, getAssessorByUserID, getTrainingForUser, createTraining, getTrainingByUniqueID, deleteTraining, updateAssessor, updateAssessorXGov, updateAssessorLead, updateAssessorRole, updateAssessorExternal
 };

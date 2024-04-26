@@ -1,0 +1,109 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change cross-gov assessor status" %}
+{% set view = "assessors" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <nav class="dfe-vertical-nav">
+            <ul class="dfe-vertical-nav__section">
+                <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessor/{{assessor.AssessorID}}">Overview</a>
+                </li>
+                <li class="dfe-vertical-nav__section-item ">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessment-history/{{assessor.AssessorID}}">Assessment
+                        history</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Assessor details</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessor.FirstName}}   {{assessor.LastName}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                   
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessor.EmailAddress }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                   
+                </dd>
+            </div>
+            
+        </dl>
+     
+        <form action="/admin/assessor-change-cross-gov" method="post">
+            <input type="hidden" name="AssessorID" value="{{assessor.AssessorID}}">
+
+            <div class="govuk-form-group {%if hasCrossGovError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="crossGovAssessor-hint">
+                   
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-fieldset__heading">
+                            Can they assess other department services?
+                        </h2>
+                      </legend>
+                    <div id="crossGovAssessor-hint" class="govuk-hint">
+                        They will need to have completed the cross-gov assessor training or demonstrate acceptance from
+                        CDDO
+                    </div>
+                    {%if hasCrossGovError%}
+                    <p id="passport-issued-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select if the person is a cross gov assessor
+                        or not
+                    </p>{% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="crossGovAssessor" name="crossGovAssessor"
+                                type="radio" value="Yes" {% if assessor.CrossGovAssessor == true%}checked{% endif %} />
+                            <label class="govuk-label govuk-radios__label" for="crossGovAssessor">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="crossGovAssessor-2" name="crossGovAssessor"
+                                type="radio" value="No" {% if assessor.CrossGovAssessor == false%}checked{% endif %} />
+                            <label class="govuk-label govuk-radios__label" for="crossGovAssessor-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            
+
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Save and return</button>
+                <a href="/admin/assessor/{{assessor.AssessorID}}" class="govuk-link">Cancel and return to assessor profile</a>
+            </div>
+        </form>
+
+
+
+    </div>
+</div>
+
+{% endblock %}

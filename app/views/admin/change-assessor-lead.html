@@ -1,0 +1,106 @@
+{% extends "layouts/auth.html" %}
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change lead assessor status" %}
+{% set view = "assessors" %}
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <nav class="dfe-vertical-nav">
+            <ul class="dfe-vertical-nav__section">
+                <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessor/{{assessor.AssessorID}}">Overview</a>
+                </li>
+                <li class="dfe-vertical-nav__section-item ">
+                    <a class="dfe-vertical-nav__link" href="/admin/assessment-history/{{assessor.AssessorID}}">Assessment
+                        history</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+
+        <h2 class="govuk-heading-l">Assessor details</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessor.FirstName}}   {{assessor.LastName}}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                   
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{assessor.EmailAddress }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                   
+                </dd>
+            </div>
+            
+        </dl>
+     
+        <form action="/admin/assessor-change-lead" method="post">
+            <input type="hidden" name="AssessorID" value="{{assessor.AssessorID}}">
+
+            <div class="govuk-form-group {%if hasLeadError%}govuk-form-group--error{% endif%}">
+                <fieldset class="govuk-fieldset" aria-describedby="leadAssessor-hint">
+                
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-fieldset__heading">
+                            Can they lead an assessment?
+                        </h2>
+                      </legend>
+                    <div id="leadAssessor-hint" class="govuk-hint">
+                        You'll also need to set their role even if they are a lead assessor.
+                    </div>{%if hasLeadError%}
+                    <p id="passport-issued-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Select if the person is a lead assessor or not
+                    </p>{% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="leadAssessor" name="leadAssessor" type="radio"
+                                value="Yes" {% if assessor.LeadAssessor == true%}checked{% endif %} />
+                            <label class="govuk-label govuk-radios__label" for="leadAssessor">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="leadAssessor-2" name="leadAssessor" type="radio"
+                                value="No" {% if assessor.LeadAssessor == false%}checked{% endif %} />
+                            <label class="govuk-label govuk-radios__label" for="leadAssessor-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            
+
+            <div class="govuk-button-group">
+                <button name="action" class="govuk-button" data-module="govuk-button">Save and return</button>
+                <a href="/admin/assessor/{{assessor.AssessorID}}" class="govuk-link">Cancel and return to assessor profile</a>
+            </div>
+        </form>
+
+
+
+    </div>
+</div>
+
+{% endblock %}
