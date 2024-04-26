@@ -64,13 +64,10 @@
         {% if drafts.length %}
 
         <h2 class="govuk-heading-l">Continue with a draft</h2>
-        <div class="govuk-summary-card">
-            <div class="govuk-summary-card__title-wrapper">
-                <h3 class="govuk-summary-card__title">Your drafts</h3>
+        <p>Booking requests you've started, but not yet submitted. If you no longer need a draft, select the one you want to remove, and on the following page, you'll have the option to delete it.</p>  
 
-            </div>
-            <div class="govuk-summary-card__content">
                 <table class="govuk-table ">
+                    <caption class="govuk-table__caption govuk-table__caption--m">Your drafts</caption>
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header govuk-!-width-one-third">Service</th>
@@ -95,8 +92,7 @@
 
                     </tbody>
                 </table>
-            </div>
-        </div>
+    
 
         {% endif %}
 
