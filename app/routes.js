@@ -18,11 +18,14 @@ const publicController = require('./controllers/publicController');
 const reportsController = require('./controllers/reportsController');
 const serviceAdminController = require('./controllers/serviceAdminController');
 const surveyController = require('./controllers/surveyController');
+const { param } = require('express-validator');
 
 
 // Roles to check for admin access
 const rolesToCheck = ['Department lead', 'Administrator', 'Service Administrator'];
 
+
+// TODO: #71 Move the route middleware to a separate function and import
 
 // Middleware for authentication
 function isAuthenticated(req, res, next) {
@@ -73,6 +76,34 @@ async function isAssessor(req, res, next) {
         return res.redirect('/sign-out');
     }
 }
+
+function validateParamIsInteger(paramName) {
+    return function(req, res, next) {
+        const value = parseInt(req.params[paramName], 10);
+        // Check if value is an integer and within the int range
+        if (!Number.isInteger(value) || value < -2147483648 || value > 2147483647) {
+
+            if(paramName === 'assessmentID')
+            {
+                paramName = "The assessment reference number"
+            }
+
+            if(paramName === 'assessorID')
+            {
+                paramName = "The assessor reference number"
+            }
+
+
+            const error = `${paramName} must be a valid number`;
+            return res.render('error', { error }); 
+        }
+        next();
+    };
+}
+
+module.exports = validateParamIsInteger;
+
+
 
 // Public routes
 router.get('/', publicController.g_home);
@@ -139,7 +170,7 @@ router.post("/book/request/confirm-delete", isAuthenticated, bookController.p_co
 // Manage routes
 router.get('/manage', isAuthenticated, manageController.g_manage);
 router.get("/manage/previous", isAuthenticated, manageController.g_previous);
-router.get("/manage/overview/:assessmentID", isAuthenticated, manageController.g_overview);
+router.get("/manage/overview/:assessmentID", isAuthenticated, validateParamIsInteger('assessmentID'), manageController.g_overview);
 router.get("/manage/panel/:assessmentID", isAuthenticated, manageController.g_panel);
 router.get("/manage/request/:assessmentID", isAuthenticated, manageController.g_request);
 router.get("/manage/report/:assessmentID", isAuthenticated, manageController.g_report);
@@ -227,7 +258,7 @@ router.post("/admin/change-portfolio", isAuthenticated, isAdmin, adminController
 router.post("/admin/change-dd", isAuthenticated, isAdmin, adminController.p_changeDD);
 router.post("/admin/change-pm", isAuthenticated, isAdmin, adminController.p_changePM);
 router.post("/admin/change-dm", isAuthenticated, isAdmin, adminController.p_changeDM);
-router.post("/admin/create-reassessment", isAuthenticated, isAdmin, adminController.p_createReassessment);  
+router.post("/admin/create-reassessment", isAuthenticated, isAdmin, adminController.p_createReassessment);
 
 // ANALYSIS ROUTES
 router.get('/analysis', isAuthenticated, analysisController.g_index);

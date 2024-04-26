@@ -48,7 +48,7 @@ exports.g_previous = async (req, res) => {
     }
 }
 
-exports.g_overview = async function (req, res) {
+exports.g_overview = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);

@@ -1,0 +1,23 @@
+{% extends "layouts/public.html" %}
+
+{% set pageName = "Error" %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">Sorry, an error has occured</h1>
+
+        <p>{{error}}</p>
+
+        <p class="govuk-body">You can go back and try again, or if you're tying to access something from a link, you may not have access to this page, or, you're missing part of the URL.</p>
+
+        <p>If you're still having problems, <a href="/support">get in touch with DesignOps</a> and describe what you're trying to do.</p>
+
+    </div>
+</div>
+
+
+{% endblock %}

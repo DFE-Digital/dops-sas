@@ -274,6 +274,12 @@ exports.g_assessors = async function (req, res) {
 exports.g_assessor = async function (req, res) {
     try {
         const { assessorID } = req.params;
+        const parsedId = parseInt(assessorID,10); 
+
+        if (!Number.isInteger(parsedId)) {
+            return res.redirect('/error')
+        }
+
         const assessor = await getAssessor(assessorID);
         const training = await getTrainingForUser(assessor.UserID);
 
