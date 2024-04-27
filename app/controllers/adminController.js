@@ -12,7 +12,7 @@ const {
     getAssessmentPanelByUserID,
     changePrimaryContact,
     getAllAssessments,
-    createReAssessment,
+    createReAssessment,getAllAssessmentsNotDrafts
 } = require("../models/assessmentModel");
 const {
     assessmentPanel,
@@ -530,7 +530,18 @@ exports.g_reportingAssessmentsAndPanelsForSlack = async function (req, res, next
 };
 
 
+exports.g_reportingAssessmentsAll = async function (req, res, next) {
+    try {
+        const department = req.session.data.User.Department;
+        const assessments = await getAllAssessmentsNotDrafts(department);
 
+        return res.render("admin/reporting/all", {
+            assessments: assessments,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
 
 exports.g_exportAssessmentReport = async function (req, res, next) {
@@ -585,6 +596,93 @@ exports.g_exportAssessmentReport = async function (req, res, next) {
 
         // Generate filename based on department and current timestamp for uniqueness
         const filename = `assessments_report_${Date.now()}.xlsx`;
+
+        // Set response headers to prompt download with the generated filename
+        res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        );
+
+        // Write the workbook to a buffer and send as response
+        workbook.xlsx
+            .writeBuffer()
+            .then((buffer) => {
+                res.send(buffer);
+            })
+            .catch((error) => {
+                console.error("Error writing Excel to buffer", error);
+                res.status(500).send("Error generating Excel file");
+            });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+exports.g_exportAllAssessmentReport = async function (req, res, next) {
+    try {
+        const department = req.session.data.User.Department;
+
+        const assessments = await getAllAssessmentsNotDrafts(department);
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Assessments");
+
+        // Define columns based on your HTML table headers
+        worksheet.columns = [
+            { header: "Service", key: "service", width: 25 },
+            { header: "Description", key: "description", width: 60 },
+            { header: "Status", key: "status", width: 15 },
+            { header: "Phase", key: "phase", width: 15 },
+            { header: "Type", key: "type", width: 20 },
+            { header: "Assessment Date", key: "date", width: 15 },
+            { header: "Assessment Time", key: "time", width: 15 },
+            { header: "Outcome", key: "outcome", width: 15 },
+            { header: "Code", key: "code", width: 15 },
+            { header: "Portfolio", key: "portfolio", width: 25 },
+            { header: "PhaseStart", key: "phaseStart", width: 25 },
+            { header: "PhaseEnd", key: "phaseEnd", width: 25 },
+            { header: "BookedDate", key: "submitted", width: 25 },
+            { header: "Deputy Director", key: "dd", width: 25 },
+            { header: "Delivery Manager", key: "dm", width: 25 },
+            { header: "Product Manager", key: "pm", width: 25 },
+        ];
+
+        // Add rows for each assessment
+        assessments.forEach((assessment) => {
+            // Add a row for each assessment
+            const row = worksheet.addRow({
+                service: {
+                    text: assessment.Name,
+                    hyperlink: `https://service-assessments.education.gov.uk/admin/overview/${assessment.AssessmentID}`,
+                },
+                description: assessment.Description,
+                status: assessment.Status,
+                phase: assessment.Phase,
+                type: assessment.Type,
+                date: assessment.AssessmentDateTime,
+                time: assessment.AssessmentTime,
+                outcome: assessment.Outcome,
+                code: assessment.ProjectCode,
+                portfolio: assessment.Portfolio,
+                phaseStart: assessment.StartDate,
+                phaseEnd: assessment.EndDate,
+                submitted: assessment.CreatedDate,
+                dd: assessment.DDFirstName + ' ' + assessment.DDLastName,
+                dm: assessment.DMFirstName + ' ' + assessment.DMLastName,
+                pm: assessment.PMFirstName + ' ' + assessment.PMLastName
+            });
+
+            // Optional: Set style for hyperlink (blue color & underlined text)
+            row.getCell("service").style = {
+                font: { color: { argb: "FF0000FF" }, underline: true },
+            };
+        });
+
+        // Generate filename based on department and current timestamp for uniqueness
+        const filename = `all_assessments_${Date.now()}.xlsx`;
 
         // Set response headers to prompt download with the generated filename
         res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);

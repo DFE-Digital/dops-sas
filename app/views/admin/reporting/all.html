@@ -1,0 +1,70 @@
+{% extends "layouts/auth.html" %}
+
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Report" %}
+{% set view = "reporting" %}
+{% set filter = ""%}
+
+{% block hero %}
+{% include '../_header.html'%}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+              <h2 class="govuk-summary-card__title">
+                All assessment data
+              </h2>
+              <ul class="govuk-summary-card__actions">
+                <li class="govuk-summary-card__action">
+                  <a class="govuk-link" href="/admin/reporting/export-all-report">Export to Excel</a>
+                </li>
+              </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+
+                <p>This is just an excerpt of the full data. The Excel export will contain all information.</p>
+
+        <table class="govuk-table dfe-table--smaller">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Code</th>
+                    <th scope="col" class="govuk-table__header">Service</th>
+                    <th scope="col" class="govuk-table__header">Type</th>
+                    <th scope="col" class="govuk-table__header">Phase</th>
+                    <th scope="col" class="govuk-table__header">Date</th>
+                    <th scope="col" class="govuk-table__header ">Time</th>
+
+                    <th scope="col" class="govuk-table__header ">Outcome</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for assessment in assessments %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">{{assessment.ProjectCode}}</td>
+                    <td class="govuk-table__cell"><a href="/admin/overview/{{assessment.AssessmentID}}">{{assessment.Name}}</a></td>
+                    <td class="govuk-table__cell">{{assessment.Type}}</td>
+                    <td class="govuk-table__cell">{{assessment.Phase}}</td>
+                    <td class="govuk-table__cell">{{assessment.AssessmentDateTime | date('D MMM YYYY') }}</td>
+                    <td class="govuk-table__cell">{{assessment.AssessmentTime}}</td>
+                    <td class="govuk-table__cell">{{assessment.Outcome}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>  
+        </div>
+
+        <style>
+            .dfe-table--smaller * {
+                font-size: 0.9em;
+            }
+        </style>
+
+    </div>
+</div>
+{% endblock %}

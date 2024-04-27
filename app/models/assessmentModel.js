@@ -431,6 +431,38 @@ async function getAllAssessments(departmentID) {
     }
 }
 
+/** 
+ * Get all assessments for a department that aren't published
+ * @param {number} departmentID The ID of the department
+ */
+async function getAllAssessmentsNotDrafts(departmentID) {
+    try {
+        const result = await pool.query(
+            `
+            SELECT
+            a.*,
+            dd."FirstName" AS "DDFirstName",
+            dd."LastName" AS "DDLastName",
+            pm."FirstName" AS "PMFirstName",
+            pm."LastName" AS "PMLastName",
+            dm."FirstName" AS "DMFirstName",
+            dm."LastName" AS "DMLastName"
+          FROM public."Assessment" a
+          LEFT JOIN public."User" dd ON a."DD" = dd."UserID"
+          LEFT JOIN public."User" pm ON a."PM" = pm."UserID"
+          LEFT JOIN public."User" dm ON a."DM" = dm."UserID"
+          WHERE a."Department" = $1 AND a."Status" != 'Draft'
+          
+            `,
+            [departmentID]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getAllAssessments:', error);
+        throw error;
+    }
+}
+
 
 module.exports = {
     AssessmentModel,
@@ -447,5 +479,6 @@ module.exports = {
     getActiveAssessmentsWithAssessorData,
     changePrimaryContact,
     getAllAssessments,
-    createReAssessment
+    createReAssessment,
+    getAllAssessmentsNotDrafts
 };

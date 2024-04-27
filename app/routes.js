@@ -201,6 +201,7 @@ router.get("/admin/team/:assessmentID", isAuthenticated, isAdmin, validateParamI
 router.get("/admin/reporting", isAuthenticated, isAdmin, adminController.g_reporting);
 router.get("/admin/reporting/assessments", isAuthenticated, isAdmin, adminController.g_reportingAssessmentsAndPanels);
 router.get("/admin/reporting/slack", isAuthenticated, isAdmin, adminController.g_reportingAssessmentsAndPanelsForSlack);
+router.get("/admin/reporting/all", isAuthenticated, isAdmin, adminController.g_reportingAssessmentsAll);
 router.get("/admin/admins", isAuthenticated, isAdmin, adminController.g_admins);
 router.get("/admin/add-admin", isAuthenticated, isAdmin, adminController.g_addadmin);
 router.get("/admin/remove-admin/:userRoleID", isAuthenticated, isAdmin, adminController.g_removeadmin);
@@ -208,6 +209,7 @@ router.get("/admin/add-training/:assessorID", isAuthenticated, isAdmin, adminCon
 router.get("/admin/remove-training/:trainingUniqueID", isAuthenticated, isAdmin, adminController.g_removetraining);
 router.get("/admin/assessment-history/:assessorID", isAuthenticated, isAdmin, adminController.g_assessmentHistory);
 router.get("/admin/reporting/export-assessment-report", isAuthenticated, isAdmin, adminController.g_exportAssessmentReport);
+router.get("/admin/reporting/export-all-report", isAuthenticated, isAdmin, adminController.g_exportAllAssessmentReport);
 router.get("/admin/assessor-change-status/:assessorID", isAuthenticated, isAdmin, adminController.g_changeAssessorStatus);
 router.get('/admin/assessor-change-cross-gov/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorCrossgov);
 router.get('/admin/assessor-change-lead/:assessorID', isAuthenticated, isAdmin, adminController.g_changeAssessorLead);
