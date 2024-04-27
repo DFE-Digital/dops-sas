@@ -516,6 +516,23 @@ exports.g_reportingAssessmentsAndPanels = async function (req, res, next) {
     }
 };
 
+exports.g_reportingAssessmentsAndPanelsForSlack = async function (req, res, next) {
+    try {
+        const department = req.session.data.User.Department;
+        const assessments = await getActiveAssessmentsWithAssessorData(department);
+
+        return res.render("admin/reporting/slack", {
+            assessments: assessments,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+
 exports.g_exportAssessmentReport = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;

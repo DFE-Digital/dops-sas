@@ -1,0 +1,131 @@
+{% extends "layouts/auth.html" %}
+
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Assessors needed" %}
+{% set view = "reporting" %}
+{% set filter = ""%}
+
+{% block hero %}
+{% include '../_header.html'%}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    Content for slack post
+                </h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <button type="button" class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button"
+                            id="copyToClipboard">
+                            Copy to clipboard
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content" id="slack_content">
+
+                <p>Hey @channel, </p>
+                <p><br /></p>
+                <p>We're looking for assessors for the following assessments and peer reviews, can you help out?.</p>
+                <p><br /></p>
+                <p>You can find more information and volunteer to assess, by selecting the link on each item.</p>
+                <p><br /></p>
+                <h2>:mantelpiece_clock: Lead assessor needed:</h2>
+                <ul class="govuk-list">
+                    {% for assessment in assessments if not assessment.Lead %}
+                    <li><a
+                            href="https://service-assessments.education.gov.uk/volunteer/detail/{{assessment.AssessmentID}}">{{
+                            assessment.Name }}</a> / {{ assessment.Phase }} / {{assessment.Type}} / {{
+                        assessment.AssessmentDateTime | date('ddd D MMM')}} / {{assessment.AssessmentTime}}</li>
+                    {% else %}
+                    <li>No assessments under this category.</li>
+                    {% endfor %}
+                </ul>
+                <p><br /></p>
+                <h2>:magnifying_glass: User Research assessor needed:</h2>
+                <ul class="govuk-list">
+                    {% for assessment in assessments if not assessment.UR %}
+                    <li><a
+                            href="https://service-assessments.education.gov.uk/volunteer/detail/{{assessment.AssessmentID}}">{{
+                            assessment.Name }}</a> / {{ assessment.Phase }} / {{assessment.Type}} / {{
+                        assessment.AssessmentDateTime | date('ddd D MMM') }} / {{assessment.AssessmentTime}}</li>
+                    {% else %}
+                    <li>No assessments under this category.</li>
+                    {% endfor %}
+                </ul>
+                <p><br /></p>
+                <h2>:lower_left_paintbrush: Design assessor needed:</h2>
+                <ul class="govuk-list">
+                    {% for assessment in assessments if not assessment.Design %}
+                    <li><a
+                            href="https://service-assessments.education.gov.uk/volunteer/detail/{{assessment.AssessmentID}}">{{
+                            assessment.Name }}</a> / {{ assessment.Phase }} / {{assessment.Type}} / {{
+                        assessment.AssessmentDateTime | date('ddd D MMM') }} / {{assessment.AssessmentTime}}</li>
+                    {% else %}
+                    <li>No assessments under this category.</li>
+                    {% endfor %}
+                </ul>
+                <p><br /></p>
+                <h2>:technologist: Tech assessor needed:</h2>
+                <ul class="govuk-list">
+                    {% for assessment in assessments if not assessment.Tech %}
+                    <li><a
+                            href="https://service-assessments.education.gov.uk/volunteer/detail/{{assessment.AssessmentID}}">{{
+                            assessment.Name }}</a> / {{ assessment.Phase }} / {{assessment.Type}} / {{
+                        assessment.AssessmentDateTime | date('ddd D MMM') }} / {{assessment.AssessmentTime}}</li>
+                    {% else %}
+                    <li>No assessments under this category.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const copyButton = document.getElementById('copyToClipboard');
+        const contentToCopy = document.getElementById('slack_content');
+        const originalButtonText = copyButton.textContent;
+
+        copyButton.addEventListener('click', function () {
+            const range = document.createRange();
+            const selection = window.getSelection();
+            const div = document.createElement('div');
+
+            div.style.position = 'fixed';
+            div.style.left = '-99999px';
+            document.body.appendChild(div);
+
+            div.appendChild(contentToCopy.cloneNode(true));
+
+            range.selectNodeContents(div);
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            try {
+                document.execCommand('copy');
+                copyButton.textContent = 'Copied';
+            } catch (err) {
+                console.error('Failed to copy!', err);
+            }
+
+            selection.removeAllRanges();
+            document.body.removeChild(div);
+
+            setTimeout(function () {
+                copyButton.textContent = originalButtonText;
+            }, 5000);
+        });
+    });
+</script>
+
+{% endblock %}

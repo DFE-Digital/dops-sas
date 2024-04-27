@@ -200,6 +200,7 @@ router.get("/admin/artefacts/:assessmentID", isAuthenticated, isAdmin, validateP
 router.get("/admin/team/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_team);
 router.get("/admin/reporting", isAuthenticated, isAdmin, adminController.g_reporting);
 router.get("/admin/reporting/assessments", isAuthenticated, isAdmin, adminController.g_reportingAssessmentsAndPanels);
+router.get("/admin/reporting/slack", isAuthenticated, isAdmin, adminController.g_reportingAssessmentsAndPanelsForSlack);
 router.get("/admin/admins", isAuthenticated, isAdmin, adminController.g_admins);
 router.get("/admin/add-admin", isAuthenticated, isAdmin, adminController.g_addadmin);
 router.get("/admin/remove-admin/:userRoleID", isAuthenticated, isAdmin, adminController.g_removeadmin);
