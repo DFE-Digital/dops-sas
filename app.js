@@ -10,6 +10,8 @@ const dateFilter = require('nunjucks-date-filter');
 const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
+const airtable = require('airtable');
+const base = new airtable({ apiKey: process.env.airtableFeedbackKey }).base(process.env.airtableFeedbackBase);
 
 const app = express();
 
@@ -114,6 +116,58 @@ app.locals.staging = process.env.staging === 'true' ? true : false;
 app.locals.serviceName = process.env.serviceName || 'Service Assessment Service';
 
 app.use('/assets', express.static('public/assets'));
+
+
+// Route for handling Yes/No feedback submissions
+app.post('/form-response/helpful', (req, res) => {
+  const { response } = req.body;
+  const service = "Service assessment service";
+  const pageURL = req.headers.referer || 'Unknown';
+  const date = new Date().toISOString();
+
+  base('Data').create([
+      {
+          "fields": {
+              "Response": response,
+              "Service": service,
+              "URL": pageURL
+          }
+      }
+  ], function(err) {
+      if (err) {
+          console.error(err);
+          return res.status(500).send('Error saving to Airtable');
+      }
+      res.json({ success: true, message: 'Feedback submitted successfully' });
+  });
+});
+
+// New route for handling detailed feedback submissions
+app.post('/form-response/feedback', (req, res) => {
+  const { response, SID } = req.body;
+
+  
+  const service = "Service assessment service"; 
+  const pageURL = req.headers.referer || 'Unknown'; 
+  const date = new Date().toISOString();
+
+  console.log(SID)
+
+  base('Feedback').create([{
+      "fields": {
+          "Feedback": response,
+          "Service": service,
+          "URL": pageURL,
+          "UserID": SID
+      }
+  }], function(err) {
+      if (err) {
+          console.error(err);
+          return res.status(500).send('Error saving to Airtable');
+      }
+      res.json({ success: true, message: 'Feedback submitted successfully' });
+  });
+});
 
 // Routes
 app.use('/', appRoutes);

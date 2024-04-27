@@ -1,11 +1,11 @@
 .dfe-feedback-banner {
-    background-color: #f3f2f1;
-    border: 1px solid $govuk-border-colour;
-    margin-bottom: 30px;
+
+    margin-bottom: 0px;
     margin-top: 60px;
 
     .dfe-feedback-banner--content {
-        padding: 20px 15px;
+        padding: 30px 0px;    
+        border-top: 2px solid $govuk-border-colour;
 
         .dfe-feedback-banner--content-questions {
             display: flex;
@@ -29,9 +29,7 @@
             }
         }
 
-        .govuk-button--secondary {
-            background: #ffffff !important;
-        }
+     
 
         .dfe-feedback-banner--content-message[hidden] {
             display: none !important;

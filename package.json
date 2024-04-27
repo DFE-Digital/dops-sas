@@ -15,6 +15,7 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.23.10",
     "@nightwatch/browserstack": "^3.2.5",
+    "airtable": "^0.12.2",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "connect-pg-simple": "^9.0.1",
