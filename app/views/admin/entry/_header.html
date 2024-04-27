@@ -9,8 +9,8 @@
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">Rating</th>
-                            <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Phase</th>
                             <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Type</th>
+                            <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Phase</th>
                             <th class="govuk-table__header" scope="col">Assessment date</th>
                             {% if assessment.Status == 'Published' %}
                             <th class="govuk-table__header" scope="col">Status</th>
@@ -28,8 +28,8 @@
                                 <strong class="govuk-tag">Unrated</strong>
                                 {% endif %}
                             </td>
-                            <td class="govuk-table__cell">{{assessment.Phase}}</td>
                             <td class="govuk-table__cell">{{assessment.Type}}</td>
+                            <td class="govuk-table__cell">{{assessment.Phase}}</td>
                             <td class="govuk-table__cell">
                                 {% if not assessment.AssessmentTime and not assessment.AssessmentDateTime %}
                                 <a href="/admin/add-date/{{assessment.AssessmentID}}" class="govuk-link">Set date and
@@ -37,7 +37,7 @@
                                 {% else %}
                                 {% if assessment.AssessmentTime %} {{assessment.AssessmentTime }} on {% else %}Time not
                                 set{% endif %}
-                                {% if assessment.AssessmentDateTime %} {{assessment.AssessmentDateTime | date('D MMMM
+                                {% if assessment.AssessmentDateTime %} {{assessment.AssessmentDateTime | date('D MMM
                                 YYYY')}} {% else %}Date not set{% endif %}
                                 {% endif %}
                             </td>

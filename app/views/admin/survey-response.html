@@ -31,8 +31,8 @@
                         <li class="app-sub-navigation__item">
                             <a class="app-sub-navigation__link" {% if view==='admins' %} aria-current="page" {% endif
                                 %}href="/admin/admins">Administrators</a>
-                        </li>   
-                         <li class="app-sub-navigation__item">
+                        </li>
+                        <li class="app-sub-navigation__item">
                             <a class="app-sub-navigation__link" {% if view==='surveys' %} aria-current="page" {% endif
                                 %}href="/admin/surveys">Surveys</a>
                         </li>
@@ -49,7 +49,6 @@
 </div>
 {% endblock %}
 
-
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -62,7 +61,7 @@
                     Service
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    {{survey.Name}}
+                    <a href="/reports/report/{{survey.AssessmentID}}">{{survey.Name}}</a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -70,7 +69,8 @@
                     Outcome
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    <strong class="govuk-tag govuk-!-font-size-16 govuk-tag--{{survey.Outcome | lower}}">{% if survey.Outcome === 'Not rated' %} Unrated {% else %} {{survey.Outcome }} {% endif %}</strong>
+                    <strong class="govuk-tag govuk-tag--{{survey.Outcome | lower}}">{% if
+                        survey.Outcome === 'Not rated' %} Unrated {% else %} {{survey.Outcome }} {% endif %}</strong>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -83,31 +83,25 @@
             </div>
         </dl>
 
-        <h3 class="govuk-heading-m">Assessors</h3>
-
+        <h2 class="govuk-heading-l">Assessors</h2>
         {% if assessors | length > 0 %}
-
         <dl class="govuk-summary-list">
             {% for assessor in assessors %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    {{assessor.FirstName}}   {{assessor.LastName}}
+                    {{assessor.FirstName}} {{assessor.LastName}}
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {{assessor.Role}}
                 </dd>
             </div>
             {% endfor %}
-            
         </dl>
-
         {% else %}
-<p>Assessor information not available.</p>
+        <p>Assessor information not available.</p>
         {% endif %}
 
-
-
-        <h2 class="govuk-heading-l govuk-!-margin-top-9">Scores</h2>
+        <h2 class="govuk-heading-l">Scores and feedback</h2>
 
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
@@ -136,38 +130,47 @@
             </div>
         </dl>
 
-  
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Feedback on low scores
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if survey.feedbackOnLowScores %}
+                    <p>{{survey.feedbackOnLowScores}}</p>
 
-        <h2 class="govuk-heading-m">Feedback on low scores</h2>
+                    {% else %}
+                    <p>No feedback given.</p>
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Assessor feedback
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if survey.specificFeedbackForAssessor %}
+                    <p>{{survey.specificFeedbackForAssessor}}</p>
 
-        {% if survey.feedbackOnLowScores %}
-        <p>{{survey.feedbackOnLowScores}}</p>
+                    {% else %}
+                    <p>No feedback given.</p>
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Other feedback
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if survey.furtherComments %}
+                    <p>{{survey.furtherComments}}</p>
 
-        {% else %}
-        <p>No feedback given.</p>
-        {% endif %}
-
-        <h2 class="govuk-heading-m">Assessor feedback</h2>
-
-        {% if survey.specificFeedbackForAssessor %}
-        <p>{{survey.specificFeedbackForAssessor}}</p>
-
-        {% else %}
-        <p>No feedback given.</p>
-        {% endif %}
-
-        <h2 class="govuk-heading-m">Other feedback</h2>
-
-        {% if survey.furtherComments %}
-        <p>{{survey.furtherComments}}</p>
-
-        {% else %}
-        <p>No feedback given.</p>
-        {% endif %}
-
-
+                    {% else %}
+                    <p>No feedback given.</p>
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
     </div>
-
 </div>
-
 {% endblock %}

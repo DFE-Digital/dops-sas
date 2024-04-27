@@ -43,49 +43,71 @@
 
 {% block content %}
 
-{% if hasActive == true %}
-<table class="govuk-table">
-    <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Service</th>
-            <th scope="col" class="govuk-table__header ">Type</th>
-            <th scope="col" class="govuk-table__header ">Phase</th>
-            <th scope="col" class="govuk-table__header ">Date</th>
-            <th scope="col" class="govuk-table__header ">Outcome</th>
-        </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-        {% for record in userOnPanels %}
-        {% if record.Status === 'Published' %}
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header">
-                <a class="govuk-link govuk-link--no-visited-state "
-                    href="/assess/report/{{record.AssessmentID}}">{{record.Name}}</a>
-            </th>
-            <td class="govuk-table__cell">{{record.Type}}</td>
-            <td class="govuk-table__cell">{{record.Phase}}</td>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+        {% if hasActive == true %}
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header  govuk-!-width-one-third">Service</th>
+                    <th scope="col" class="govuk-table__header">Type</th>
+                    <th scope="col" class="govuk-table__header">Phase</th>
+                    <th scope="col" class="govuk-table__header">Date</th>
+                    <th scope="col" class="govuk-table__header ">Outcome</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for record in userOnPanels %}
+                {% if record.Status === 'Published' %}
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">
+                        <a class="govuk-link govuk-link--no-visited-state "
+                            href="/assess/report/{{record.AssessmentID}}">{{record.Name}}</a>
+                    </th>
+                    <td class="govuk-table__cell">{{record.Type}}</td>
+                    <td class="govuk-table__cell">{{record.Phase}}</td>
 
 
-            <td class="govuk-table__cell">{{record.AssessmentDateTime|date('D MMM YYYY')}}
-            </td>
-            <td class="govuk-table__cell">
-                {% if record.Status == "Team Review" or record.Status
-                == "SA Publish" or record.Status == "Published" %}
-                <strong class="govuk-tag govuk-tag--{{record.Outcome | lower}}">{{record.Outcome}}</strong>
-                {% else %}
-                <strong class="govuk-tag">Unrated</strong>
+                    <td class="govuk-table__cell">{{record.AssessmentDateTime|date('D MMM YYYY')}}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {% if record.Status == "Team Review" or record.Status
+                        == "SA Publish" or record.Status == "Published" %}
+                        <strong class="govuk-tag govuk-tag--{{record.Outcome | lower}}">{{record.Outcome}}</strong>
+                        {% else %}
+                        <strong class="govuk-tag">Unrated</strong>
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endif %}
-            </td>
-        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>You're not listed on any active assessments.</p>
+        <p><a href="/assessments">Volunteer for an upcoming assessment or peer review</a>.</p>
         {% endif %}
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>You're not listed on any active assessments.</p>
-<p><a href="/assessments">Volunteer for an upcoming assessment or peer review</a>.</p>
-{% endif %}
 
-
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+        <aside class="dfe-aside">
+            <h2 class="govuk-heading-m">Related guidance</h2>
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    <a href="https://apply-the-service-standard.education.gov.uk/" target="_blank">Apply the Service
+                        Standard
+                        in DfE <span class="govuk-visually-hidden">(opens in new tab)</span></a>
+                </li>
+                <li>
+                    <a href="https://apply-the-service-standard.education.gov.uk/service-assessments/support-team"
+                        target="_blank">Supporting the team after an assessment <span class="govuk-visually-hidden">(opens in new
+                            tab)</span></a>
+                </li>
+               
+            </ul>
+        </aside>
+    </div>
+</div>
 
 {% endblock %}

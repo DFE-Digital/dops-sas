@@ -75,7 +75,7 @@
                 {% if loop.index < 21 %}
               <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header"><a href="/reports/report/{{survey.AssessmentID}}">{{survey.Name}}</a></th>
-                <td class="govuk-table__cell"><strong class="govuk-tag govuk-!-font-size-16 govuk-tag--{{survey.Outcome | lower}}">{% if survey.Outcome === 'Not rated' %} Unrated {% else %} {{survey.Outcome }} {% endif %}</strong></td>
+                <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--{{survey.Outcome | lower}}">{% if survey.Outcome === 'Not rated' %} Unrated {% else %} {{survey.Outcome }} {% endif %}</strong></td>
                 <td class="govuk-table__cell">{{survey.preAssessmentCall}}</td>
                 <td class="govuk-table__cell">{{survey.organisationOfServiceAssessment}}</td>
                 <td class="govuk-table__cell">{{survey.runningOfAssessment}}</td>
