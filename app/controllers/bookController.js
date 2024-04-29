@@ -24,7 +24,7 @@ function removeSpecificSessionDataKeys(req) {
     });
 }
 
-exports.g_start = async function (req, res) {
+exports.g_start = async function (req, res, next) {
     try {
         req.session.data.model = {};
         removeSpecificSessionDataKeys(req);
@@ -40,7 +40,7 @@ exports.g_start = async function (req, res) {
     }
 }
 
-exports.g_getdraft = async function (req, res) {
+exports.g_getdraft = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
         const draftData = await getAssessmentById(assessmentID);
@@ -54,7 +54,7 @@ exports.g_getdraft = async function (req, res) {
 }
 
 
-exports.g_phase = async function (req, res) {
+exports.g_phase = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -69,7 +69,7 @@ exports.g_phase = async function (req, res) {
     }
 };
 
-exports.g_type = async function (req, res) {
+exports.g_type = async function (req, res, next) {
     try {
         if (!req.session.data) {
             return res.render('book/index');
@@ -87,7 +87,7 @@ exports.g_type = async function (req, res) {
     }
 };
 
-exports.g_name = async function (req, res) {
+exports.g_name = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -101,7 +101,7 @@ exports.g_name = async function (req, res) {
     }
 };
 
-exports.g_description = async function (req, res) {
+exports.g_description = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -115,7 +115,7 @@ exports.g_description = async function (req, res) {
     }
 };
 
-exports.g_code = async function (req, res) {
+exports.g_code = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -129,7 +129,7 @@ exports.g_code = async function (req, res) {
     }
 };
 
-exports.g_startdate = async function (req, res) {
+exports.g_startdate = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -143,7 +143,7 @@ exports.g_startdate = async function (req, res) {
     }
 };
 
-exports.g_enddate = async function (req, res) {
+exports.g_enddate = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -157,7 +157,7 @@ exports.g_enddate = async function (req, res) {
     }
 };
 
-exports.g_dates = async function (req, res) {
+exports.g_dates = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -181,7 +181,7 @@ exports.g_dates = async function (req, res) {
     }
 };
 
-exports.g_portfolio = async function (req, res) {
+exports.g_portfolio = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -195,7 +195,7 @@ exports.g_portfolio = async function (req, res) {
     }
 };
 
-exports.g_dd = async function (req, res) {
+exports.g_dd = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -216,7 +216,7 @@ exports.g_dd = async function (req, res) {
     }
 };
 
-exports.g_product = async function (req, res) {
+exports.g_product = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -236,7 +236,7 @@ exports.g_product = async function (req, res) {
     }
 };
 
-exports.g_delivery = async function (req, res) {
+exports.g_delivery = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -256,7 +256,7 @@ exports.g_delivery = async function (req, res) {
     }
 };
 
-exports.g_tasks = async function (req, res) {
+exports.g_tasks = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -271,7 +271,7 @@ exports.g_tasks = async function (req, res) {
 };
 
 
-exports.g_delete = async function (req, res) {
+exports.g_delete = async function (req, res, next) {
     try {
         const assessmentID = req.session.data.AssessmentID;
         if (assessmentID) {
@@ -286,7 +286,7 @@ exports.g_delete = async function (req, res) {
 };
 
 
-exports.g_deleted = async function (req, res) {
+exports.g_deleted = async function (req, res, next) {
     try {
 
         req.session.data.model = {};
@@ -298,7 +298,7 @@ exports.g_deleted = async function (req, res) {
     }
 };
 
-exports.g_submitted = async function (req, res) {
+exports.g_submitted = async function (req, res, next) {
     try {
 
         req.session.data.model = {};
@@ -314,7 +314,7 @@ exports.g_submitted = async function (req, res) {
 
 exports.p_phase = [
     validatePhase,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -370,7 +370,7 @@ exports.p_phase = [
 
 exports.p_type = [
     validateType,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -425,7 +425,7 @@ exports.p_type = [
 
 exports.p_name = [
     validateName,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -473,7 +473,7 @@ exports.p_name = [
 
 exports.p_description = [
     validateDescription,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -522,7 +522,7 @@ exports.p_description = [
 
 exports.p_code = [
     validateCode,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -572,7 +572,7 @@ exports.p_code = [
 
 exports.p_startdate = [
     validateDate, // Make sure this validation properly validates Day, Month, and Year
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -628,7 +628,7 @@ exports.p_startdate = [
 
 exports.p_enddate = [
     validateEndDate,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -688,7 +688,7 @@ exports.p_enddate = [
 
 exports.p_dates = [
     validateEndDates,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
             const userID = req.session.data.User.UserID;
@@ -740,7 +740,7 @@ exports.p_dates = [
 
 exports.p_portfolio = [
     validatePortfolio,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -788,7 +788,7 @@ exports.p_portfolio = [
 
 exports.p_dd = [
     validateDD,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -837,7 +837,7 @@ exports.p_dd = [
 
 exports.p_product = [
     validatePM,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -898,7 +898,7 @@ exports.p_product = [
 
 exports.p_delivery = [
     validateDM,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -957,7 +957,7 @@ exports.p_delivery = [
 ];
 
 
-exports.p_submit = async function (req, res) {
+exports.p_submit = async function (req, res, next) {
     try {
 
         const userID = req.session.data.User.UserID;
@@ -1025,7 +1025,7 @@ exports.p_submit = async function (req, res) {
 
 }
 
-exports.p_confirmdelete = async function (req, res) {
+exports.p_confirmdelete = async function (req, res, next) {
     try {
         const userID = req.session.data.User.UserID;
         let assessmentID = req.session.data.AssessmentID;

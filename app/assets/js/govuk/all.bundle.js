@@ -4,46 +4,77 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.GOVUKFrontend = {}));
 })(this, (function (exports) { 'use strict';
 
-  const version = '5.2.0';
+  const version = '5.3.1';
+
+  function normaliseString(value, property) {
+    const trimmedValue = value ? value.trim() : '';
+    let output;
+    let outputType = property == null ? void 0 : property.type;
+    if (!outputType) {
+      if (['true', 'false'].includes(trimmedValue)) {
+        outputType = 'boolean';
+      }
+      if (trimmedValue.length > 0 && isFinite(Number(trimmedValue))) {
+        outputType = 'number';
+      }
+    }
+    switch (outputType) {
+      case 'boolean':
+        output = trimmedValue === 'true';
+        break;
+      case 'number':
+        output = Number(trimmedValue);
+        break;
+      default:
+        output = value;
+    }
+    return output;
+  }
+
+  /**
+   * @typedef {import('./index.mjs').SchemaProperty} SchemaProperty
+   */
 
   function mergeConfigs(...configObjects) {
-    function flattenObject(configObject) {
-      const flattenedObject = {};
-      function flattenLoop(obj, prefix) {
-        for (const [key, value] of Object.entries(obj)) {
-          const prefixedKey = prefix ? `${prefix}.${key}` : key;
-          if (value && typeof value === 'object') {
-            flattenLoop(value, prefixedKey);
-          } else {
-            flattenedObject[prefixedKey] = value;
-          }
-        }
-      }
-      flattenLoop(configObject);
-      return flattenedObject;
-    }
     const formattedConfigObject = {};
     for (const configObject of configObjects) {
-      const obj = flattenObject(configObject);
-      for (const [key, value] of Object.entries(obj)) {
-        formattedConfigObject[key] = value;
+      for (const key of Object.keys(configObject)) {
+        const option = formattedConfigObject[key];
+        const override = configObject[key];
+        if (isObject(option) && isObject(override)) {
+          formattedConfigObject[key] = mergeConfigs(option, override);
+        } else {
+          formattedConfigObject[key] = override;
+        }
       }
     }
     return formattedConfigObject;
   }
-  function extractConfigByNamespace(configObject, namespace) {
-    const newObject = {};
-    for (const [key, value] of Object.entries(configObject)) {
+  function extractConfigByNamespace(Component, dataset, namespace) {
+    const property = Component.schema.properties[namespace];
+    if ((property == null ? void 0 : property.type) !== 'object') {
+      return;
+    }
+    const newObject = {
+      [namespace]: ({})
+    };
+    for (const [key, value] of Object.entries(dataset)) {
+      let current = newObject;
       const keyParts = key.split('.');
-      if (keyParts[0] === namespace) {
-        if (keyParts.length > 1) {
-          keyParts.shift();
+      for (const [index, name] of keyParts.entries()) {
+        if (typeof current === 'object') {
+          if (index < keyParts.length - 1) {
+            if (!isObject(current[name])) {
+              current[name] = {};
+            }
+            current = current[name];
+          } else if (key !== namespace) {
+            current[name] = normaliseString(value);
+          }
         }
-        const newKey = keyParts.join('.');
-        newObject[newKey] = value;
       }
     }
-    return newObject;
+    return newObject[namespace];
   }
   function getFragmentFromUrl(url) {
     if (!url.includes('#')) {
@@ -93,26 +124,42 @@
     const validationErrors = [];
     for (const [name, conditions] of Object.entries(schema)) {
       const errors = [];
-      for (const {
-        required,
-        errorMessage
-      } of conditions) {
-        if (!required.every(key => !!config[key])) {
-          errors.push(errorMessage);
+      if (Array.isArray(conditions)) {
+        for (const {
+          required,
+          errorMessage
+        } of conditions) {
+          if (!required.every(key => !!config[key])) {
+            errors.push(errorMessage);
+          }
         }
-      }
-      if (name === 'anyOf' && !(conditions.length - errors.length >= 1)) {
-        validationErrors.push(...errors);
+        if (name === 'anyOf' && !(conditions.length - errors.length >= 1)) {
+          validationErrors.push(...errors);
+        }
       }
     }
     return validationErrors;
+  }
+  function isArray(option) {
+    return Array.isArray(option);
+  }
+  function isObject(option) {
+    return !!option && typeof option === 'object' && !isArray(option);
   }
 
   /**
    * Schema for component config
    *
    * @typedef {object} Schema
+   * @property {{ [field: string]: SchemaProperty | undefined }} properties - Schema properties
    * @property {SchemaCondition[]} [anyOf] - List of schema conditions
+   */
+
+  /**
+   * Schema property for component config
+   *
+   * @typedef {object} SchemaProperty
+   * @property {'string' | 'boolean' | 'number' | 'object'} type - Property type
    */
 
   /**
@@ -123,26 +170,15 @@
    * @property {string} errorMessage - Error message when required config fields not provided
    */
 
-  function normaliseString(value) {
-    if (typeof value !== 'string') {
-      return value;
-    }
-    const trimmedValue = value.trim();
-    if (trimmedValue === 'true') {
-      return true;
-    }
-    if (trimmedValue === 'false') {
-      return false;
-    }
-    if (trimmedValue.length > 0 && isFinite(Number(trimmedValue))) {
-      return Number(trimmedValue);
-    }
-    return value;
-  }
-  function normaliseDataset(dataset) {
+  function normaliseDataset(Component, dataset) {
     const out = {};
-    for (const [key, value] of Object.entries(dataset)) {
-      out[key] = normaliseString(value);
+    for (const [field, property] of Object.entries(Component.schema.properties)) {
+      if (field in dataset) {
+        out[field] = normaliseString(dataset[field], property);
+      }
+      if ((property == null ? void 0 : property.type) === 'object') {
+        out[field] = extractConfigByNamespace(Component, dataset, field);
+      }
     }
     return out;
   }
@@ -212,18 +248,21 @@
       if (!lookupKey) {
         throw new Error('i18n: lookup key missing');
       }
-      if (typeof (options == null ? void 0 : options.count) === 'number') {
-        lookupKey = `${lookupKey}.${this.getPluralSuffix(lookupKey, options.count)}`;
+      let translation = this.translations[lookupKey];
+      if (typeof (options == null ? void 0 : options.count) === 'number' && typeof translation === 'object') {
+        const translationPluralForm = translation[this.getPluralSuffix(lookupKey, options.count)];
+        if (translationPluralForm) {
+          translation = translationPluralForm;
+        }
       }
-      const translationString = this.translations[lookupKey];
-      if (typeof translationString === 'string') {
-        if (translationString.match(/%{(.\S+)}/)) {
+      if (typeof translation === 'string') {
+        if (translation.match(/%{(.\S+)}/)) {
           if (!options) {
             throw new Error('i18n: cannot replace placeholders in string if no option data provided');
           }
-          return this.replacePlaceholders(translationString, options);
+          return this.replacePlaceholders(translation, options);
         }
-        return translationString;
+        return translation;
       }
       return lookupKey;
     }
@@ -251,12 +290,15 @@
       if (!isFinite(count)) {
         return 'other';
       }
+      const translation = this.translations[lookupKey];
       const preferredForm = this.hasIntlPluralRulesSupport() ? new Intl.PluralRules(this.locale).select(count) : this.selectPluralFormUsingFallbackRules(count);
-      if (`${lookupKey}.${preferredForm}` in this.translations) {
-        return preferredForm;
-      } else if (`${lookupKey}.other` in this.translations) {
-        console.warn(`i18n: Missing plural form ".${preferredForm}" for "${this.locale}" locale. Falling back to ".other".`);
-        return 'other';
+      if (typeof translation === 'object') {
+        if (preferredForm in translation) {
+          return preferredForm;
+        } else if ('other' in translation) {
+          console.warn(`i18n: Missing plural form ".${preferredForm}" for "${this.locale}" locale. Falling back to ".other".`);
+          return 'other';
+        }
       }
       throw new Error(`i18n: Plural form ".other" is required for "${this.locale}" locale`);
     }
@@ -443,8 +485,8 @@
         });
       }
       this.$module = $module;
-      this.config = mergeConfigs(Accordion.defaults, config, normaliseDataset($module.dataset));
-      this.i18n = new I18n(extractConfigByNamespace(this.config, 'i18n'));
+      this.config = mergeConfigs(Accordion.defaults, config, normaliseDataset(Accordion, $module.dataset));
+      this.i18n = new I18n(this.config.i18n);
       const $sections = this.$module.querySelectorAll(`.${this.sectionClass}`);
       if (!$sections.length) {
         throw new ElementError({
@@ -680,6 +722,16 @@
     },
     rememberExpanded: true
   });
+  Accordion.schema = Object.freeze({
+    properties: {
+      i18n: {
+        type: 'object'
+      },
+      rememberExpanded: {
+        type: 'boolean'
+      }
+    }
+  });
   const helper = {
     /**
      * Check for `window.sessionStorage`, and that it actually works.
@@ -733,7 +785,10 @@
    *   'Show' button's accessible name when a section is expanded.
    */
 
-  const KEY_SPACE = 32;
+  /**
+   * @typedef {import('../../common/index.mjs').Schema} Schema
+   */
+
   const DEBOUNCE_TIMEOUT_IN_SECONDS = 1;
 
   /**
@@ -759,13 +814,13 @@
         });
       }
       this.$module = $module;
-      this.config = mergeConfigs(Button.defaults, config, normaliseDataset($module.dataset));
+      this.config = mergeConfigs(Button.defaults, config, normaliseDataset(Button, $module.dataset));
       this.$module.addEventListener('keydown', event => this.handleKeyDown(event));
       this.$module.addEventListener('click', event => this.debounce(event));
     }
     handleKeyDown(event) {
       const $target = event.target;
-      if (event.keyCode !== KEY_SPACE) {
+      if (event.key !== ' ') {
         return;
       }
       if ($target instanceof HTMLElement && $target.getAttribute('role') === 'button') {
@@ -794,9 +849,20 @@
    * @property {boolean} [preventDoubleClick=false] - Prevent accidental double
    *   clicks on submit buttons from submitting forms multiple times.
    */
+
+  /**
+   * @typedef {import('../../common/index.mjs').Schema} Schema
+   */
   Button.moduleName = 'govuk-button';
   Button.defaults = Object.freeze({
     preventDoubleClick: false
+  });
+  Button.schema = Object.freeze({
+    properties: {
+      preventDoubleClick: {
+        type: 'boolean'
+      }
+    }
   });
 
   function closestAttributeValue($element, attributeName) {
@@ -850,7 +916,7 @@
           identifier: 'Form field (`.govuk-js-character-count`)'
         });
       }
-      const datasetConfig = normaliseDataset($module.dataset);
+      const datasetConfig = normaliseDataset(CharacterCount, $module.dataset);
       let configOverrides = {};
       if ('maxwords' in datasetConfig || 'maxlength' in datasetConfig) {
         configOverrides = {
@@ -863,7 +929,7 @@
       if (errors[0]) {
         throw new ConfigError(`Character count: ${errors[0]}`);
       }
-      this.i18n = new I18n(extractConfigByNamespace(this.config, 'i18n'), {
+      this.i18n = new I18n(this.config.i18n, {
         locale: closestAttributeValue($module, 'lang')
       });
       this.maxLength = (_ref = (_this$config$maxwords = this.config.maxwords) != null ? _this$config$maxwords : this.config.maxlength) != null ? _ref : Infinity;
@@ -1076,6 +1142,20 @@
     }
   });
   CharacterCount.schema = Object.freeze({
+    properties: {
+      i18n: {
+        type: 'object'
+      },
+      maxwords: {
+        type: 'number'
+      },
+      maxlength: {
+        type: 'number'
+      },
+      threshold: {
+        type: 'number'
+      }
+    },
     anyOf: [{
       required: ['maxwords'],
       errorMessage: 'Either "maxlength" or "maxwords" must be provided'
@@ -1152,7 +1232,7 @@
         return;
       }
       const $target = document.getElementById(targetId);
-      if ($target && $target.classList.contains('govuk-checkboxes__conditional')) {
+      if ($target != null && $target.classList.contains('govuk-checkboxes__conditional')) {
         const inputIsChecked = $input.checked;
         $input.setAttribute('aria-expanded', inputIsChecked.toString());
         $target.classList.toggle('govuk-checkboxes__conditional--hidden', !inputIsChecked);
@@ -1225,7 +1305,7 @@
         });
       }
       this.$module = $module;
-      this.config = mergeConfigs(ErrorSummary.defaults, config, normaliseDataset($module.dataset));
+      this.config = mergeConfigs(ErrorSummary.defaults, config, normaliseDataset(ErrorSummary, $module.dataset));
       if (!this.config.disableAutoFocus) {
         setFocus(this.$module);
       }
@@ -1290,9 +1370,20 @@
    * @property {boolean} [disableAutoFocus=false] - If set to `true` the error
    *   summary will not be focussed when the page loads.
    */
+
+  /**
+   * @typedef {import('../../common/index.mjs').Schema} Schema
+   */
   ErrorSummary.moduleName = 'govuk-error-summary';
   ErrorSummary.defaults = Object.freeze({
     disableAutoFocus: false
+  });
+  ErrorSummary.schema = Object.freeze({
+    properties: {
+      disableAutoFocus: {
+        type: 'boolean'
+      }
+    }
   });
 
   /**
@@ -1336,8 +1427,8 @@
           identifier: 'Button (`.govuk-exit-this-page__button`)'
         });
       }
-      this.config = mergeConfigs(ExitThisPage.defaults, config, normaliseDataset($module.dataset));
-      this.i18n = new I18n(extractConfigByNamespace(this.config, 'i18n'));
+      this.config = mergeConfigs(ExitThisPage.defaults, config, normaliseDataset(ExitThisPage, $module.dataset));
+      this.i18n = new I18n(this.config.i18n);
       this.$module = $module;
       this.$button = $button;
       const $skiplinkButton = document.querySelector('.govuk-js-exit-this-page-skiplink');
@@ -1407,7 +1498,7 @@
       if (!this.$updateSpan) {
         return;
       }
-      if ((event.key === 'Shift' || event.keyCode === 16 || event.which === 16) && !this.lastKeyWasModified) {
+      if (event.key === 'Shift' && !this.lastKeyWasModified) {
         this.keypressCounter += 1;
         this.updateIndicator();
         if (this.timeoutMessageId) {
@@ -1501,6 +1592,10 @@
    * @property {string} [pressOneMoreTime] - Screen reader announcement informing
    *   the user they must press the activation key one more time.
    */
+
+  /**
+   * @typedef {import('../../common/index.mjs').Schema} Schema
+   */
   ExitThisPage.moduleName = 'govuk-exit-this-page';
   ExitThisPage.defaults = Object.freeze({
     i18n: {
@@ -1508,6 +1603,13 @@
       timedOut: 'Exit this page expired.',
       pressTwoMoreTimes: 'Shift, press 2 more times to exit.',
       pressOneMoreTime: 'Shift, press 1 more time to exit.'
+    }
+  });
+  ExitThisPage.schema = Object.freeze({
+    properties: {
+      i18n: {
+        type: 'object'
+      }
     }
   });
 
@@ -1624,7 +1726,7 @@
         });
       }
       this.$module = $module;
-      this.config = mergeConfigs(NotificationBanner.defaults, config, normaliseDataset($module.dataset));
+      this.config = mergeConfigs(NotificationBanner.defaults, config, normaliseDataset(NotificationBanner, $module.dataset));
       if (this.$module.getAttribute('role') === 'alert' && !this.config.disableAutoFocus) {
         setFocus(this.$module);
       }
@@ -1640,9 +1742,174 @@
    *   applies if the component has a `role` of `alert` – in other cases the
    *   component will not be focused on page load, regardless of this option.
    */
+
+  /**
+   * @typedef {import('../../common/index.mjs').Schema} Schema
+   */
   NotificationBanner.moduleName = 'govuk-notification-banner';
   NotificationBanner.defaults = Object.freeze({
     disableAutoFocus: false
+  });
+  NotificationBanner.schema = Object.freeze({
+    properties: {
+      disableAutoFocus: {
+        type: 'boolean'
+      }
+    }
+  });
+
+  /**
+   * Password input component
+   *
+   * @preserve
+   */
+  class PasswordInput extends GOVUKFrontendComponent {
+    /**
+     * @param {Element | null} $module - HTML element to use for password input
+     * @param {PasswordInputConfig} [config] - Password input config
+     */
+    constructor($module, config = {}) {
+      super();
+      this.$module = void 0;
+      this.config = void 0;
+      this.i18n = void 0;
+      this.$input = void 0;
+      this.$showHideButton = void 0;
+      this.$screenReaderStatusMessage = void 0;
+      if (!($module instanceof HTMLElement)) {
+        throw new ElementError({
+          componentName: 'Password input',
+          element: $module,
+          identifier: 'Root element (`$module`)'
+        });
+      }
+      const $input = $module.querySelector('.govuk-js-password-input-input');
+      if (!($input instanceof HTMLInputElement)) {
+        throw new ElementError({
+          componentName: 'Password input',
+          element: $input,
+          expectedType: 'HTMLInputElement',
+          identifier: 'Form field (`.govuk-js-password-input-input`)'
+        });
+      }
+      if ($input.type !== 'password') {
+        throw new ElementError('Password input: Form field (`.govuk-js-password-input-input`) must be of type `password`.');
+      }
+      const $showHideButton = $module.querySelector('.govuk-js-password-input-toggle');
+      if (!($showHideButton instanceof HTMLButtonElement)) {
+        throw new ElementError({
+          componentName: 'Password input',
+          element: $showHideButton,
+          expectedType: 'HTMLButtonElement',
+          identifier: 'Button (`.govuk-js-password-input-toggle`)'
+        });
+      }
+      if ($showHideButton.type !== 'button') {
+        throw new ElementError('Password input: Button (`.govuk-js-password-input-toggle`) must be of type `button`.');
+      }
+      this.$module = $module;
+      this.$input = $input;
+      this.$showHideButton = $showHideButton;
+      this.config = mergeConfigs(PasswordInput.defaults, config, normaliseDataset(PasswordInput, $module.dataset));
+      this.i18n = new I18n(this.config.i18n, {
+        locale: closestAttributeValue($module, 'lang')
+      });
+      this.$showHideButton.removeAttribute('hidden');
+      const $screenReaderStatusMessage = document.createElement('div');
+      $screenReaderStatusMessage.className = 'govuk-password-input__sr-status govuk-visually-hidden';
+      $screenReaderStatusMessage.setAttribute('aria-live', 'polite');
+      this.$screenReaderStatusMessage = $screenReaderStatusMessage;
+      this.$input.insertAdjacentElement('afterend', $screenReaderStatusMessage);
+      this.$showHideButton.addEventListener('click', this.toggle.bind(this));
+      if (this.$input.form) {
+        this.$input.form.addEventListener('submit', () => this.hide());
+      }
+      window.addEventListener('pageshow', event => {
+        if (event.persisted && this.$input.type !== 'password') {
+          this.hide();
+        }
+      });
+      this.hide();
+    }
+    toggle(event) {
+      event.preventDefault();
+      if (this.$input.type === 'password') {
+        this.show();
+        return;
+      }
+      this.hide();
+    }
+    show() {
+      this.setType('text');
+    }
+    hide() {
+      this.setType('password');
+    }
+    setType(type) {
+      if (type === this.$input.type) {
+        return;
+      }
+      this.$input.setAttribute('type', type);
+      const isHidden = type === 'password';
+      const prefixButton = isHidden ? 'show' : 'hide';
+      const prefixStatus = isHidden ? 'passwordHidden' : 'passwordShown';
+      this.$showHideButton.innerText = this.i18n.t(`${prefixButton}Password`);
+      this.$showHideButton.setAttribute('aria-label', this.i18n.t(`${prefixButton}PasswordAriaLabel`));
+      this.$screenReaderStatusMessage.innerText = this.i18n.t(`${prefixStatus}Announcement`);
+    }
+  }
+
+  /**
+   * Password input config
+   *
+   * @typedef {object} PasswordInputConfig
+   * @property {PasswordInputTranslations} [i18n=PasswordInput.defaults.i18n] - Password input translations
+   */
+
+  /**
+   * Password input translations
+   *
+   * @see {@link PasswordInput.defaults.i18n}
+   * @typedef {object} PasswordInputTranslations
+   *
+   * Messages displayed to the user indicating the state of the show/hide toggle.
+   * @property {string} [showPassword] - Visible text of the button when the
+   *   password is currently hidden. Plain text only.
+   * @property {string} [hidePassword] - Visible text of the button when the
+   *   password is currently visible. Plain text only.
+   * @property {string} [showPasswordAriaLabel] - aria-label of the button when
+   *   the password is currently hidden. Plain text only.
+   * @property {string} [hidePasswordAriaLabel] - aria-label of the button when
+   *   the password is currently visible. Plain text only.
+   * @property {string} [passwordShownAnnouncement] - Screen reader
+   *   announcement to make when the password has just become visible.
+   *   Plain text only.
+   * @property {string} [passwordHiddenAnnouncement] - Screen reader
+   *   announcement to make when the password has just been hidden.
+   *   Plain text only.
+   */
+
+  /**
+   * @typedef {import('../../common/index.mjs').Schema} Schema
+   * @typedef {import('../../i18n.mjs').TranslationPluralForms} TranslationPluralForms
+   */
+  PasswordInput.moduleName = 'govuk-password-input';
+  PasswordInput.defaults = Object.freeze({
+    i18n: {
+      showPassword: 'Show',
+      hidePassword: 'Hide',
+      showPasswordAriaLabel: 'Show password',
+      hidePasswordAriaLabel: 'Hide password',
+      passwordShownAnnouncement: 'Your password is visible',
+      passwordHiddenAnnouncement: 'Your password is hidden'
+    }
+  });
+  PasswordInput.schema = Object.freeze({
+    properties: {
+      i18n: {
+        type: 'object'
+      }
+    }
   });
 
   /**
@@ -1812,12 +2079,6 @@
       this.$tabs = void 0;
       this.$tabList = void 0;
       this.$tabListItems = void 0;
-      this.keys = {
-        left: 37,
-        right: 39,
-        up: 38,
-        down: 40
-      };
       this.jsHiddenClass = 'govuk-tabs__panel--hidden';
       this.changingHash = false;
       this.boundTabClick = void 0;
@@ -1997,14 +2258,18 @@
       $panel.id = panelId;
     }
     onTabKeydown(event) {
-      switch (event.keyCode) {
-        case this.keys.left:
-        case this.keys.up:
+      switch (event.key) {
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'Left':
+        case 'Up':
           this.activatePreviousTab();
           event.preventDefault();
           break;
-        case this.keys.right:
-        case this.keys.down:
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case 'Right':
+        case 'Down':
           this.activateNextTab();
           event.preventDefault();
           break;
@@ -2104,7 +2369,7 @@
       console.log(new SupportError());
       return;
     }
-    const components = [[Accordion, config.accordion], [Button, config.button], [CharacterCount, config.characterCount], [Checkboxes], [ErrorSummary, config.errorSummary], [ExitThisPage, config.exitThisPage], [Header], [NotificationBanner, config.notificationBanner], [Radios], [SkipLink], [Tabs]];
+    const components = [[Accordion, config.accordion], [Button, config.button], [CharacterCount, config.characterCount], [Checkboxes], [ErrorSummary, config.errorSummary], [ExitThisPage, config.exitThisPage], [Header], [NotificationBanner, config.notificationBanner], [PasswordInput, config.passwordInput], [Radios], [SkipLink], [Tabs]];
     const $scope = (_config$scope = config.scope) != null ? _config$scope : document;
     components.forEach(([Component, config]) => {
       const $elements = $scope.querySelectorAll(`[data-module="${Component.moduleName}"]`);
@@ -2128,6 +2393,7 @@
    * @property {ErrorSummaryConfig} [errorSummary] - Error Summary config
    * @property {ExitThisPageConfig} [exitThisPage] - Exit This Page config
    * @property {NotificationBannerConfig} [notificationBanner] - Notification Banner config
+   * @property {PasswordInputConfig} [passwordInput] - Password input config
    */
 
   /**
@@ -2142,6 +2408,7 @@
    * @typedef {import('./components/exit-this-page/exit-this-page.mjs').ExitThisPageConfig} ExitThisPageConfig
    * @typedef {import('./components/exit-this-page/exit-this-page.mjs').ExitThisPageTranslations} ExitThisPageTranslations
    * @typedef {import('./components/notification-banner/notification-banner.mjs').NotificationBannerConfig} NotificationBannerConfig
+   * @typedef {import('./components/password-input/password-input.mjs').PasswordInputConfig} PasswordInputConfig
    */
 
   /**
@@ -2158,6 +2425,7 @@
   exports.ExitThisPage = ExitThisPage;
   exports.Header = Header;
   exports.NotificationBanner = NotificationBanner;
+  exports.PasswordInput = PasswordInput;
   exports.Radios = Radios;
   exports.SkipLink = SkipLink;
   exports.Tabs = Tabs;

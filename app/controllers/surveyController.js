@@ -1,7 +1,7 @@
 const { addSurvey } = require('../models/survey');
 const { getAssessmentById } = require('../models/assessmentModel');
 
-exports.g_survey = async (req, res) => {
+exports.g_survey = async (req, res, next) => {
     try {
         const { assessmentID } = req.params
         const assessment = await getAssessmentById(assessmentID);
@@ -12,7 +12,7 @@ exports.g_survey = async (req, res) => {
     }
 };
 
-exports.g_surveyComplete = async (req, res) => {
+exports.g_surveyComplete = async (req, res, next) => {
     try {
         return res.render('survey/complete')
     }
@@ -22,7 +22,7 @@ exports.g_surveyComplete = async (req, res) => {
 };
 
 // TODO: #70 Change to validation model approach
-exports.p_submitSurvey = async (req, res) => {
+exports.p_submitSurvey = async (req, res, next) => {
     try {
         const { assessmentID } = req.body;
         const userID = req.session.data.User.UserID;

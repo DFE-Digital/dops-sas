@@ -363,7 +363,7 @@ exports.p_volunteer = async function (req, res, next) {
 
 exports.p_reportSection = [
     validateAddRating,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -411,7 +411,7 @@ exports.p_reportSection = [
  */
 exports.p_reportSectionActionsAdd = [
     validateAddAction,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { AssessmentID, Standard, actionPlanItem } = req.body;
             const user = req.session.data.User;
@@ -448,7 +448,7 @@ exports.p_reportSectionActionsAdd = [
  */
 exports.p_reportSectionActionsManage = [
     validateAddAction,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { AssessmentID, Standard, UniqueID, action, actionPlanItem } = req.body;
             const user = req.session.data.User;
@@ -487,7 +487,7 @@ exports.p_reportSectionActionsManage = [
  */
 exports.p_reportPanelComments = [
     validateAddComments,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { AssessmentID, PanelComments } = req.body;
 

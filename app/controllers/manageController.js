@@ -20,7 +20,7 @@ const { getTeamForAssessmentExtended, addTeam, getTeamMemberForIdAndUniqueID, de
 const { validateAddArtefact, validateAddTeam } = require('../validation/manage');
 
 
-exports.g_manage = async (req, res) => {
+exports.g_manage = async (req, res, next) => {
     try {
         const user = req.session.data.User;
         const assessments = await getAssessmentsUserCanAccess(user.UserID);
@@ -34,7 +34,7 @@ exports.g_manage = async (req, res) => {
     }
 }
 
-exports.g_previous = async (req, res) => {
+exports.g_previous = async (req, res, next) => {
     try {
         const user = req.session.data.User;
         const assessments = await getAssessmentsUserCanAccess(user.UserID);
@@ -204,7 +204,7 @@ exports.g_removeteam = async function (req, res, next) {
 
 exports.p_addartefact = [
     validateAddArtefact,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { Title, Description, URL, AssessmentID } = req.body;
 
@@ -264,7 +264,7 @@ exports.p_removeartefact = async function (req, res, next) {
 
 exports.p_addteam = [
     validateAddTeam,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { EmailAddress, FirstName, LastName, Role, AssessmentID } = req.body;
 

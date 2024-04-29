@@ -7,11 +7,11 @@ const { getRoleByUserID } = require('../models/userrole');
 const { getAllAssessors, createAssessor, getAssessorByUserID } = require('../models/assessors');
 const { getDepartments, getDepartmentForUser } = require('../models/departments');
 
-exports.g_signin = (req, res) => {
+exports.g_signin = (req, res, next) => {
     res.render('auth/sign-in');
 };
 
-exports.g_checktoken = async (req, res) => {
+exports.g_checktoken = async (req, res, next) => {
     try {
         const { token } = req.params;
 
@@ -74,7 +74,7 @@ exports.g_checktoken = async (req, res) => {
     }
 };
 
-exports.g_signout = (req, res) => {
+exports.g_signout = (req, res, next) => {
     try {
         req.session.destroy((err) => {
             if (err) {
@@ -90,7 +90,7 @@ exports.g_signout = (req, res) => {
     }
 };
 
-exports.g_checkemail = (req, res) => {
+exports.g_checkemail = (req, res, next) => {
     try {
         res.render('auth/check-email');
     } catch (error) {
@@ -109,7 +109,7 @@ exports.g_checkemail = (req, res) => {
  */
 exports.p_signin = [
     validateSignIn,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 

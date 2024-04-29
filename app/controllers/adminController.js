@@ -898,7 +898,7 @@ exports.g_surveyResponse = async function (req, res, next) {
 
 exports.p_addartefact = [
     validateAddArtefact,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { Title, Description, URL, AssessmentID } = req.body;
 
@@ -960,7 +960,7 @@ exports.p_removeartefact = async function (req, res, next) {
 
 exports.p_process = [
     validateRequest,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { assessmentID, process } = req.body;
             const userID = req.session.data.User.UserID;
@@ -990,7 +990,7 @@ exports.p_process = [
 
 exports.p_addpanel = [
     validateAddPanel,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { AssessmentID, Assessor, Role } = req.body;
 
@@ -1352,7 +1352,7 @@ exports.p_publishReport = async function (req, res, next) {
 
 exports.p_addadmin = [
     validateAddAdmin,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -1404,7 +1404,7 @@ exports.p_removeadmin = async function (req, res, next) {
  */
 exports.p_addTraining = [
     validateAddTraining,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const {
                 AssessorID,
@@ -1707,7 +1707,7 @@ exports.p_changePortfolio = async function (req, res, next) {
 
 exports.p_changeDD = [
     validateDD,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { AssessmentID, ddemail } = req.body;
             let model = await getAssessmentById(AssessmentID);
@@ -1743,7 +1743,7 @@ exports.p_changeDD = [
 
 exports.p_changePM = [
     validatePM,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { AssessmentID, pm } = req.body;
 
@@ -1798,7 +1798,7 @@ exports.p_changePM = [
 
 exports.p_changeDM = [
     validateDM,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const { AssessmentID, dm } = req.body;
 

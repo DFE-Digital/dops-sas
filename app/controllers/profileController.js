@@ -9,7 +9,7 @@ const { getDepartments, getDepartmentForUser } = require('../models/departments'
 
 const e = require('express');
 
-exports.g_profile = async (req, res) => {
+exports.g_profile = async (req, res, next) => {
     try {
 
         const user = req.session.data.User;
@@ -40,14 +40,14 @@ exports.g_profile = async (req, res) => {
     }
 }
 
-exports.g_changeName = (req, res) => {
+exports.g_changeName = (req, res, next) => {
     try {
         res.render('profile/change-name')
     } catch (error) {
         next(error)
     }
 }
-exports.g_changeEmail = (req, res) => {
+exports.g_changeEmail = (req, res, next) => {
     try {
         res.render('profile/change-email')
     } catch (error) {
@@ -55,7 +55,7 @@ exports.g_changeEmail = (req, res) => {
     }
 }
 
-exports.g_training = async (req, res) => {
+exports.g_training = async (req, res, next) => {
     try {
         const training = await getTrainingForUser(req.session.data.User.UserID);
 
@@ -65,7 +65,7 @@ exports.g_training = async (req, res) => {
     }
 }
 
-exports.g_history = async (req, res) => {
+exports.g_history = async (req, res, next) => {
     try {
         const user = req.session.data.User;
         const assessments = await getAssessmentPanelByUserID(user.UserID);
@@ -80,7 +80,7 @@ exports.g_history = async (req, res) => {
 
 exports.p_changeName = [
     validateChangeName,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 
@@ -119,7 +119,7 @@ exports.p_changeName = [
 
 exports.p_changeEmail = [
     validateChangeEmail,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const errors = validationResult(req);
 

@@ -13,7 +13,7 @@
 
 const { getServiceStandards } = require('../models/standards');
 
-exports.g_home = (req, res) => {
+exports.g_home = (req, res, next) => {
     try {
 
         if (req.session && req.session.data) {
@@ -26,7 +26,7 @@ exports.g_home = (req, res) => {
     }
 }
 
-exports.g_features = (req, res) => {
+exports.g_features = (req, res, next) => {
     try {
         res.render('features/index')
     } catch (error) {
@@ -34,35 +34,35 @@ exports.g_features = (req, res) => {
     }
 }
 
-exports.g_features_book = (req, res) => {
+exports.g_features_book = (req, res, next) => {
     try {
         res.render('features/book')
     } catch (error) {
         next(error)
     }
 }
-exports.g_features_manage = (req, res) => {
+exports.g_features_manage = (req, res, next) => {
     try {
         res.render('features/manage')
     } catch (error) {
         next(error)
     }
 }
-exports.g_features_assess = (req, res) => {
+exports.g_features_assess = (req, res, next) => {
     try {
         res.render('features/assess')
     } catch (error) {
         next(error)
     }
 }
-exports.g_features_reports = (req, res) => {
+exports.g_features_reports = (req, res, next) => {
     try {
         res.render('features/reports')
     } catch (error) {
         next(error)
     }
 }
-exports.g_features_admin = (req, res) => {
+exports.g_features_admin = (req, res, next) => {
     try {
         res.render('features/admin')
     } catch (error) {
@@ -70,7 +70,7 @@ exports.g_features_admin = (req, res) => {
     }
 }
 
-exports.g_features_installation = (req, res) => {
+exports.g_features_installation = (req, res, next) => {
     try {
         res.render('features/installation/index')
     } catch (error) {
@@ -78,7 +78,7 @@ exports.g_features_installation = (req, res) => {
     }
 }
 
-exports.g_support = (req, res) => {
+exports.g_support = (req, res, next) => {
     try {
         res.render('support')
     } catch (error) {
@@ -86,7 +86,7 @@ exports.g_support = (req, res) => {
     }
 }
 
-exports.g_accessibility = (req, res) => {
+exports.g_accessibility = (req, res, next) => {
     try {
         res.render('accessibility')
     } catch (error) {
@@ -94,7 +94,7 @@ exports.g_accessibility = (req, res) => {
     }
 }
 
-exports.g_privacy = (req, res) => {
+exports.g_privacy = (req, res, next) => {
     try {
         res.render('privacy')
     } catch (error) {
@@ -102,7 +102,7 @@ exports.g_privacy = (req, res) => {
     }
 }
 
-exports.g_cookies = (req, res) => {
+exports.g_cookies = (req, res, next) => {
     try {
         res.render('cookies')
     } catch (error) {
@@ -110,7 +110,7 @@ exports.g_cookies = (req, res) => {
     }
 }
 
-exports.g_notAssessor = (req, res) => {
+exports.g_notAssessor = (req, res, next) => {
     try {
         res.render('not-assessor')
     } catch (error) {
@@ -124,7 +124,7 @@ exports.g_notAssessor = (req, res) => {
  * redirect to assidfe based on the parmeter
  * @param {standard} the specific standard to redirect to assidfe
  */
-exports.g_assidfe = async (req, res) => {
+exports.g_assidfe = async (req, res, next) => {
     try {
         const { standard } = req.params
         const serviceStandards = await getServiceStandards()
