@@ -17,7 +17,7 @@
 
 {% block content %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
 
         {% include 'partials/errorSummary.html' %}
 
@@ -135,7 +135,7 @@
                     Description
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    {{assessment.Description}}
+                   <pre class="govuk-body" style="white-space: break-spaces;">{{assessment.Description}}</pre>
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link" href="/admin/change-description/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> description</span></a>

@@ -1,6 +1,6 @@
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
        {% if assessment.Status == 'SA Review' and selectedNav === 'Admin' %}
        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
           data-module="govuk-notification-banner">
@@ -160,7 +160,7 @@
        {% endfor %}
        {% endif %}
     </div>
-    <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column-one-quarter">
        {% if assessment.Status !== 'Draft' and assessment.Status !== 'Active' %}
        <aside class="dfe-aside">
           <h2 class="govuk-heading-m">Download report</h2>
