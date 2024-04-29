@@ -1194,8 +1194,10 @@ exports.p_addassessor = async function (req, res, next) {
             department = department.DepartmentID;
         }
 
+        let emailAddress = EmailAddress.toLowerCase();
+
         const userx = await UpsertUserNoToken(
-            EmailAddress,
+            emailAddress,
             FirstName,
             LastName,
             user.UserID,
@@ -1722,6 +1724,7 @@ exports.p_changeDD = [
             }
 
             const userID = req.session.data.User.UserID;
+
 
             let ddUserID = await UpsertUserNoToken(
                 ddemail,

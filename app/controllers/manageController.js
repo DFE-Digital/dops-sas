@@ -279,7 +279,9 @@ exports.p_addteam = [
                 });
             }
 
-            let userID = await UpsertUserNoToken(EmailAddress, FirstName, LastName, req.session.data.User.UserID, 'Add team member request: ' + AssessmentID);
+            let emailAddress = EmailAddress.toLowerCase();
+
+            let userID = await UpsertUserNoToken(emailAddress, FirstName, LastName, req.session.data.User.UserID, 'Add team member request: ' + AssessmentID);
 
             await addTeam(AssessmentID, userID, Role);
 
