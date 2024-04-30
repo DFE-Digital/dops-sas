@@ -19,7 +19,7 @@
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "connect-pg-simple": "^9.0.1",
-    "dfe-webfrontend": "^1.1.8",
+    "dfe-webfrontend": "^1.1.10",
     "docxtemplater": "^3.46.0",
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",

@@ -4,7 +4,6 @@ $govuk-font-family: 'Inter', sans-serif;
 $govuk-new-link-styles: true;
 $govuk-global-styles: true;
 
-
 @import 'node_modules/govuk-frontend/dist/govuk/all';
 @import 'node_modules/dfe-webfrontend/packages/dfefrontend';
 @import './_hero.scss';
@@ -18,14 +17,7 @@ $govuk-global-styles: true;
 @import './_interruption.scss';
 
 
-.govuk-width-container {
-  @include govuk-width-container;
-}
 
-
-a:visited {
-  color: $govuk-link-colour;
-}
 
 .dfe-vertical-nav {
   -webkit-font-smoothing: antialiased;
