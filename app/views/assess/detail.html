@@ -114,7 +114,7 @@
                         <dd class="govuk-summary-list__value">
                             {% set exists = false %}
                             {% for assessor in assessmentPanel %}
-                            {% if (assessor.AssessmentID == assessment.AssessmentID) and assessor.Role === "Design assessor" %}
+                            {% if (assessor.AssessmentID == assessment.AssessmentID) and "Design" in assessor.Role %}
                             {{ assessor.FirstName }}
                             {{ assessor.LastName }}
                             {% set exists = true %}
@@ -139,6 +139,23 @@
                             {% endfor %}
                             {% if not exists %}
                             <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/performance"
+                                class="govuk-link">Volunteer</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Policy</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set exists = false %}
+                            {% for assessor in assessmentPanel %}
+                            {% if (assessor.AssessmentID == assessment.AssessmentID) and "Policy" in assessor.Role %}
+                            {{ assessor.FirstName }}
+                            {{ assessor.LastName }}
+                            {% set exists = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if not exists %}
+                            <a href="/volunteer/volunteer/{{ assessment.AssessmentID }}/policy"
                                 class="govuk-link">Volunteer</a>
                             {% endif %}
                         </dd>
