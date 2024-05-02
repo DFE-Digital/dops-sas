@@ -9,7 +9,6 @@ $govuk-global-styles: true;
 @import './_hero.scss';
 @import './_topnav.scss';
 @import './_banner.scss';
-@import './_cards.scss';
 @import './_listpanels.scss';
 @import './_subnav.scss';
 @import './_feedback.scss';
@@ -2430,24 +2429,6 @@ ol {
   /* Adjust font size as needed */
 }
 
-// DfE Frontend Overrides - until a future release
-
-.dfe-header__menu-toggle {
-  border-radius: 0px;
-}
-
-@include govuk-media-query($until: large-desktop) {
-  .dfe-header__navigation {
-    background: #ffffff;
-  }
-
-  .dfe-header__navigation-item--current {
-    a.dfe-header__navigation-link {
-      color: #003a69;
-    }
-  }
-
-}
 
 
 ul.dfe-items-list {
