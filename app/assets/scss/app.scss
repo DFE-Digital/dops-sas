@@ -5,7 +5,7 @@ $govuk-new-link-styles: true;
 $govuk-global-styles: true;
 
 @import 'node_modules/govuk-frontend/dist/govuk/all';
-@import 'node_modules/dfe-webfrontend/packages/dfefrontend';
+@import 'node_modules/dfe-frontend/packages/dfefrontend';
 @import './_hero.scss';
 @import './_topnav.scss';
 @import './_banner.scss';
@@ -2482,12 +2482,12 @@ ul.dfe-items-list>li>ul.meta>li>span {
 }
 
 
-.dfe-aside{
+.dfe-aside {
   border-top: 5px solid $color_dfe-blue;
   padding-top: 15px;
 }
 
-.govuk-tag--na{
+.govuk-tag--na {
   color: #282d30;
-    background-color: #e5e6e7;
+  background-color: #e5e6e7;
 }

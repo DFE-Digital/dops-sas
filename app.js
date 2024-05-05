@@ -39,7 +39,7 @@ var nunjuckEnv = nunjucks.configure(
   [
     'app/views',
     'node_modules/govuk-frontend/dist/',
-    'node_modules/dfe-webfrontend/packages/components',
+    'node_modules/dfe-frontend/packages/components',
   ],
   {
     autoescape: true,
@@ -126,19 +126,19 @@ app.post('/form-response/helpful', (req, res) => {
   const date = new Date().toISOString();
 
   base('Data').create([
-      {
-          "fields": {
-              "Response": response,
-              "Service": service,
-              "URL": pageURL
-          }
+    {
+      "fields": {
+        "Response": response,
+        "Service": service,
+        "URL": pageURL
       }
-  ], function(err) {
-      if (err) {
-          console.error(err);
-          return res.status(500).send('Error saving to Airtable');
-      }
-      res.json({ success: true, message: 'Feedback submitted successfully' });
+    }
+  ], function (err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error saving to Airtable');
+    }
+    res.json({ success: true, message: 'Feedback submitted successfully' });
   });
 });
 
@@ -146,26 +146,26 @@ app.post('/form-response/helpful', (req, res) => {
 app.post('/form-response/feedback', (req, res) => {
   const { response, SID } = req.body;
 
-  
-  const service = "Service assessment service"; 
-  const pageURL = req.headers.referer || 'Unknown'; 
+
+  const service = "Service assessment service";
+  const pageURL = req.headers.referer || 'Unknown';
   const date = new Date().toISOString();
 
   console.log(SID)
 
   base('Feedback').create([{
-      "fields": {
-          "Feedback": response,
-          "Service": service,
-          "URL": pageURL,
-          "UserID": SID
-      }
-  }], function(err) {
-      if (err) {
-          console.error(err);
-          return res.status(500).send('Error saving to Airtable');
-      }
-      res.json({ success: true, message: 'Feedback submitted successfully' });
+    "fields": {
+      "Feedback": response,
+      "Service": service,
+      "URL": pageURL,
+      "UserID": SID
+    }
+  }], function (err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error saving to Airtable');
+    }
+    res.json({ success: true, message: 'Feedback submitted successfully' });
   });
 });
 
@@ -177,14 +177,14 @@ app.use('/', appRoutes);
 
 app.use(expressWinston.logger({
   transports: [
-      new winston.transports.Console({
-          json: true,
-          colorize: true
-      })
+    new winston.transports.Console({
+      json: true,
+      colorize: true
+    })
   ],
   format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.json()
+    winston.format.colorize(),
+    winston.format.json()
   ),
   meta: true, // optional: control whether you want to log the meta data about the request (default to true)
   msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. 
