@@ -60,7 +60,7 @@ exports.seed = function(knex) {
               {
                   Point: 10,
                   Title: 'Define what success looks like and publish performance data',
-                  Assessors: 'Performance analyst, Leadh',
+                  Assessors: 'Performance analyst, Lead',
                   Url: 'https://apply-the-service-standard.education.gov.uk/service-standard/10-define-success-publish-performance-data'
               },
               {
