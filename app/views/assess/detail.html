@@ -98,7 +98,7 @@
                             {% for assessor in assessmentPanel %}
                             {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role === "Accessibility assessor" %}
                             {{ assessor.FirstName }}
-                            {{ assessor.LastName }}
+                            {{ assessor.LastName }}<br/>
                             {% set exists = true %}
                             {% set exists = true %}
                             {% endif %}
@@ -116,7 +116,7 @@
                             {% for assessor in assessmentPanel %}
                             {% if (assessor.AssessmentID == assessment.AssessmentID) and "Design" in assessor.Role %}
                             {{ assessor.FirstName }}
-                            {{ assessor.LastName }}
+                            {{ assessor.LastName }}<br/>
                             {% set exists = true %}
                             {% endif %}
                             {% endfor %}
@@ -133,7 +133,7 @@
                             {% for assessor in assessmentPanel %}
                             {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role === "Performance assessor" %}
                             {{ assessor.FirstName }}
-                            {{ assessor.LastName }}
+                            {{ assessor.LastName }}<br/>
                             {% set exists = true %}
                             {% endif %}
                             {% endfor %}
@@ -150,7 +150,7 @@
                             {% for assessor in assessmentPanel %}
                             {% if (assessor.AssessmentID == assessment.AssessmentID) and "Policy" in assessor.Role %}
                             {{ assessor.FirstName }}
-                            {{ assessor.LastName }}
+                            {{ assessor.LastName }}<br/>
                             {% set exists = true %}
                             {% endif %}
                             {% endfor %}
@@ -165,9 +165,9 @@
                         <dd class="govuk-summary-list__value">
                             {% set exists = false %}
                             {% for assessor in assessmentPanel %}
-                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role === "Research assessor" %}
+                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role === "User research assessor" %}
                             {{ assessor.FirstName }}
-                            {{ assessor.LastName }}
+                            {{ assessor.LastName }}<br/>
                             {% set exists = true %}
                             {% endif %}
                             {% endfor %}
@@ -182,10 +182,9 @@
                         <dd class="govuk-summary-list__value">
                             {% set exists = false %}
                             {% for assessor in assessmentPanel %}
-                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role == "Technology
-                            assessor" %}
+                            {% if assessor.AssessmentID == assessment.AssessmentID and assessor.Role == "Technical assessor" %}
                             {{ assessor.FirstName }}
-                            {{ assessor.LastName }}
+                            {{ assessor.LastName }}<br/>
                             {% set exists = true %}
                             {% endif %}
                             {% endfor %}
@@ -198,6 +197,7 @@
                 </dl>
             </div>
         </div>
+    
     </div>
     <div class="govuk-grid-column-one-quarter">
        
