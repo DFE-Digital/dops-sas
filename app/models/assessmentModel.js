@@ -228,8 +228,7 @@ async function getRequestsByMixedStatus(statuses, department) {
         const result = await pool.query(
             `SELECT * FROM "Assessment"
             WHERE "Status" = ANY($1) AND "Department" = $2
-            ORDER BY CASE WHEN "Status" = 'Published' THEN 1 ELSE 0 END, "Status";
-            `,
+            ORDER BY "AssessmentDateTime" ASC;`,
             [statuses, department] // Pass statuses as an array
         );
 

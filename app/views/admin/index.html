@@ -1,90 +1,129 @@
 {% extends "layouts/auth.html" %}
 
-
 {% set selectedNav = "Admin" %}
 {% set pageName = "Your dashboard" %}
 {% set view = "dashboard" %}
 
-
 {% block hero %}
-{% include './_header.html'%}
+{% include './_header.html' %}
 {% endblock %}
 
 
+{# Loop the filteredData JSON array and create a new array where the Status parameter contains each of these statuses
+{% set statuses = ['New', 'Team Review', 'SA Review', 'SA Publish', 'Active'] %}
+#}
+
+{% set statuses = ['New', 'Team Review', 'SA Review', 'SA Publish', 'Active'] %}
+{% set newRequests = [] %}
+{% set teamReviewRequests = [] %}
+{% set saReviewRequests = [] %}
+{% set saPublishRequests = [] %}
+{% set activeRequests = [] %}
+
+{% for record in filteredData %}
+{% if record.Status == 'New' %}
+{% set newRequests = newRequests.concat(record) %}
+{% endif %}
+{% if record.Status == 'Team Review' %}
+{% set teamReviewRequests = teamReviewRequests.concat(record) %}
+{% endif %}
+{% if record.Status == 'SA Review' %}
+{% set saReviewRequests = saReviewRequests.concat(record) %}
+{% endif %}
+{% if record.Status == 'SA Publish' %}
+{% set saPublishRequests = saPublishRequests.concat(record) %}
+{% endif %}
+{% if record.Status == 'Active' and not record.AssessmentDateTime %}
+{% set activeRequests = activeRequests.concat(record) %}
+{% endif %}
+{% endfor %}
 
 {% block content %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter">
-        <nav class="dfe-vertical-nav">
-            <ul class="dfe-vertical-nav__section">
-                <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'priority' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{priority | length }}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin">Priority tasks</a>
-                </li>
-                <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'no-date' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{noDateRequests | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/no-date">Date not set</a>
-                </li>
-                <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'sa-review' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{saReviewRequests | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/sa-review">Send to team</a>
-                </li>
+    <div class="govuk-grid-column-full">
 
-                <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'team-review' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{teamReviewRequests | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/team-review">Team reviewing</a>
-                </li>
-                <li
-                    class="dfe-vertical-nav__section-item {% if filter == 'sa-publish' %}dfe-vertical-nav__section-item--current {% endif %}">
-                    <span class="dfe-vertical-nav--count">{{saPublishRequests | length}}</span>
-                    <a class="dfe-vertical-nav__link" href="/admin/tasks/sa-publish">To be published</a>
-                </li>
-            </ul>
-        </nav>
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    New requests
+                </h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                {% if new | length > 0%}
+                {% include './_basictable.html' %}
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No new requests.</p>
+                {% endif %}
+
+            </div>
+        </div>
 
 
-    </div>
-    <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    Requests with no assessment date
+                </h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                {% if activeRequests | length > 0%}
+                {% include './_basictable.html' %}
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No assessments without a date.</p>
+                {% endif %}
 
-{% if filteredData | length > 0 %}
-        <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">{{filterView}}</caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Service</th>  {% if filter === 'priority'%}
-                    <th scope="col" class="govuk-table__header">Action</th>{% endif %}
-                    <th scope="col" class="govuk-table__header">Phase</th>
-                    <th scope="col" class="govuk-table__header">Type</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-
-                {% for record in filteredData %}
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header"><a href="/admin/overview/{{record.AssessmentID}}">{{record.Name}}
-                    </a>
-                    </th>
-                    {% if filter === 'priority'%}
-                    <td class="govuk-table__cell">                {% if record.Status == "New" %}Process new booking request{% endif %}
-                        {% if record.Status == "SA Review" %}Send report to the team{% endif %}
-                        {% if record.Status == "SA Publish" %}Publish report{% endif %}</td>
-{% endif%}
-                    <td class="govuk-table__cell">{{record.Phase}}</td>
-                    <td class="govuk-table__cell">{{record.Type}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-{% else %}
-<h2 class="govuk-heading-m">{{filterView}}</h2>
-<p>There are no requests to show for this status.</p>
-{% endif %}
+            </div>
+        </div>
 
 
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    Reports to send to the team
+                </h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                {% if saReviewRequests | length > 0%}
+                {% include './_basictable.html' %}
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No reports ready to send to the team.</p>
+                {% endif %}
+
+            </div>
+        </div>
+
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    Reports the team are reviewing
+                </h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                {% if teamReviewRequests | length > 0%}
+                {% include './_basictable.html' %}
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No reports being reviewed by teams.</p>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    Reports to be published
+                </h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                {% if saPublishRequests | length > 0%}
+                {% include './_basictable.html' %}
+                {% else %}
+                <p class="govuk-!-margin-bottom-0">No reports waiting to be published.</p>
+                {% endif %}
+
+            </div>
+        </div>
 
 
     </div>

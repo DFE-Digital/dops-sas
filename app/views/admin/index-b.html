@@ -1,0 +1,76 @@
+{% extends "layouts/auth.html" %}
+
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Your dashboard" %}
+{% set view = "dashboard" %}
+
+
+{% block hero %}
+{% include './_header.html'%}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-full">
+
+
+        <h2 class="govuk-heading-l">Your tasks</h2>
+
+    <h3 class="govuk-heading-m">New requests</h3>
+
+    {% set statuses = ['New', 'Team Review', 'SA Review', 'SA Publish', 'Active'] %}
+    {% for status in statuses %}
+        {% if status == 'Active' %}
+            {% set filteredStatusData = filteredData | selectattr("Status", "equalto", status) | selectattr("AssessmentDateTime", "none") | list %}
+        {% else %}
+            {% set filteredStatusData = filteredData | selectattr("Status", "equalto", status) | list %}
+        {% endif %}
+    
+        {% if filteredStatusData | length > 0 %}
+            <h3 class="govuk-heading-m">{{ status }} Requests</h3>
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-table__caption--m">{{ status }} Requests</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Service</th>
+                        <th scope="col" class="govuk-table__header">Action</th>
+                        <th scope="col" class="govuk-table__header">Phase</th>
+                        <th scope="col" class="govuk-table__header">Type</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for record in filteredStatusData %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                            </th>
+                            <td class="govuk-table__cell">
+                                {% if record.Status == "New" %}Process new booking request{% endif %}
+                                {% if record.Status == "SA Review" %}Send the report to the team{% endif %}
+                                {% if record.Status == "SA Publish" %}Publish the report{% endif %}
+                                {% if record.Status == "Active" and not record.AssessmentDateTime %}Set assessment date and time{% endif %}
+                            </td>
+                            <td class="govuk-table__cell">{{ record.Phase }}</td>
+                            <td class="govuk-table__cell">{{ record.Type }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endfor %}
+    
+    {% if filteredData | length == 0 %}
+        <h2 class="govuk-heading-m">{{ filterView }}</h2>
+        <p>There are no requests to show for this status.</p>
+    {% endif %}
+    
+
+
+
+    </div>
+</div>
+{% endblock %}
