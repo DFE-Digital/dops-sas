@@ -95,6 +95,9 @@ nunjuckEnv.addFilter('andify', function (input) {
   }
 });
 
+nunjuckEnv.addFilter('toFixed', function (num, digits) {
+  return parseFloat(num).toFixed(digits);
+});
 
 
 app.set('view engine', 'html');

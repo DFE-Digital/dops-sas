@@ -22,20 +22,20 @@
             <div class="dfe-card">
                 <div class="dfe-card-container">
                     <p>Pre-assessment</p>
-                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgPreAssessment}}</h3>
+                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgPreAssessment | toFixed(1) }}</h3>
                     <p class="govuk-!-margin-bottom-0 govuk-body-s">Out of 5</p>
                 </div>
             </div>
             <div class="dfe-card">
                 <div class="dfe-card-container">     <p>Organisation</p>
-                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgOrganisation}}</h3>
+                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgOrganisation | toFixed(1) }}</h3>
                
                     <p class="govuk-!-margin-bottom-0 govuk-body-s">Out of 5</p>
                 </div>
             </div>
             <div class="dfe-card">
                 <div class="dfe-card-container">   <p>Assessment</p>
-                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgRunning}}</h3>
+                    <h3 class="govuk-heading-m govuk-!-font-size-80 ">{{avgRunning | toFixed(1) }}</h3>
                  
                     <p class="govuk-!-margin-bottom-0 govuk-body-s">Out of 5</p>
                 </div>
