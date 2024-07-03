@@ -31,6 +31,7 @@ class AssessmentModel {
         this.PanelCommentsComplete = data.PanelCommentsComplete;
         this.PanelCommentsImprove = data.PanelCommentsImprove;
         this.Department = data.Department;
+        this.SlackID = data.SlackID;
     }
 }
 
@@ -217,19 +218,18 @@ async function getRequestsByStatus(status, department) {
 }
 
 /**
-* Gets assessments by status for the department the user belongs to.
-* @param {string} status The status of the assessments to get.
-* @param {number} department The department the user belongs to.
-* @returns {Promise<Array>} A promise that resolves to an array of assessment objects.
-*/
+ * Gets assessments by status for the department the user belongs to.
+ * @param {string[]} statuses The statuses of the assessments to get.
+ * @param {number} department The department the user belongs to.
+ * @returns {Promise<Array>} A promise that resolves to an array of assessment objects.
+ */
 async function getRequestsByMixedStatus(statuses, department) {
     try {
         // Use ANY($1) to match any of the statuses in the array
         const result = await pool.query(
             `SELECT * FROM "Assessment"
             WHERE "Status" = ANY($1) AND "Department" = $2
-            ORDER BY CASE WHEN "Status" = 'Published' THEN 1 ELSE 0 END, "Status";
-            `,
+            ORDER BY "AssessmentDateTime" ASC;`,
             [statuses, department] // Pass statuses as an array
         );
 
@@ -239,6 +239,7 @@ async function getRequestsByMixedStatus(statuses, department) {
         throw error;
     }
 }
+
 
 /**
 * Gets assessments that the given user can access.
@@ -463,6 +464,19 @@ async function getAllAssessmentsNotDrafts(departmentID) {
     }
 }
 
+//Update the SlackID for an assessment
+async function updateSlackChannelID(assessmentID, slackID) {
+    try {
+        await pool.query(`
+            UPDATE "Assessment"
+            SET "SlackID" = $2
+            WHERE "AssessmentID" = $1
+        `, [assessmentID, slackID]);
+    } catch (error) {
+        console.error('Error in updateSlackChannelID:', error);
+        throw error;
+    } 
+}
 
 module.exports = {
     AssessmentModel,
@@ -480,5 +494,6 @@ module.exports = {
     changePrimaryContact,
     getAllAssessments,
     createReAssessment,
-    getAllAssessmentsNotDrafts
+    getAllAssessmentsNotDrafts,
+    updateSlackChannelID
 };

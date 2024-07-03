@@ -29,6 +29,20 @@
         </div>
     </li>
 
+    {# <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            <a class="govuk-link govuk-task-list__link" href="/admin/create-slack-channel/{{assessment.AssessmentID}}"
+            aria-describedby="add-slack-status">Create Slack channel</a>
+        </div>
+        <div class="govuk-task-list__status" id="add-slack-status">
+            {% if assessment.SlackID %}
+            Completed
+            {% else %}
+            <strong class="govuk-tag govuk-tag--blue">To do</strong>
+            {% endif %}
+        </div>
+    </li> #}
+
 
     <li class="govuk-task-list__item govuk-task-list__item--with-link">
         <div class="govuk-task-list__name-and-hint">
@@ -42,6 +56,8 @@
             {% endif %}
         </div>
     </li>
+
+
 
 
     <li class="govuk-task-list__item govuk-task-list__item--with-link">

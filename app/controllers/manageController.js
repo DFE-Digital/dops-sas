@@ -18,7 +18,7 @@ const { getActionsForAssessmentID } = require('../models/actions');
 const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact } = require('../models/artefacts');
 const { getTeamForAssessmentExtended, addTeam, getTeamMemberForIdAndUniqueID, deleteTeamMemberByID } = require('../models/team');
 const { validateAddArtefact, validateAddTeam } = require('../validation/manage');
-
+const {postArtefactMessage } = require('../models/slack');
 
 exports.g_manage = async (req, res, next) => {
     try {
@@ -221,11 +221,17 @@ exports.p_addartefact = [
 
             await addArtefact(AssessmentID, Title, Description, URL, req.session.data.User.UserID);
 
+            // Post to slack
+            // channelId, artefactName, assessmentID
+            await postArtefactMessage(assessment.SlackID, Title, AssessmentID);
+
+
             // Clear the body and data for the fields
             req.body = {};
             req.session.data.Title = '';
             req.session.data.Description = '';
             req.session.data.URL = '';
+
 
 
             return res.redirect(`/manage/artefacts/${AssessmentID}`);

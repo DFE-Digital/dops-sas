@@ -90,6 +90,10 @@ const {
     getSurveyData, getSurvey
 } = require("../models/survey");
 
+const {
+   addUserToChannelByEmail
+
+} = require("../models/slack"); 
 
 const { validateChangeName, validateChangeEmail } = require('../validation/profile');
 
@@ -893,6 +897,15 @@ exports.g_surveyResponse = async function (req, res, next) {
 };
 
 
+exports.g_createSlackChannel = async function (req, res, next) {
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        return res.render("admin/entry/create-slack-channel", { assessment });
+    } catch (error) {
+        next(error);
+    }
+};
 
 // POSTS
 
@@ -1009,6 +1022,9 @@ exports.p_addpanel = [
             const panel = await addPanelMember(AssessmentID, Assessor, Role);
             const assessorInfo = await getAssessorByUserID(Assessor);
             const assessmentDateTime = new Date(assessment.AssessmentDateTime);
+
+            const message = await addUserToChannelByEmail(assessorInfo.EmailAddress, assessment.SlackID);
+
 
             // TODO: Put into a function
 
