@@ -156,7 +156,7 @@ exports.p_signin = [
 
         } catch (error) {
             console.error('Error:', error);
-            return res.render('sign-in', { errors })
+            return res.render('sign-in', { error })
         }
     }
 ];

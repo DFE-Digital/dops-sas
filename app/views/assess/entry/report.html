@@ -95,7 +95,9 @@
                 </div>
             </li>
         </ul>
+
         <h3 class="govuk-heading-m">Standards</h3>
+
         <ul class="govuk-task-list">
             {% for standard in serviceStandards %}
             <li class="govuk-task-list__item govuk-task-list__item--with-link">
@@ -107,8 +109,6 @@
                     {% for rating in ratings %}
                     {% if (rating.Standard === standard.Point) and (rating.Outcome != 'Green' and rating.Outcome !=
                     'NA') %}
-
-
 
                     <div id="standard-details-{{standard.point}}-hint" class="govuk-task-list__hint">
 
@@ -122,9 +122,17 @@
 
                         {%-if actionForStandardCount == 0 -%}No actions added{% else %}{{actionForStandardCount}}
                         action{%-if actionForStandardCount !== 1 -%}s{%-endif %} added{% endif %}
+                        
                     </div>
                     {% endif %}
                     {% endfor %}
+
+                    {% if standard.Assessors %}
+     
+      <p class="govuk-task-list__hint govuk-!-margin-bottom-0 govuk-body-s">Standard assessed by {{standard.Assessors | lower}}</p>
+      {% else %}
+     
+      {% endif %}
                 </div>
                 <div class="govuk-task-list__status" id="standard-details-{{standard.point}}-status">
                     {% set rated = false %}
