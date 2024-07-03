@@ -50,7 +50,26 @@
             </div>
             <div class="govuk-summary-card__content">
                 {% if new | length > 0%}
-                {% include './_basictable.html' %}
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-half">Service</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+                            <th scope="col" class="govuk-table__header">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in new %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                            </th>
+                            <td class="govuk-table__cell">{{ record.Phase }}</td>
+                            <td class="govuk-table__cell">{{ record.Type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% else %}
                 <p class="govuk-!-margin-bottom-0">No new requests.</p>
                 {% endif %}
@@ -67,7 +86,26 @@
             </div>
             <div class="govuk-summary-card__content">
                 {% if activeRequests | length > 0%}
-                {% include './_basictable.html' %}
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-half">Service</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+                            <th scope="col" class="govuk-table__header">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in activeRequests %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                            </th>
+                            <td class="govuk-table__cell">{{ record.Phase }}</td>
+                            <td class="govuk-table__cell">{{ record.Type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% else %}
                 <p class="govuk-!-margin-bottom-0">No assessments without a date.</p>
                 {% endif %}
@@ -84,7 +122,26 @@
             </div>
             <div class="govuk-summary-card__content">
                 {% if saReviewRequests | length > 0%}
-                {% include './_basictable.html' %}
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-half">Service</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+                            <th scope="col" class="govuk-table__header">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in saReviewRequests %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                            </th>
+                            <td class="govuk-table__cell">{{ record.Phase }}</td>
+                            <td class="govuk-table__cell">{{ record.Type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% else %}
                 <p class="govuk-!-margin-bottom-0">No reports ready to send to the team.</p>
                 {% endif %}
@@ -101,7 +158,26 @@
             </div>
             <div class="govuk-summary-card__content">
                 {% if teamReviewRequests | length > 0%}
-                {% include './_basictable.html' %}
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-half">Service</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+                            <th scope="col" class="govuk-table__header">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in teamReviewRequests %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                            </th>
+                            <td class="govuk-table__cell">{{ record.Phase }}</td>
+                            <td class="govuk-table__cell">{{ record.Type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% else %}
                 <p class="govuk-!-margin-bottom-0">No reports being reviewed by teams.</p>
                 {% endif %}
@@ -117,7 +193,26 @@
             </div>
             <div class="govuk-summary-card__content">
                 {% if saPublishRequests | length > 0%}
-                {% include './_basictable.html' %}
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-half">Service</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Phase</th>
+                            <th scope="col" class="govuk-table__header">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for record in saPublishRequests %}
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                            </th>
+                            <td class="govuk-table__cell">{{ record.Phase }}</td>
+                            <td class="govuk-table__cell">{{ record.Type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% else %}
                 <p class="govuk-!-margin-bottom-0">No reports waiting to be published.</p>
                 {% endif %}
