@@ -479,7 +479,8 @@ exports.p_description = [
 
             if (!errors.isEmpty()) {
                 return res.render('book/request/description', {
-                    errors: errors.array()
+                    errors: errors.array(),
+                    model: req.body, // Pass back the form data for user convenience
                 });
             }
 

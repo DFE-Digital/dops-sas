@@ -50,8 +50,8 @@ exports.validateDescription = [
             if (value === '') {
                 throw new Error('Enter a description');
             }
-            if (value.length > 2500) {
-                throw new Error('Description must be less than 2500 characters');
+            if (value.length > 750) {
+                throw new Error('Description must be less than 750 characters');
             }
             return true;
         })
