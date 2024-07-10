@@ -19,6 +19,7 @@ const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, dele
 const { getTeamForAssessmentExtended, addTeam, getTeamMemberForIdAndUniqueID, deleteTeamMemberByID } = require('../models/team');
 const { validateAddArtefact, validateAddTeam } = require('../validation/manage');
 
+const { sendNotifyEmail } = require('../middleware/notify');
 
 exports.g_manage = async (req, res, next) => {
     try {
@@ -291,6 +292,20 @@ exports.p_addteam = [
             req.session.data.FirstName = '';
             req.session.data.LastName = '';
             req.session.data.Role = '';
+
+            // Send email to the added team member
+
+            const templateParams = {
+                phase: assessment.Phase.toLowerCase(),
+                type: assessment.Type.toLowerCase(),
+                name: assessment.Name,
+                summary: assessment.Description,
+                serviceURL: process.env.serviceURL,
+                id: assessment.AssessmentID.toString()
+            };
+    
+            // Send email to user
+            sendNotifyEmail(process.env.email_AddedToTeam, emailAddress, templateParams);
 
 
             return res.redirect(`/manage/team/${AssessmentID}`);
