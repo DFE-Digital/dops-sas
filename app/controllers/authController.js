@@ -122,13 +122,15 @@ exports.p_signin = [
             // Get the user's email address from the form
             const { EmailAddress } = req.body;
 
+            var email = EmailAddress.toLowerCase()
+
 
             const token = uuidv4();
             const tokenExpiry = new Date()
             tokenExpiry.setMinutes(tokenExpiry.getMinutes() + 30);
             const formattedTokenExpiry = tokenExpiry.toISOString().slice(0, 19);
 
-            const userId = await checkAndSetUserToken(EmailAddress, token, formattedTokenExpiry);
+            const userId = await checkAndSetUserToken(email, token, formattedTokenExpiry);
 
             if (userId != 0) {
 
@@ -140,7 +142,7 @@ exports.p_signin = [
                 };
 
                 // Send the email
-                const emailSent = await sendNotifyEmail(templateId, EmailAddress, templateParams);
+                const emailSent = await sendNotifyEmail(templateId, email, templateParams);
                 if (emailSent) {
                     console.log('Email sent successfully');
                 } else {

@@ -130,7 +130,10 @@ exports.p_changeEmail = [
             }
 
             const { emailAddress } = req.body;
-            await updateEmail(emailAddress, req.session.data.User.UserID);
+            
+            var email = emailAddress.toLowerCase()
+
+            await updateEmail(email, req.session.data.User.UserID);
             const model = await getBasicUserDetails(req.session.data.User.UserID);
 
             req.session.data.User = model;
