@@ -1,7 +1,7 @@
 {% extends "layouts/auth.html" %}
 {% set selectedNav = "Admin" %}
-{% set pageName = "Manage assessments" %}
-{% set view = "assessments" %}
+{% set pageName = "Completed assessments" %}
+{% set view = "completed" %}
 {% block hero %}
 {% include './_header.html'%}
 {% endblock %}
@@ -137,80 +137,52 @@
 
         <div class="govuk-table-container">
 
-            <table class="govuk-table" id="assessorsTable">
-                <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header  govuk-!-width-one-quarter">Name</th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Type</th>
-                        <th scope="col" class="govuk-table__header">Assessment date</th>
-                        <th scope="col" class="govuk-table__header">Completed standards</th>
-                        <th scope="col" class="govuk-table__header">Report outcome</th>
-                    </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    {% for assessment in assessments %}
-                    {% if assessment.Status !== "Published" %}
-                    <tr class="govuk-table__row" data-phase="{{assessment.Phase}}" data-type="{{assessment.Type}}"
-                        data-outcome="{{assessment.Outcome}}">
-                        <th scope="row" class="govuk-table__header">
-                            <a href="/admin/overview/{{assessment.AssessmentID}}"
-                                class="govuk-link govuk-link--no-visited-state">{{assessment.Name}}</a>
-                        </th>
-                        <td class="govuk-table__cell">{{assessment.Phase}}<br />{{assessment.Type }}</td>
-                        <td class="govuk-table__cell">
-                            {% if assessment.AssessmentDateTime %}{{assessment.AssessmentDateTime | date('D MMM
-                            YY')}}
-                            {% else %}Date not set{% endif %}
-                        </td>
-                        <td class="govuk-table__cell">
+         
+  
 
-                            {% set outcomesByAssessmentID = 0 %}
+    
 
-                            {% for assessmentOutcome in outcomes %}
+        <table class="govuk-table" id="assessorsTable">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Name</th>
+                    <th scope="col" class="govuk-table__header">Type</th>
+                    <th scope="col" class="govuk-table__header">Phase</th>
+                    <th scope="col" class="govuk-table__header">Assessment date</th>
+                    <th scope="col" class="govuk-table__header">Status</th>
+                    <th scope="col" class="govuk-table__header">Outcome</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for assessment in assessments %}
+                {% if assessment.Status === "Published" %}
 
-                            {% if assessmentOutcome.AssessmentID == assessment.AssessmentID%}
-                            {% set outcomesByAssessmentID = outcomesByAssessmentID+1 %}
-                            {% endif %}
+                <tr class="govuk-table__row" data-phase="{{assessment.Phase}}" data-type="{{assessment.Type}}"
+                    data-outcome="{{assessment.Outcome}}">
+                    <th scope="row" class="govuk-table__header">
+                        <a href="/admin/report/{{assessment.AssessmentID}}"
+                            class="govuk-link govuk-link--no-visited-state">{{assessment.Name}}</a>
+                    </th>
+                    <td class="govuk-table__cell">{{assessment.Type}}</td>
+                    <td class="govuk-table__cell">{{assessment.Phase }}</td>
+                    <td class="govuk-table__cell">
+                        {% if assessment.AssessmentDateTime %}{{assessment.AssessmentDateTime | date('D MMM
+                        YY')}}
+                        {% else %}Date not set{% endif %}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {% if assessment.Status == 'Published' %}
+                        Published
+                        {% else %}Active{% endif %}
+                    </td>
+                    <td class="govuk-table__cell">{% include '../partials/_statustag.html' %}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
 
-                            {% endfor%}
-
-                            {{outcomesByAssessmentID}} of 14
-
-                        </td>
-                        <td class="govuk-table__cell">
-
-                            {% if assessment.Status === 'Active' %}
-
-                            {% if outcomesByAssessmentID === 0 %}
-                            <p>Not started</p>
-                            {% else %}
-                            <p>In progress</p>
-                            {% endif %}
-
-
-                            {% else %}
-   <strong class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">{% if assessment.Outcome
-                                === 'Not rated' %} Unrated {% else %} {{assessment.Outcome }} {% endif %}</strong>
-                            {% endif %}
-
-                            
-
-                         
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-            <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No items for the selected
-                criteria.
-            </p>
-        </div>
-
-
-
-
-
+    </div>
     </div>
 </div>
 <script>

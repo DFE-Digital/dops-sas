@@ -192,6 +192,7 @@ router.get("/admin/add-panel/:assessmentID", isAuthenticated, isAdmin, validateP
 router.get("/admin/remove-panel/:assessmentPanelID/:uniqueID", isAuthenticated, isAdmin, adminController.g_removepanel);
 router.get("/admin/add-date/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_adddate);
 router.get("/admin/assessments", isAuthenticated, isAdmin, adminController.g_assessments);
+router.get("/admin/completed", isAuthenticated, isAdmin, adminController.g_completed);
 router.get("/admin/assessors", isAuthenticated, isAdmin, adminController.g_assessors);
 router.get("/admin/assessor/:assessorID", isAuthenticated, isAdmin, adminController.g_assessor);
 router.get("/admin/add-assessor", isAuthenticated, isAdmin, adminController.g_addassessor);

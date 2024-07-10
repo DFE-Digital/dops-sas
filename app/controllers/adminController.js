@@ -57,6 +57,7 @@ const {
 const {
     getServiceStandards,
     getServiceStandardOutcomesByAssessmentID,
+    getStandardOutcomes
 } = require("../models/standards");
 const { getActionsForAssessmentID } = require("../models/actions");
 const {
@@ -249,7 +250,25 @@ exports.g_assessments = async function (req, res, next) {
             "Published",
         ];
         const active = await getRequestsByMixedStatus(statuses, department);
-        return res.render("admin/assessments", { assessments: active });
+        const outcomes = await getStandardOutcomes();
+        return res.render("admin/assessments", { assessments: active, outcomes });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.g_completed = async function (req, res, next) {
+    try {
+        const department = req.session.data.User.Department;
+        const statuses = [
+            "Active",
+            "Team Review",
+            "SA Review",
+            "SA Publish",
+            "Published",
+        ];
+        const active = await getRequestsByMixedStatus(statuses, department);
+        return res.render("admin/completed", { assessments: active });
     } catch (error) {
         next(error);
     }

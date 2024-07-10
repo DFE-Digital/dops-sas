@@ -8,5 +8,65 @@
 {% endblock %}
 
 {% block content %}
-{% include 'partials/_report.html' %}
+<h2 class="govuk-heading-l">Report</h2>
+
+
+{% if ratings | length > 0 %}
+
+
+
+{% if assessment.Type === 'Peer review' and (assessment.Status !== 'Draft' and assessment.Status !== 'Active') %}
+<h3 class="govuk-heading-m">What the team has demonstrated well</h3>
+<pre class="govuk-body">{{assessment.PanelComments}}</pre>
+<h3 class="govuk-heading-m">Recommendations for what the team could improve</h3>
+<pre class="govuk-body">{{assessment.PanelCommentsImprove}}</pre>
+{% endif %}
+{% if assessment.Type === 'Service assessment'%}
+<h2 class="govuk-heading-m  govuk-!-margin-top-7">Summary of ratings for standards</h2>
+<ol class="govuk-task-list">
+   {% for standard in serviceStandards %}
+   {% for rating in ratings %}
+   {% if standard.Point == rating.Standard %}
+   <li class="govuk-task-list__item govuk-task-list__item--with-link">
+      <div class="govuk-task-list__name-and-hint">
+         <a class="govuk-link govuk-task-list__link" href="#point-{{standard.Point}}"
+            aria-describedby="standard-{{standard.Point}}-status">{{ standard.Point }}. {{ standard.Title
+         }}</a>
+      </div>
+      <div class="govuk-task-list__status" id="standard-{{standard.Point}}-status">
+         <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome | NAToString }}</strong>
+      </div>
+   </li>
+   {% endif %}
+   {% endfor %}
+   {% endfor %}
+</ol>
+{% for standard in serviceStandards %}
+{% for rating in ratings %}
+{% if standard.Point == rating.Standard %}
+<h2 class="govuk-heading-m govuk-!-margin-top-9" id="point-{{standard.Point}}">{{ standard.Point }}. {{
+   standard.Title }}
+</h2>
+<p>This standard was rated  <strong class="govuk-tag govuk-tag--{{ rating.Outcome | lower }}">{{ rating.Outcome | NAToString }}</strong></p>
+
+
+  {% if rating.Outcome !== 'Green' %}
+<h3 class="govuk-heading-s">Actions for the team</h3>
+<ul class="govuk-list govuk-list--bullet  govuk-list--spaced">
+   {% for action in actions %}
+   {% if action.Point === standard.Point %}
+   <li>{{action.Comments}}</li>
+   {% endif %}
+   {% endfor %}
+</ul>   
+{% endif %}
+{% endif %}
+{% endfor %}
+<hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+{% endfor %}
+{% endif %}
+
+{% else %}
+<p>The panel haven't started the report yet.</p>
+{% endif %}
 {% endblock %}

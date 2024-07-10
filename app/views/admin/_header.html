@@ -15,6 +15,10 @@
                                 endif %} href="/admin/assessments">Assessments</a>
                         </li>
                         <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='completed' %} aria-current="page" {%
+                                endif %} href="/admin/completed">Completed</a>
+                        </li>
+                        <li class="app-sub-navigation__item">
                             <a class="app-sub-navigation__link" {% if view==='assessors' %} aria-current="page" {% endif
                                 %}href="/admin/assessors">Assessors</a>
                         </li>
