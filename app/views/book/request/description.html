@@ -33,7 +33,7 @@
         {% include 'partials/errorSummary.html' %}
 
         <form action="/book/request/description" method="post">
-            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="2500">
+            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="750">
                 <div class="govuk-form-group  {%if hasError%}govuk-form-group--error{% endif%}">
                     <h1 class="govuk-label-wrapper">
                         <label class="govuk-label govuk-label--l" for="Description">{{pageName}}</label>
@@ -52,7 +52,7 @@
                         id="Description" name="Description" rows="10"
                         aria-describedby="purpose-info purpose-hint">{{model.Description}}</textarea>
                 </div>
-                <div id="Description-info" class="govuk-hint govuk-character-count__message">You can enter up to 2500
+                <div id="Description-info" class="govuk-hint govuk-character-count__message">You can enter up to 750
                     characters</div>
             </div>
             <div class="govuk-button-group">
