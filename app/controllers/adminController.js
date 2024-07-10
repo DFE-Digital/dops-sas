@@ -12,7 +12,7 @@ const {
     getAssessmentPanelByUserID,
     changePrimaryContact,
     getAllAssessments,
-    createReAssessment,getAllAssessmentsNotDrafts
+    createReAssessment, getAllAssessmentsNotDrafts
 } = require("../models/assessmentModel");
 const {
     assessmentPanel,
@@ -46,7 +46,7 @@ const {
 const {
     UpsertUserNoToken,
     getBasicUserDetails,
-    getBasicUserDetailsByEmail,updateName, updateEmail 
+    getBasicUserDetailsByEmail, updateName, updateEmail
 } = require("../models/user");
 const {
     getAllAdmins,
@@ -268,7 +268,7 @@ exports.g_assessors = async function (req, res, next) {
 exports.g_assessor = async function (req, res, next) {
     try {
         const { assessorID } = req.params;
-        const parsedId = parseInt(assessorID,10); 
+        const parsedId = parseInt(assessorID, 10);
 
         if (!Number.isInteger(parsedId)) {
             return res.redirect('/error')
@@ -821,7 +821,7 @@ exports.g_surveys = async function (req, res, next) {
     try {
         // Extract department ID from the user session
         const departmentID = req.session.data.User.Department;
-        
+
         if (!departmentID) {
             const error = new Error("Department ID is required but was not found in the session.");
             error.status = 400; // Bad Request
@@ -829,16 +829,16 @@ exports.g_surveys = async function (req, res, next) {
         }
 
         const surveys = await getSurveyData(departmentID);
-      
+
         const { avgPreAssessment, avgOrganisation, avgRunning } = calculateSurveyAverages(surveys);
 
-        return res.render('admin/surveys', { 
+        return res.render('admin/surveys', {
             surveys,
             avgPreAssessment,
             avgOrganisation,
             avgRunning
         });
-      
+
     } catch (error) {
         return next(error);
     }
@@ -848,13 +848,13 @@ exports.g_surveys = async function (req, res, next) {
 exports.g_surveyResponse = async function (req, res, next) {
     try {
         // Extract department ID from the user session
-        const {surveyID } = req.params;
+        const { surveyID } = req.params;
         const survey = await getSurvey(surveyID);
         const assessors = await assessmentPanelExtended(survey.AssessmentID)
-        return res.render('admin/survey-response', { 
+        return res.render('admin/survey-response', {
             survey, assessors
         });
-      
+
     } catch (error) {
         return next(error);
     }
@@ -1026,11 +1026,21 @@ exports.p_addpanel = [
                 role: Role.toLowerCase(),
             };
 
-            sendNotifyEmail(
-                process.env.email_AddedToPanel,
-                assessorInfo.EmailAddress,
-                templateParams,
-            );
+            if (templateParams.role === 'observer') {
+                templateParams.observerName = assessorInfo.FirstName,
+
+                sendNotifyEmail(
+                    process.env.email_AddedToPanelObserver,
+                    assessorInfo.EmailAddress,
+                    templateParams,
+                );
+            } else {
+                sendNotifyEmail(
+                    process.env.email_AddedToPanel,
+                    assessorInfo.EmailAddress,
+                    templateParams,
+                );
+            }
 
             return res.redirect(`/admin/panel/${AssessmentID}`);
         } catch (error) {
@@ -1518,15 +1528,15 @@ exports.p_changeAssessorName = [
             const { AssessorID, firstName, lastName } = req.body;
 
             console.log(errors)
-  const assessor = await getAssessor(AssessorID);
+            const assessor = await getAssessor(AssessorID);
             if (!errors.isEmpty()) {
-              
+
                 return res.render('admin/change-assessor-name', {
                     errors: errors.array(), assessor
                 });
             }
 
-        
+
             // Update existing assessment
             await updateName(firstName, lastName, assessor.UserID);
 
