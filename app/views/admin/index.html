@@ -8,7 +8,7 @@
 {% include './_header.html' %}
 {% endblock %}
 
-
+{% block content %}
 {# Loop the filteredData JSON array and create a new array where the Status parameter contains each of these statuses
 {% set statuses = ['New', 'Team Review', 'SA Review', 'SA Publish', 'Active'] %}
 #}
@@ -38,7 +38,7 @@
 {% endif %}
 {% endfor %}
 
-{% block content %}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
@@ -49,7 +49,7 @@
                 </h2>
             </div>
             <div class="govuk-summary-card__content">
-                {% if new | length > 0%}
+                {% if newRequests | length > 0%}
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
@@ -59,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        {% for record in new %}
+                        {% for record in newRequests %}
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">
                                 <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
