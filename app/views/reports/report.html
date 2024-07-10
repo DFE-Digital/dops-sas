@@ -27,7 +27,9 @@
                 <table class="govuk-table  govuk-!-margin-bottom-3">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
+                            {% if assessment.Type === 'Service assessment' %}
                             <th class="govuk-table__header" scope="col">Rating</th>
+                            {% endif %}
                             <th class="govuk-table__header" scope="col">Type</th>
                             <th class="govuk-table__header" scope="col">Phase</th>
                             <th class="govuk-table__header" scope="col">Assessment date</th>
@@ -36,10 +38,11 @@
                     </thead>
                     <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
+                            
+                            {% if assessment.Type === 'Service assessment' %}<td class="govuk-table__cell">
                                 <strong
                                     class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">{{assessment.Outcome | NAToString }}</strong>
-                            </td>
+                            </td>   {% endif %}
                             <td class="govuk-table__cell">{{assessment.Type}}</td>
                             <td class="govuk-table__cell">{{assessment.Phase}}</td>
                             <td class="govuk-table__cell">{{assessment.AssessmentDateTime | date('D MMM YYYY')}}</td>
