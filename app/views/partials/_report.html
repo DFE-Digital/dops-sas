@@ -116,6 +116,9 @@
        <pre class="govuk-body">{{assessment.PanelCommentsImprove}}</pre>
        {% endif %}
        {% if assessment.Type === 'Service assessment' and (assessment.Status !== 'Draft' and assessment.Status !== 'Active') %}
+       <h3 class="govuk-heading-m">What the team has demonstrated well</h3>
+       <pre class="govuk-body">{{assessment.PanelComments}}</pre>
+       
        <h2 class="govuk-heading-m  govuk-!-margin-top-7">Summary of ratings for standards</h2>
        <ol class="govuk-task-list">
           {% for standard in serviceStandards %}
