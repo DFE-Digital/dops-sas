@@ -245,7 +245,7 @@ async function getRequestsByMixedStatus(statuses, department) {
 * also needs to include where they are also in the AssessmentTeam table
 */
 async function getAssessmentsUserCanAccess(userID) {
-    try {
+    try {console.log(userID)
         const result = await pool.query(
             `
             SELECT DISTINCT * FROM "Assessment"
