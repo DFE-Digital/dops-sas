@@ -4,136 +4,135 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 
-<head>
-  <meta charset="utf-8">
-  <title>{{pageName}} - Service assessment service - Department for Education</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#003a69">
-  <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico">
-  <link rel="icon" sizes="any" href="/assets/images/favicon.svg" type="image/svg+xml">
-  <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c">
-  <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png">
-  <link rel="stylesheet" href="/assets/css/app.min.css">
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageName}} - Service assessment service - Department for Education</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#003a69">
+    <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico">
+    <link rel="icon" sizes="any" href="/assets/images/favicon.svg" type="image/svg+xml">
+    <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c">
+    <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png">
+    <link rel="stylesheet" href="/assets/css/app.min.css">
 
-</head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J9EGREXSYH"></script>
+  </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QV4HWRX9XT"></script>
 
+  <body class="govuk-template__body">
+    <script>
+      document.body.className += ' js-enabled' + (
+        'noModule' in HTMLScriptElement.prototype
+        ? ' govuk-frontend-supported'
+        : '');
+    </script>
+    {% if staging %}
+    {% else %}
+      {% include 'layouts/_cookiebanner.html'%}
+    {% endif %}
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
 
-<body class="govuk-template__body">
-  <script>
-    document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
-  </script>
-  {% if staging %}
-  {% else %}
-  {% include 'layouts/_cookiebanner.html'%}
-  {% endif %}
-  <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+    {% if staging %}
+      <div class="govuk-!-padding-3" style="background: #fff200">
+        <div class="govuk-width-container dfe-width-container" style="background: #fff200">
+          <p class="govuk-!-margin-bottom-0">Test environment</p>
+        </div>
+      </div>
+    {% endif %}
 
-  {% if staging %}
-  <div class="govuk-!-padding-3" style="background: #fff200">
-    <div class="govuk-width-container dfe-width-container" style="background: #fff200">
-      <p class="govuk-!-margin-bottom-0">Test environment</p>
-    </div>
-  </div>
-  {% endif %}
-
-  {% block header %}
-  {% include 'layouts/_authheader.html'%}
-  {% endblock %}
-
-  {% block hero %}{% endblock %}
-  <div class="dfe-width-container">
-    {% block beforeContent%}{% endblock %}
-
-    {% block main %}
-    <main class="govuk-main-wrapper " id="main-content" role="main">
-      {% block content %}{% endblock %}
-    </main>
-
-
-
+    {% block header %}
+      {% include 'layouts/_authheader.html'%}
     {% endblock %}
 
-  </div>
+    {% block hero %}{% endblock %}
+    <div class="dfe-width-container">
+      {% block beforeContent%}{% endblock %}
 
-  {% if debug === true %}
-  <div class="govuk-!-padding-5" style="background: #fffee0">
-    <div class="govuk-width-container dfe-width-container" style="background: #fffee0">
-      <h2 class="govuk-heading-m">Debug information</h2>
+      {% block main %}
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+          {% block content %}{% endblock %}
+        </main>
 
+      {% endblock %}
 
-      <h3 class="govuk-heading-s">Data</h3>
-      {{data | dump}}
-
-      <h3 class="govuk-heading-s">Assessment (if available)</h3>
-      {{assessment | dump}}
-
-      <h3 class="govuk-heading-s govuk-!-margin-top-5">Errors</h3>
-      {{errors | dump}}
     </div>
-  </div>
-  {% endif %}
 
-  {% include './_feedback.html' %}
+    {% if debug === true %}
+      <div class="govuk-!-padding-5" style="background: #fffee0">
+        <div class="govuk-width-container dfe-width-container" style="background: #fffee0">
+          <h2 class="govuk-heading-m">Debug information</h2>
 
-  <footer class="govuk-footer">
-    <div class="govuk-width-container dfe-width-container">
-      <div class="govuk-footer__navigation">
-        <div class="govuk-footer__section govuk-grid-column-two-thirds">
-          <h2 class="govuk-footer__heading govuk-heading-m">Guidance and information</h2>
-          <ul class="govuk-footer__list govuk-footer__list--columns-2">
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="https://apply-the-service-standard.education.gov.uk" target="_blank">
-                Apply the Service Standard in DfE <span class="govuk-visually-hidden">opens in new tab</span>
-              </a>
-            </li>
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="#" target="_blank">
-                Templates and tools <span class="govuk-visually-hidden">opens in new tab</span>
-              </a>
-            </li>
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="https://www.gov.uk/service-manual" target="_blank">
-                GOV.UK Service Manual <span class="govuk-visually-hidden">opens in new tab</span>
-              </a>
-            </li>
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="https://design.education.gov.uk" target="_blank">
-                Design manual <span class="govuk-visually-hidden">opens in new tab</span>
-              </a>
-            </li>
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="https://technical-guidance.education.gov.uk" target="_blank">
-                Technical manual <span class="govuk-visually-hidden">opens in new tab</span>
-              </a>
-            </li>
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="https://user-research.education.gov.uk" target="_blank">
-                User research manual <span class="govuk-visually-hidden">opens in new tab</span>
-              </a>
-            </li>
-          </ul>
+          <h3 class="govuk-heading-s">Data</h3>
+          {{data | dump}}
+
+          <h3 class="govuk-heading-s">Assessment (if available)</h3>
+          {{assessment | dump}}
+
+          <h3 class="govuk-heading-s govuk-!-margin-top-5">Errors</h3>
+          {{errors | dump}}
         </div>
-        <div class="govuk-footer__section govuk-grid-column-one-third">
-          <h2 class="govuk-footer__heading govuk-heading-m">Service information</h2>
-          <ul class="govuk-footer__list">
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="/accessibility">
+      </div>
+    {% endif %}
+
+    {% include './_feedback.html' %}
+
+    <footer class="govuk-footer">
+      <div class="govuk-width-container dfe-width-container">
+        <div class="govuk-footer__navigation">
+          <div class="govuk-footer__section govuk-grid-column-two-thirds">
+            <h2 class="govuk-footer__heading govuk-heading-m">Guidance and information</h2>
+            <ul class="govuk-footer__list govuk-footer__list--columns-2">
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="https://apply-the-service-standard.education.gov.uk" target="_blank">
+                Apply the Service Standard in DfE <span class="govuk-visually-hidden">opens in new tab</span>
+                </a>
+              </li>
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="#" target="_blank">
+                Templates and tools <span class="govuk-visually-hidden">opens in new tab</span>
+                </a>
+              </li>
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="https://www.gov.uk/service-manual" target="_blank">
+                GOV.UK Service Manual <span class="govuk-visually-hidden">opens in new tab</span>
+                </a>
+              </li>
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="https://design.education.gov.uk" target="_blank">
+                Design manual <span class="govuk-visually-hidden">opens in new tab</span>
+                </a>
+              </li>
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="https://technical-guidance.education.gov.uk" target="_blank">
+                Technical manual <span class="govuk-visually-hidden">opens in new tab</span>
+                </a>
+              </li>
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="https://user-research.education.gov.uk" target="_blank">
+                User research manual <span class="govuk-visually-hidden">opens in new tab</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="govuk-footer__section govuk-grid-column-one-third">
+            <h2 class="govuk-footer__heading govuk-heading-m">Service information</h2>
+            <ul class="govuk-footer__list">
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="/accessibility">
                 Accessibility
               </a>
-            </li>
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link"
+              </li>
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link"
                 href="https://www.gov.uk/government/publications/privacy-information-department-for-education-workforce/privacy-information-department-for-education-workforce"
                 target="_blank">
                 Privacy
               </a>
-            </li>
-            <li class="govuk-footer__list-item">
-              <a class="govuk-footer__link" href="/cookies">
+              </li>
+              <li class="govuk-footer__list-item">
+                <a class="govuk-footer__link" href="/cookies">
                 Cookies
               </a>
-            </li>
+              </li>
             </li>
             <li class="govuk-footer__list-item">
               <a class="govuk-footer__link" href="/support">
@@ -170,7 +169,7 @@
 
   {% if staging %}
   {% else %}
-  <script src="/assets/js/cookies.min.js"></script>
+    <script src="/assets/js/cookies.min.js"></script>
   {% endif %}
 
   <script type="module" src="/assets/js/govuk-frontend.min.js"></script>
@@ -179,9 +178,7 @@
   <script type="text/javascript" src="/assets/js/accessible-autocomplete.min.js"></script>
   {% block scripts %}{% endblock %}
   <script type="module">
-    import {
-      initAll
-    } from '/assets/js/govuk-frontend.min.js'
+    import {initAll} from '/assets/js/govuk-frontend.min.js'
     initAll()
   </script>
 </body>
