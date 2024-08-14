@@ -1,5 +1,7 @@
 const pool = require('./pool.js');
 
+const canManageDepartments = process.env.dfe_canmanage.split(',');
+
 class AssessmentModel {
     constructor(data) {
         this.AssessmentID = data.AssessmentID;
@@ -216,20 +218,44 @@ async function getRequestsByStatus(status, department) {
     }
 }
 
+// /**
+// * Gets assessments by status for the department the user belongs to.
+// * @param {string} status The status of the assessments to get.
+// * @param {number} department The department the user belongs to.
+// * @returns {Promise<Array>} A promise that resolves to an array of assessment objects.
+// */
+// async function getRequestsByMixedStatus(statuses, department) {
+//     try {
+//         // Use ANY($1) to match any of the statuses in the array
+//         const result = await pool.query(
+//             `SELECT * FROM "Assessment"
+//             WHERE "Status" = ANY($1) AND "Department" = $2
+//             ORDER BY "AssessmentDateTime" ASC;`,
+//             [statuses, department] // Pass statuses as an array
+//         );
+
+//         return result.rows;
+//     } catch (error) {
+//         console.error('Error in getRequestsByMixedStatus:', error);
+//         throw error;
+//     }
+// }
+
+// Replaced above function with the one below to get assessments for departments the user is allowed to manage
 /**
-* Gets assessments by status for the department the user belongs to.
-* @param {string} status The status of the assessments to get.
-* @param {number} department The department the user belongs to.
-* @returns {Promise<Array>} A promise that resolves to an array of assessment objects.
-*/
-async function getRequestsByMixedStatus(statuses, department) {
+ * Gets assessments by status for departments the user is allowed to manage.
+ * @param {string[]} statuses The statuses of the assessments to get.
+ * @returns {Promise<Array>} A promise that resolves to an array of assessment objects.
+ */
+async function getRequestsByMixedStatus(statuses) {
     try {
         // Use ANY($1) to match any of the statuses in the array
+        // Use ANY($2) to match any department in the allowed departments list
         const result = await pool.query(
             `SELECT * FROM "Assessment"
-            WHERE "Status" = ANY($1) AND "Department" = $2
+            WHERE "Status" = ANY($1) AND "Department" = ANY($2)
             ORDER BY "AssessmentDateTime" ASC;`,
-            [statuses, department] // Pass statuses as an array
+            [statuses, canManageDepartments] 
         );
 
         return result.rows;
@@ -239,31 +265,63 @@ async function getRequestsByMixedStatus(statuses, department) {
     }
 }
 
+// /**
+// * Gets assessments that the given user can access.
+// * this includes where they created the assessment, are the DD, PM, or DM
+// * also needs to include where they are also in the AssessmentTeam table
+// */
+// async function getAssessmentsUserCanAccess(userID) {
+//     try {console.log(userID)
+//         const result = await pool.query(
+//             `
+//             SELECT DISTINCT * FROM "Assessment"
+//             WHERE "CreatedBy" = $1
+//             OR "DD" = $1
+//             OR "PM" = $1
+//             OR "DM" = $1
+//             OR "AssessmentID" IN (
+//                 SELECT "AssessmentID" FROM "AssessmentTeam" WHERE "UserID" = $1
+//             )
+            
+//             `,
+//             [userID] 
+//         );
+
+//         return result.rows;
+//     } catch (error) {
+//         console.error('Error in getRequestsByMixedStatus:', error);
+//         throw error;
+//     }
+// }
+
 /**
 * Gets assessments that the given user can access.
 * this includes where they created the assessment, are the DD, PM, or DM
 * also needs to include where they are also in the AssessmentTeam table
 */
 async function getAssessmentsUserCanAccess(userID) {
-    try {console.log(userID)
+    try {
+        console.log(userID);
         const result = await pool.query(
             `
             SELECT DISTINCT * FROM "Assessment"
-            WHERE "CreatedBy" = $1
-            OR "DD" = $1
-            OR "PM" = $1
-            OR "DM" = $1
-            OR "AssessmentID" IN (
-                SELECT "AssessmentID" FROM "AssessmentTeam" WHERE "UserID" = $1
+            WHERE (
+                "CreatedBy" = $1
+                OR "DD" = $1
+                OR "PM" = $1
+                OR "DM" = $1
+                OR "AssessmentID" IN (
+                    SELECT "AssessmentID" FROM "AssessmentTeam" WHERE "UserID" = $1
+                )
             )
-            
+            AND "Department" = ANY($2)
             `,
-            [userID] 
+            [userID, canManageDepartments] // Pass userID and departments list
         );
 
         return result.rows;
     } catch (error) {
-        console.error('Error in getRequestsByMixedStatus:', error);
+        console.error('Error in getAssessmentsUserCanAccess:', error);
         throw error;
     }
 }

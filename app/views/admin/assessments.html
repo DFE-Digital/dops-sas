@@ -3,302 +3,294 @@
 {% set pageName = "Manage assessments" %}
 {% set view = "assessments" %}
 {% block hero %}
-{% include './_header.html'%}
+    {% include './_header.html'%}
 {% endblock %}
 {% block content %}
 
-
-
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter">
-        <div class="govuk-summary-card">
-            <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title">Filters</h2>
-                <ul class="govuk-summary-card__actions">
-                    <li class="govuk-summary-card__action">
-                        <a class="govuk-link" href="/admin/assessments">Clear</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="govuk-summary-card__content">
-                <div class="govuk-form-group">
-                    <label id="filterTableLabel" for="filterTable" class="govuk-label govuk-!-font-weight-bold">Filter
-                        by name</label>
-                    <input type="text" id="filterTable" class="govuk-input" aria-describedby="filterTableLabel" />
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+            <div class="govuk-summary-card">
+                <div class="govuk-summary-card__title-wrapper">
+                    <h2 class="govuk-summary-card__title">Filters</h2>
+                    <ul class="govuk-summary-card__actions">
+                        <li class="govuk-summary-card__action">
+                            <a class="govuk-link" href="/admin/assessments">Clear</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend  govuk-fieldset__legend--s">
+                <div class="govuk-summary-card__content">
+                    <div class="govuk-form-group">
+                        <label id="filterTableLabel" for="filterTable" class="govuk-label govuk-!-font-weight-bold">Filter
+                        by name</label>
+                        <input type="text" id="filterTable" class="govuk-input" aria-describedby="filterTableLabel" />
+                    </div>
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend  govuk-fieldset__legend--s">
                             Phase
                         </legend>
-                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_phase" name="filter_phase"
+                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="filter_phase" name="filter_phase"
                                     type="checkbox" value="Discovery">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_phase">
+                                    <label class="govuk-label govuk-checkboxes__label" for="filter_phase">
                                     Discovery
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_phase-2" name="filter_phase"
+                                </div>
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="filter_phase-2" name="filter_phase"
                                     type="checkbox" value="Alpha">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_phase-2">
+                                    <label class="govuk-label govuk-checkboxes__label" for="filter_phase-2">
                                     Alpha
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_phase-3" name="filter_phase"
+                                </div>
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="filter_phase-3" name="filter_phase"
                                     type="checkbox" value="Private Beta">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_phase-3">
+                                    <label class="govuk-label govuk-checkboxes__label" for="filter_phase-3">
                                     Private Beta
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_phase-4" name="filter_phase"
+                                </div>
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="filter_phase-4" name="filter_phase"
                                     type="checkbox" value="Public Beta">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_phase-4">
+                                    <label class="govuk-label govuk-checkboxes__label" for="filter_phase-4">
                                     Public Beta
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_phase-5" name="filter_phase"
+                                </div>
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="filter_phase-5" name="filter_phase"
                                     type="checkbox" value="Live">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_phase-5">
+                                    <label class="govuk-label govuk-checkboxes__label" for="filter_phase-5">
                                     Live
                                 </label>
-                            </div>
-                    </fieldset>
-                </div>
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend  govuk-fieldset__legend--s">
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend  govuk-fieldset__legend--s">
                             Outcomes
                         </legend>
-                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_outcome" name="filter_outcome"
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="filter_outcome" name="filter_outcome"
                                     type="checkbox" value="Red">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_outcome">
+                                        <label class="govuk-label govuk-checkboxes__label" for="filter_outcome">
                                     Red
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_outcome-2" name="filter_outcome"
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="filter_outcome-2" name="filter_outcome"
                                     type="checkbox" value="Amber">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_outcome-2">
+                                        <label class="govuk-label govuk-checkboxes__label" for="filter_outcome-2">
                                     Amber
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_outcome-3" name="filter_outcome"
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="filter_outcome-3" name="filter_outcome"
                                     type="checkbox" value="Green">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_outcome-3">
+                                        <label class="govuk-label govuk-checkboxes__label" for="filter_outcome-3">
                                     Green
                                 </label>
+                                    </div>
+                                </fieldset>
                             </div>
-                    </fieldset>
-                </div>
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend  govuk-fieldset__legend--s">
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend  govuk-fieldset__legend--s">
                             Type
                         </legend>
-                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_type" name="filter_type"
+                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="filter_type" name="filter_type"
                                     type="checkbox" value="Service assessment">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_type">
+                                            <label class="govuk-label govuk-checkboxes__label" for="filter_type">
                                     Assessment
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_type-1" name="filter_type"
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="filter_type-1" name="filter_type"
                                     type="checkbox" value="Reassessment">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_type-1">
+                                            <label class="govuk-label govuk-checkboxes__label" for="filter_type-1">
                                     Reassessment
                                 </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="filter_type-2" name="filter_type"
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="filter_type-2" name="filter_type"
                                     type="checkbox" value="Peer review">
-                                <label class="govuk-label govuk-checkboxes__label" for="filter_type-2">
+                                            <label class="govuk-label govuk-checkboxes__label" for="filter_type-2">
                                     Peer review
                                 </label>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
-                    </fieldset>
-                </div>
-            </div>
-        </div>
-    </div>
+                        </div>
+                    </div>
 
+               
+                    <div class="govuk-grid-column-three-quarters">
 
-    <div class="govuk-grid-column-three-quarters">
+                        <div class="govuk-table-container">
 
-        <div class="govuk-table-container">
-
-            <table class="govuk-table" id="assessorsTable">
-                <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header  govuk-!-width-one-quarter">Name</th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Type</th>
-                        <th scope="col" class="govuk-table__header">Assessment date</th>
-                        <th scope="col" class="govuk-table__header">Completed standards</th>
-                        <th scope="col" class="govuk-table__header">Report outcome</th>
-                    </tr>
+                            <table class="govuk-table" id="assessorsTable">
+                                <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th scope="col" class="govuk-table__header  govuk-!-width-one-third">Name</th>
+                                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Type</th>
+                                        <th scope="col" class="govuk-table__header">Assessment Date</th>
+                                        <th scope="col" class="govuk-table__header">Completed standards</th>
+                                        <th scope="col" class="govuk-table__header">Outcome</th>
+                                    </tr>
                 </thead>
-                <tbody class="govuk-table__body">
-                    {% for assessment in assessments %}
-                    {% if assessment.Status !== "Published" %}
-                    <tr class="govuk-table__row" data-phase="{{assessment.Phase}}" data-type="{{assessment.Type}}"
+                                <tbody class="govuk-table__body">
+                                    {% for assessment in assessments %}
+                                        {% if assessment.Status !== "Published" %}
+                                            <tr class="govuk-table__row" data-phase="{{assessment.Phase}}" data-type="{{assessment.Type}}"
                         data-outcome="{{assessment.Outcome}}">
-                        <th scope="row" class="govuk-table__header">
-                            <a href="/admin/overview/{{assessment.AssessmentID}}"
+                                                <th scope="row" class="govuk-table__header">
+                                                    <a href="/admin/overview/{{assessment.AssessmentID}}"
                                 class="govuk-link govuk-link--no-visited-state">{{assessment.Name}}</a>
-                        </th>
-                        <td class="govuk-table__cell">{{assessment.Phase}}<br />{{assessment.Type }}</td>
-                        <td class="govuk-table__cell">
-                            {% if assessment.AssessmentDateTime %}{{assessment.AssessmentDateTime | date('D MMM
+                                                </th>
+                                                <td class="govuk-table__cell">{{assessment.Phase}}<br />{{assessment.Type }}</td>
+                                                <td class="govuk-table__cell">
+                                                    {% if assessment.AssessmentDateTime %}{{assessment.AssessmentDateTime | date('D MMM
                             YY')}}
-                            {% else %}Date not set{% endif %}
+                                                    {% else %}Date not set{% endif %}
+                                                </td>
+                                                <td class="govuk-table__cell">
+
+                                                    {% set outcomesByAssessmentID = 0 %}
+
+                                                    {% for assessmentOutcome in outcomes %}
+
+                                                        {% if assessmentOutcome.AssessmentID == assessment.AssessmentID%}
+                                                            {% set outcomesByAssessmentID = outcomesByAssessmentID + 1 %}
+                                                        {% endif %}
+
+                                                        {% endfor%}
+
+                                                        {{outcomesByAssessmentID}} of 14
+
                         </td>
-                        <td class="govuk-table__cell">
+                                                    <td class="govuk-table__cell">
 
-                            {% set outcomesByAssessmentID = 0 %}
+                                                        {% if assessment.Status === 'Active' %}
 
-                            {% for assessmentOutcome in outcomes %}
+                                                            {% if outcomesByAssessmentID === 0 %}
+                                                                <p>Not started</p>
+                                                            {% else %}
+                                                                <p>In progress</p>
+                                                            {% endif %}
 
-                            {% if assessmentOutcome.AssessmentID == assessment.AssessmentID%}
-                            {% set outcomesByAssessmentID = outcomesByAssessmentID+1 %}
-                            {% endif %}
+                                                        {% else %}
+                                                            <strong class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">
+                                                                {% if assessment.Outcome === 'Not rated' %} Unrated {% else %}
+                                                                    {{assessment.Outcome }}
+                                                                {% endif %}
+                                                            </strong>
+                                                        {% endif %}
 
-                            {% endfor%}
-
-                            {{outcomesByAssessmentID}} of 14
-
-                        </td>
-                        <td class="govuk-table__cell">
-
-                            {% if assessment.Status === 'Active' %}
-
-                            {% if outcomesByAssessmentID === 0 %}
-                            <p>Not started</p>
-                            {% else %}
-                            <p>In progress</p>
-                            {% endif %}
-
-
-                            {% else %}
-   <strong class="govuk-tag govuk-tag--{{assessment.Outcome | lower}}">{% if assessment.Outcome
-                                === 'Not rated' %} Unrated {% else %} {{assessment.Outcome }} {% endif %}</strong>
-                            {% endif %}
-
-                            
-
-                         
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-            <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No items for the selected
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <p class="no-matching-assessors" id="noMatchingAssessors" style="display: none;">No items for the selected
                 criteria.
             </p>
-        </div>
+                            </div>
 
+                        </div>
+                    </div>
+                    <script>
+                        document
+                            .getElementById('filterTable')
+                            .addEventListener('keyup', function () {
+                                let filter = this
+                                    .value
+                                    .toUpperCase();
+                                let tableBody = document.querySelector('.govuk-table__body');
+                                let rows = tableBody.querySelectorAll('.govuk-table__row');
+                                let noMatchingAssessors = document.getElementById('noMatchingAssessors');
+                                let table = document.getElementById('assessorsTable');
 
+                                let matchingAssessorsExist = false;
 
+                                for (let i = 0; i < rows.length; i++) {
+                                    let person = rows[i].querySelector('.govuk-table__header');
 
+                                    if (person) {
+                                        let txtValue = person.textContent || person.innerText;
+                                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                            rows[i].style.display = "";
+                                            rows[i].setAttribute("aria-hidden", "false");
+                                            matchingAssessorsExist = true;
+                                        } else {
+                                            rows[i].style.display = "none";
+                                            rows[i].setAttribute("aria-hidden", "true");
+                                        }
+                                    }
+                                }
 
-    </div>
-</div>
-<script>
-    document
-        .getElementById('filterTable')
-        .addEventListener('keyup', function () {
-            let filter = this
-                .value
-                .toUpperCase();
-            let tableBody = document.querySelector('.govuk-table__body');
-            let rows = tableBody.querySelectorAll('.govuk-table__row');
-            let noMatchingAssessors = document.getElementById('noMatchingAssessors');
-            let table = document.getElementById('assessorsTable');
+                                // Toggle the visibility of the table and paragraph based on matching assessors
+                                if (matchingAssessorsExist) {
+                                    table.style.display = "table"; // Show the table
+                                    noMatchingAssessors.style.display = "none"; // Hide the paragraph
+                                } else {
+                                    table.style.display = "none"; // Hide the table
+                                    noMatchingAssessors.style.display = "block"; // Show the paragraph
+                                }
+                            });
 
-            let matchingAssessorsExist = false;
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const filters = document.querySelectorAll('.govuk-checkboxes__input');
+                            filters.forEach(filter => filter.addEventListener('change', applyFilters));
 
-            for (let i = 0; i < rows.length; i++) {
-                let person = rows[i].querySelector('.govuk-table__header');
+                            function applyFilters() {
+                                let activePhases = getActiveFilters('filter_phase');
+                                let activeOutcomes = getActiveFilters('filter_outcome');
+                                let activeTypes = getActiveFilters('filter_type');
+                                let rows = document.querySelectorAll('.govuk-table > tbody > tr');
 
-                if (person) {
-                    let txtValue = person.textContent || person.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        rows[i].style.display = "";
-                        rows[i].setAttribute("aria-hidden", "false");
-                        matchingAssessorsExist = true;
-                    } else {
-                        rows[i].style.display = "none";
-                        rows[i].setAttribute("aria-hidden", "true");
-                    }
-                }
-            }
+                                let visibleCount = 0;
+                                rows.forEach(row => {
+                                    let phase = row.getAttribute('data-phase');
+                                    let outcome = row.getAttribute('data-outcome');
+                                    let type = row.getAttribute('data-type');
 
-            // Toggle the visibility of the table and paragraph based on matching assessors
-            if (matchingAssessorsExist) {
-                table.style.display = "table"; // Show the table
-                noMatchingAssessors.style.display = "none"; // Hide the paragraph
-            } else {
-                table.style.display = "none"; // Hide the table
-                noMatchingAssessors.style.display = "block"; // Show the paragraph
-            }
-        });
+                                    if ((activePhases.includes(phase) || activePhases.length === 0) && (activeOutcomes.includes(outcome) || activeOutcomes.length === 0) && (activeTypes.includes(type) || activeTypes.length === 0)) {
+                                        row.style.display = '';
+                                        visibleCount++;
+                                    } else {
+                                        row.style.display = 'none';
+                                    }
+                                });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const filters = document.querySelectorAll('.govuk-checkboxes__input');
-        filters.forEach(filter => filter.addEventListener('change', applyFilters));
+                                document
+                                    .getElementById('noResultsMessage')
+                                    .style
+                                    .display = visibleCount > 0
+                                        ? 'none'
+                                        : '';
+                                updateItemCount(visibleCount);
+                            }
 
-        function applyFilters() {
-            let activePhases = getActiveFilters('filter_phase');
-            let activeOutcomes = getActiveFilters('filter_outcome');
-            let activeTypes = getActiveFilters('filter_type');
-            let rows = document.querySelectorAll('.govuk-table > tbody > tr');
+                            function getActiveFilters(filterName) {
+                                return Array
+                                    .from(document.querySelectorAll(`input[name="${filterName}"]:checked`))
+                                    .map(el => el.value);
+                            }
 
-            let visibleCount = 0;
-            rows.forEach(row => {
-                let phase = row.getAttribute('data-phase');
-                let outcome = row.getAttribute('data-outcome');
-                let type = row.getAttribute('data-type');
+                            function updateItemCount(count) {
+                                const countElement = document.getElementById('assessmentCount');
+                                countElement.textContent = count;
+                            }
 
-                if ((activePhases.includes(phase) || activePhases.length === 0) && (activeOutcomes.includes(outcome) || activeOutcomes.length === 0) && (activeTypes.includes(type) || activeTypes.length === 0)) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            document
-                .getElementById('noResultsMessage')
-                .style
-                .display = visibleCount > 0
-                    ? 'none'
-                    : '';
-            updateItemCount(visibleCount);
-        }
-
-        function getActiveFilters(filterName) {
-            return Array
-                .from(document.querySelectorAll(`input[name="${filterName}"]:checked`))
-                .map(el => el.value);
-        }
-
-        function updateItemCount(count) {
-            const countElement = document.getElementById('assessmentCount');
-            countElement.textContent = count;
-        }
-
-        // Apply filters on initial load
-        applyFilters();
-    });
-</script>
-{% endblock %}
+                            // Apply filters on initial load
+                            applyFilters();
+                        });
+                    </script>
+                {% endblock %}
