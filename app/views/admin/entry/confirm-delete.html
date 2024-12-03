@@ -1,0 +1,38 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set view = "request" %}
+{% set pageName = assessment.Name %}
+
+{% block hero %}
+    {% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+    {% if error.path === 'process' %}
+        {% set hasError = true %}
+    {% endif %}
+{% endfor %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+            <form action="/admin/process" method="post">
+                <h2 class="govuk-heading-l">Delete this booking request</h2>
+                <p>This is the final step.</p>
+                <input type="hidden" name="assessmentID" value="{{assessment.AssessmentID}}">
+                <input type="hidden" name="process" value="Reject">
+
+                <div class="govuk-button-group">
+                    <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+                    Delete
+                </button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

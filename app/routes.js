@@ -251,6 +251,7 @@ router.get('/admin', isAuthenticated, isAdmin, adminController.g_index);
 router.get('/admin/tasks/:filter', isAuthenticated, isAdmin, adminController.g_index);
 router.get("/admin/overview/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_overview);
 router.get("/admin/process/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_process);
+router.get("/admin/request/confirm-delete/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_confirmDelete);
 router.get("/admin/request/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_process);
 router.get("/admin/panel/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_panel);
 router.get("/admin/add-panel/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_addpanel);
@@ -300,6 +301,7 @@ router.get('/admin/create-reassessment/:assessmentID', isAuthenticated, isAdmin,
 router.get("/admin/surveys", isAuthenticated, isAdmin, adminController.g_surveys);
 router.get("/admin/survey/:surveyID", isAuthenticated, isAdmin, adminController.g_surveyResponse);
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
+router.post("/admin/confirm-delete", isAuthenticated, isAdmin, adminController.p_confirmDelete);
 router.post("/admin/add-panel/", isAuthenticated, isAdmin, adminController.p_addpanel);
 router.post("/admin/remove-panel/", isAuthenticated, isAdmin, adminController.p_removepanel);
 router.post("/admin/add-date", isAuthenticated, isAdmin, adminController.p_adddate);

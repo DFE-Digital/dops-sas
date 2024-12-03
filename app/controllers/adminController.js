@@ -193,6 +193,17 @@ exports.g_process = async function (req, res, next) {
     }
 };
 
+exports.g_confirmDelete = async function (req, res, next) {
+    try {
+        const { assessmentID } = req.params;
+
+        const assessment = await getAssessmentById(assessmentID);
+        return res.render("admin/entry/confirm-delete", { assessment });
+    } catch (error) {
+        next(error);
+    }
+};
+
 exports.g_panel = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
@@ -1062,6 +1073,19 @@ exports.p_process = [
         }
     },
 ];
+
+
+
+exports.p_confirmDelete = async function (req, res, next) {
+
+    try {
+        const {assessmentID, process } = req.body;
+
+        return res.redirect(`/admin/request/confirm-delete/${assessmentID}`);
+    } catch (error) {
+        next(error);
+    }
+};
 
 exports.p_addpanel = [
     validateAddPanel,
