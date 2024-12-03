@@ -1,0 +1,65 @@
+{% extends "layouts/auth.html" %}
+
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Report" %}
+{% set view = "reporting" %}
+{% set filter = ""%}
+
+{% block hero %}
+{% include '../_header.html'%}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+              <h2 class="govuk-summary-card__title">
+                Report of duration of report acceptance from the time it is sent to the team
+              </h2>
+              <ul class="govuk-summary-card__actions">
+                <li class="govuk-summary-card__action">
+                  <a class="govuk-link" href="/admin/reporting/export-reportacceptance-report">Export to Excel</a>
+                </li>
+              </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+
+        <table class="govuk-table dfe-table--smaller">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Service</th>
+                    <th scope="col" class="govuk-table__header">Type</th>
+                    <th scope="col" class="govuk-table__header">Phase</th>
+                    <th scope="col" class="govuk-table__header">Sent to team</th>
+                    <th scope="col" class="govuk-table__header ">Accepted by team</th>
+                    <th scope="col" class="govuk-table__header ">Working days elapsed</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for assessment in assessments %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/admin/overview/{{assessment.AssessmentID}}">{{assessment.Name}}</a></td>
+                    <td class="govuk-table__cell">{{assessment.Type}}</td>
+                    <td class="govuk-table__cell">{{assessment.Phase}}</td>
+                    <td class="govuk-table__cell">{{assessment.ReportSentTime | date('D MMM YYYY') }}</td>
+                    <td class="govuk-table__cell">{% if assessment.ReportAcceptedTime %}{{assessment.ReportAcceptedTime | date('D MMM YYYY') }}{% else %}Not yet accepted{% endif %}</td>
+                    <td class="govuk-table__cell">{{assessment.TimeDifferenceInWorkingDays}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>  
+        </div>
+
+        <style>
+            .dfe-table--smaller * {
+                font-size: 0.9em;
+            }
+        </style>
+
+    </div>
+</div>
+{% endblock %}

@@ -73,7 +73,7 @@
                 {% set hasAssessments = false %}
 
                 {% for record in assessments %}
-                {% if record.Status !== 'Draft' %}
+                {% if record.Status !== 'Draft'  %}
                 {% set hasAssessments = true %}
                 {% endif %}
                 {% endfor %}

@@ -12,7 +12,7 @@ const {
     getAssessmentPanelByUserID,
     changePrimaryContact,
     getAllAssessments,
-    createReAssessment, getAllAssessmentsNotDrafts
+    createReAssessment, getAllAssessmentsNotDrafts, getAllAssessmentReportAcceptanceData
 } = require("../models/assessmentModel");
 const {
     assessmentPanel,
@@ -86,6 +86,7 @@ const {
     validateDM,
 } = require("../validation/book");
 
+const { addAuditEntry } = require('../models/audit');
 
 const {
     getSurveyData, getSurvey
@@ -531,6 +532,24 @@ exports.g_reportingAssessmentsAll = async function (req, res, next) {
 };
 
 
+exports.g_reportacceptance = async function (req, res, next) {
+
+
+    try {
+        const department = req.session.data.User.Department;
+        const assessments = await getAllAssessmentReportAcceptanceData(department);
+
+        return res.render("admin/reporting/reportacceptance", {
+            assessments: assessments,
+        });
+    } catch (error) {
+        next(error);
+    }
+
+
+};
+
+
 exports.g_exportAssessmentReport = async function (req, res, next) {
     try {
         const department = req.session.data.User.Department;
@@ -692,6 +711,73 @@ exports.g_exportAllAssessmentReport = async function (req, res, next) {
         next(error);
     }
 };
+
+exports.g_exportAreportacceptanceReport = async function (req, res, next) {
+    try {
+        const department = req.session.data.User.Department;
+
+        const assessments = await getAllAssessmentReportAcceptanceData(department);
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Assessments");
+
+        // Define columns based on your HTML table headers
+        worksheet.columns = [
+            { header: "Service", key: "service", width: 25 },
+            { header: "Phase", key: "phase", width: 15 },
+            { header: "Type", key: "type", width: 20 },
+            { header: "Sent to team", key: "sent", width: 15 },
+            { header: "Accepted by team", key: "accepted", width: 15 },
+            { header: "Working days elapsed", key: "days", width: 15 }
+        ];
+
+        // Add rows for each assessment
+        assessments.forEach((assessment) => {
+            // Add a row for each assessment
+            const row = worksheet.addRow({
+                service: {
+                    text: assessment.Name,
+                    hyperlink: `https://service-assessments.education.gov.uk/admin/overview/${assessment.AssessmentID}`,
+                },
+                status: assessment.Status,
+                phase: assessment.Phase,
+                type: assessment.Type,
+                sent: assessment.ReportSentTime,
+                accepted: assessment.ReportAcceptedTime,
+                days: assessment.TimeDifferenceInWorkingDays
+            });
+
+            // Optional: Set style for hyperlink (blue color & underlined text)
+            row.getCell("service").style = {
+                font: { color: { argb: "FF0000FF" }, underline: true },
+            };
+        });
+
+        // Generate filename based on department and current timestamp for uniqueness
+        const filename = `all_reportacceptance_${Date.now()}.xlsx`;
+
+        // Set response headers to prompt download with the generated filename
+        res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        );
+
+        // Write the workbook to a buffer and send as response
+        workbook.xlsx
+            .writeBuffer()
+            .then((buffer) => {
+                res.send(buffer);
+            })
+            .catch((error) => {
+                console.error("Error writing Excel to buffer", error);
+                res.status(500).send("Error generating Excel file");
+            });
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 exports.g_addartefact = async function (req, res, next) {
     try {
@@ -968,6 +1054,8 @@ exports.p_process = [
 
             await updateAssessment(assessmentID, assessment, userID);
 
+            await addAuditEntry(assessmentID, "Request processes", "Booking request: " + newStatus, req.session.data.User.UserID);
+
             return res.redirect(`/admin/overview/${assessmentID}`);
         } catch (error) {
             next(error);
@@ -1048,11 +1136,11 @@ exports.p_addpanel = [
             if (templateParams.role === 'observer') {
                 templateParams.observerName = assessorInfo.FirstName,
 
-                sendNotifyEmail(
-                    process.env.email_AddedToPanelObserver,
-                    assessorInfo.EmailAddress,
-                    templateParams,
-                );
+                    sendNotifyEmail(
+                        process.env.email_AddedToPanelObserver,
+                        assessorInfo.EmailAddress,
+                        templateParams,
+                    );
             } else {
                 sendNotifyEmail(
                     process.env.email_AddedToPanel,
@@ -1101,6 +1189,8 @@ exports.p_adddate = async function (req, res, next) {
         assessment.AssessmentTime = CustomTime;
 
         await updateAssessment(AssessmentID, assessment, userID);
+
+        await addAuditEntry(AssessmentID, "Assessment date added", "Assessment updated with assessment date: " + assessmentDate.toISOString() + " - " + CustomTime, req.session.data.User.UserID);
 
         return res.redirect(`/admin/overview/${AssessmentID}`);
     } catch (error) {
@@ -1277,6 +1367,8 @@ exports.p_sendReport = async function (req, res, next) {
             }
         }
 
+        await addAuditEntry(AssessmentID, "Report sent to team", "Assessment report has been sent to the team.", req.session.data.User.UserID);
+
         return res.redirect("/admin/report/" + AssessmentID);
     } catch (error) {
         next(error);
@@ -1342,6 +1434,8 @@ exports.p_publishReport = async function (req, res, next) {
         } catch (error) {
             // Should log this error
         }
+
+        await addAuditEntry(AssessmentID, "Report published", "Assessment report has been published.", req.session.data.User.UserID);
 
         return res.redirect("/admin/report/" + AssessmentID);
     } catch (error) {

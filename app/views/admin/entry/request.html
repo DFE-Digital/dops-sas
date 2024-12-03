@@ -22,7 +22,6 @@
         {% include 'partials/errorSummary.html' %}
 
         {% if assessment.Status == 'New' %}
-
         <form action="/admin/process" method="post">
             <input type="hidden" name="assessmentID" value="{{assessment.AssessmentID}}">
             <div class="govuk-form-group {%if hasError %}govuk-form-group--error{% endif%}">
@@ -72,6 +71,20 @@
             <div class="govuk-button-group">
                 <button type="submit" class="govuk-button" data-module="govuk-button">
                     Save
+                </button>
+                <a class="govuk-link" href="/admin/overview/{{assessment.AssessmentID}}">Cancel and return to
+                    overview</a>
+            </div>
+        </form>
+        {% else %}
+        <form action="/admin/process" method="post">
+        <h2 class="govuk-heading-l">Delete this booking request</h2>
+            <input type="hidden" name="assessmentID" value="{{assessment.AssessmentID}}">
+            <input type="hidden" name="process" value="Reject">
+           
+            <div class="govuk-button-group">
+                <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+                    Delete
                 </button>
                 <a class="govuk-link" href="/admin/overview/{{assessment.AssessmentID}}">Cancel and return to
                     overview</a>
@@ -283,6 +296,8 @@
 
 
         </form>
+
+           
 
 
     </div>

@@ -54,7 +54,7 @@ async function createAssessment(model, userID) {
 
 async function createReAssessment(assessmentId) {
     try {
-      
+
         // Fetch the original assessment data
         const originalAssessment = await getAssessmentById(assessmentId);
         if (!originalAssessment) {
@@ -84,12 +84,12 @@ async function createReAssessment(assessmentId) {
             RETURNING "AssessmentID"
         `;
         const values = [
-            originalAssessment.Type, originalAssessment.Phase, originalAssessment.Status, originalAssessment.Outcome, 
-            originalAssessment.Name, originalAssessment.Description, originalAssessment.ProjectCodeYN, originalAssessment.ProjectCode, 
-            originalAssessment.StartDate, originalAssessment.EndDateYN, originalAssessment.EndDate, originalAssessment.RequestedWeeks, 
-            originalAssessment.Portfolio, originalAssessment.DD, originalAssessment.SRO, originalAssessment.PMYN, originalAssessment.PM, 
-            originalAssessment.DMYN, originalAssessment.DM, originalAssessment.CreatedBy, new Date(), originalAssessment.AssessmentDateTime, 
-            originalAssessment.SubStatusCode, originalAssessment.PanelComments, originalAssessment.PanelCommentsImprove, 
+            originalAssessment.Type, originalAssessment.Phase, originalAssessment.Status, originalAssessment.Outcome,
+            originalAssessment.Name, originalAssessment.Description, originalAssessment.ProjectCodeYN, originalAssessment.ProjectCode,
+            originalAssessment.StartDate, originalAssessment.EndDateYN, originalAssessment.EndDate, originalAssessment.RequestedWeeks,
+            originalAssessment.Portfolio, originalAssessment.DD, originalAssessment.SRO, originalAssessment.PMYN, originalAssessment.PM,
+            originalAssessment.DMYN, originalAssessment.DM, originalAssessment.CreatedBy, new Date(), originalAssessment.AssessmentDateTime,
+            originalAssessment.SubStatusCode, originalAssessment.PanelComments, originalAssessment.PanelCommentsImprove,
             originalAssessment.PanelCommentsComplete, originalAssessment.AssessmentTime, originalAssessment.Department
         ];
         const res = await pool.query(query, values);
@@ -255,7 +255,7 @@ async function getRequestsByMixedStatus(statuses) {
             `SELECT * FROM "Assessment"
             WHERE "Status" = ANY($1) AND "Department" = ANY($2)
             ORDER BY "AssessmentDateTime" ASC;`,
-            [statuses, canManageDepartments] 
+            [statuses, canManageDepartments]
         );
 
         return result.rows;
@@ -282,7 +282,7 @@ async function getRequestsByMixedStatus(statuses) {
 //             OR "AssessmentID" IN (
 //                 SELECT "AssessmentID" FROM "AssessmentTeam" WHERE "UserID" = $1
 //             )
-            
+
 //             `,
 //             [userID] 
 //         );
@@ -344,7 +344,7 @@ async function getAssessmentPanelByUserID(userID) {
             WHERE ap."UserID" = $1
             ORDER BY a."AssessmentDateTime" ASC
             `,
-            [userID] 
+            [userID]
         );
 
         return result.rows;
@@ -464,9 +464,9 @@ async function changePrimaryContact(assessmentID, userID) {
     } catch (error) {
         console.error('Error in changePrimaryContact:', error);
         throw error;
-    } 
+    }
 }
-    
+
 /** 
  * Get all assessments for a department that aren't published
  * @param {number} departmentID The ID of the department
@@ -520,6 +520,69 @@ async function getAllAssessmentsNotDrafts(departmentID) {
     }
 }
 
+/**
+ * 
+ * @param {number} assessmentID 
+ */
+async function getAllAssessmentReportAcceptanceData() {
+    try {
+        const result = await pool.query(
+            `
+            WITH actions AS (
+                SELECT 
+                    "AssessmentID",
+                    "Action",
+                    "Created"
+                FROM public."Audit"
+                WHERE "Action" IN ('Report sent to team', 'Report accepted')
+            ),
+            paired_actions AS (
+                SELECT
+                    sent."AssessmentID",
+                    sent."Created" AS "ReportSentTime",
+                    MIN(accepted."Created") AS "ReportAcceptedTime" -- Ensure one pairing per sent time
+                FROM actions sent
+                LEFT JOIN actions accepted
+                    ON sent."AssessmentID" = accepted."AssessmentID"
+                    AND sent."Action" = 'Report sent to team'
+                    AND accepted."Action" = 'Report accepted'
+                    AND accepted."Created" > sent."Created" -- Ensure accepted comes after sent
+                WHERE sent."Action" = 'Report sent to team'
+                GROUP BY sent."AssessmentID", sent."Created"
+            )
+            SELECT 
+                pa."AssessmentID",
+                a."Type",
+                a."Phase",
+                a."Name",
+                a."Portfolio",
+                a."Outcome",
+                pa."ReportSentTime",
+                pa."ReportAcceptedTime",
+                ROUND(EXTRACT(EPOCH FROM (COALESCE(pa."ReportAcceptedTime", NOW()) - pa."ReportSentTime")) / 3600) AS "TimeDifferenceInHours",
+                (SELECT COUNT(*) 
+                 FROM generate_series(
+                     pa."ReportSentTime"::date, 
+                     COALESCE(pa."ReportAcceptedTime", NOW())::date, 
+                     '1 day'::interval
+                 ) AS days
+                 WHERE EXTRACT(DOW FROM days) NOT IN (0, 6) -- Exclude weekends
+                ) AS "TimeDifferenceInWorkingDays"
+            FROM paired_actions pa
+            JOIN public."Assessment" a
+                ON pa."AssessmentID" = a."AssessmentID";
+            `
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getAllAssessmentReportAcceptanceData:', error);
+        throw error;
+    }
+}
+
+
+
+
 
 module.exports = {
     AssessmentModel,
@@ -531,11 +594,12 @@ module.exports = {
     getRequestsByStatus,
     getRequestsByMixedStatus,
     getAssessmentsUserCanAccess,
-    getAssessmentPanelByUserID, 
+    getAssessmentPanelByUserID,
     checkSubmitStatus,
     getActiveAssessmentsWithAssessorData,
     changePrimaryContact,
     getAllAssessments,
     createReAssessment,
-    getAllAssessmentsNotDrafts
+    getAllAssessmentsNotDrafts,
+    getAllAssessmentReportAcceptanceData
 };

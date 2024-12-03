@@ -1,5 +1,6 @@
 const { addSurvey } = require('../models/survey');
 const { getAssessmentById } = require('../models/assessmentModel');
+const { addAuditEntry } = require('../models/audit');
 
 exports.g_survey = async (req, res, next) => {
     try {

@@ -18,7 +18,7 @@ const { getActionsForAssessmentID } = require('../models/actions');
 const { getArtefactsForAssessment, addArtefact, getArtefactByIdAndUniqueID, deleteArtefact } = require('../models/artefacts');
 const { getTeamForAssessmentExtended, addTeam, getTeamMemberForIdAndUniqueID, deleteTeamMemberByID } = require('../models/team');
 const { validateAddArtefact, validateAddTeam } = require('../validation/manage');
-
+const { addAuditEntry } = require('../models/audit');
 const { sendNotifyEmail } = require('../middleware/notify');
 
 exports.g_manage = async (req, res, next) => {
@@ -345,6 +345,8 @@ exports.p_acceptReport = async function (req, res, next) {
         assessment.Status = 'SA Publish'
 
         await updateAssessment(AssessmentID, assessment, user.UserID);
+        await addAuditEntry(AssessmentID, "Report accepted", "Team accepted the report", req.session.data.User.UserID);
+
         return res.redirect('/manage/report/' + AssessmentID);
     } catch (error) {
         next(error)

@@ -4,7 +4,7 @@ const { getBasicUserDetails, updateName, updateEmail } = require('../models/user
 const { getAssessmentPanelByUserID } = require('../models/assessmentModel');
 const { getAllAssessors, createAssessor, getAssessorByUserID, getTrainingForUser } = require('../models/assessors');
 const { getRoleByUserID } = require('../models/userrole');
-
+const { addAuditEntry } = require('../models/audit');
 const { getDepartments, getDepartmentForUser } = require('../models/departments');
 
 const e = require('express');

@@ -6,6 +6,7 @@ const { sendNotifyEmail } = require('../middleware/notify');
 const { getRoleByUserID } = require('../models/userrole');
 const { getAllAssessors, createAssessor, getAssessorByUserID } = require('../models/assessors');
 const { getDepartments, getDepartmentForUser } = require('../models/departments');
+const { addAuditEntry } = require('../models/audit');
 
 exports.g_signin = (req, res, next) => {
     res.render('auth/sign-in');

@@ -20,7 +20,7 @@
     </thead>
     <tbody class="govuk-table__body">
         {% for record in assessments %}
-        {% if record.Status !== 'Draft' %}
+        {% if record.Status !== 'Draft' and record.Status !== 'Rejected' %}
         <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header">
                 <a href="/{{selectedNav | lower}}/overview/{{record.AssessmentID}}"

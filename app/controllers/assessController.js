@@ -5,6 +5,8 @@ const { getActionsForAssessmentID, addAction, getActionByUniqueID, updateAction,
 const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
 const { getArtefactsForAssessment } = require('../models/artefacts');
 const { getTeamForAssessmentExtended } = require('../models/team');
+const { addAuditEntry } = require('../models/audit');
+
 const { validateAddRating, validateAddAction, validateAddComments } = require('../validation/assess');
 const { sendNotifyEmail } = require('../middleware/notify');
 
@@ -541,6 +543,8 @@ exports.p_submitReport = async function (req, res, next) {
         assessment.Outcome = outcome;
 
         await updateAssessment(AssessmentID, assessment, req.session.data.User.UserID);
+
+        await addAuditEntry(AssessmentID, "Report submitted", "Assessment report has been submitted to the SA team to send to the service team.", req.session.data.User.UserID);
 
         // ToDo: Send email to SA team
 

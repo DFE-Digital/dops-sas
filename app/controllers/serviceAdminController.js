@@ -1,6 +1,6 @@
 const knexConfig = require('../../knexfile'); // Adjust the path as necessary
 const knex = require('knex')(knexConfig.development); // Use the correct environment (development, production, etc.)
-
+const { addAuditEntry } = require('../models/audit');
 
 exports.g_createDepartment = (req, res) => {
     res.render('service-admin/create-department');

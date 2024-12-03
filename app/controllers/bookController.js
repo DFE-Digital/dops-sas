@@ -8,6 +8,7 @@ const { validatePhase, validateType, validateName, validateDescription, validate
 const { UpsertUserNoToken, getBasicUserDetails } = require('../models/user');
 const { getDates } = require('../utils/utils');
 const { sendNotifyEmail } = require('../middleware/notify');
+const { addAuditEntry } = require('../models/audit');
 
 function removeSpecificSessionDataKeys(req) {
     const keysToRemove = [
@@ -345,6 +346,8 @@ exports.p_phase = [
                 });
 
                 assessmentID = await createAssessment(model, userID);
+
+                await addAuditEntry(assessmentID, "Request created", "New request started", req.session.data.User.UserID);
 
             } else {
                 model = await getAssessmentById(assessmentID);
@@ -1022,6 +1025,8 @@ exports.p_submit = async function (req, res, next) {
         req.session.data.name = "";
 
         removeSpecificSessionDataKeys(req);
+
+        await addAuditEntry(assessmentID, "Request submitted", "New request submitted", req.session.data.User.UserID);
 
         return res.redirect('/book/submitted');
     } catch (error) {

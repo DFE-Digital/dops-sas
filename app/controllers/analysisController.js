@@ -1,5 +1,6 @@
 const { getRequestsByStatus } = require('../models/assessmentModel');
 const { countOutcomesByStandard, getAssessmentDetailsByYear } = require('../models/standards');
+const { addAuditEntry } = require('../models/audit');
 
 exports.g_index = async function (req, res, next) {
     try {
