@@ -21,6 +21,8 @@ const { validateAddArtefact, validateAddTeam } = require('../validation/manage')
 const { addAuditEntry } = require('../models/audit');
 const { sendNotifyEmail } = require('../middleware/notify');
 
+const { postArtefactMessage } = require('../models/slack');
+
 exports.g_manage = async (req, res, next) => {
     try {
         const user = req.session.data.User;
@@ -222,6 +224,8 @@ exports.p_addartefact = [
 
             await addArtefact(AssessmentID, Title, Description, URL, req.session.data.User.UserID);
 
+            await postArtefactMessage(assessment.SlackID, Title, AssessmentID);
+            
             // Clear the body and data for the fields
             req.body = {};
             req.session.data.Title = '';

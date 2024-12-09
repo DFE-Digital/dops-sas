@@ -20,6 +20,7 @@ const profileController = require('./controllers/profileController');
 const publicController = require('./controllers/publicController');
 const reportsController = require('./controllers/reportsController');
 const serviceAdminController = require('./controllers/serviceAdminController');
+const slackController = require('./controllers/slackController');
 const surveyController = require('./controllers/surveyController');
 const { param } = require('express-validator');
 
@@ -387,5 +388,11 @@ router.get('/profile/training', isAuthenticated, profileController.g_training);
 router.get('/profile/history', isAuthenticated, profileController.g_history);
 router.post('/profile/change-name', isAuthenticated, profileController.p_changeName);
 router.post('/profile/change-email', isAuthenticated, profileController.p_changeEmail);
+
+
+// Slack routes
+router.get("/admin/create-slack-channel/:assessmentID", isAuthenticated, isAdmin, adminController.g_createSlackChannel);
+router.post("/admin/create-slack-channel", isAuthenticated, isAdmin, slackController.p_create_channel);
+
 
 module.exports = router;

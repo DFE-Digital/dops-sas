@@ -14,6 +14,9 @@
                             <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Type</th>
                             <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Phase</th>
                             <th class="govuk-table__header" scope="col">Assessment date</th>
+                            {% if assessment.SlackID %}
+  <th class="govuk-table__header" scope="col">Slack channel</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -34,6 +37,9 @@
                                 {{assessment.AssessmentDateTime | date('D MMM YYYY')}}
                                 {% else %}Date not set{% endif %}
                             </td>
+                              {% if assessment.SlackID %}
+                               <td class="govuk-table__cell"><a href="https://ukgovernmentdfe.slack.com/archives/{{assessment.SlackID}}" target="_blank">Go to channel</a></td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>

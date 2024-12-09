@@ -33,6 +33,7 @@ class AssessmentModel {
         this.PanelCommentsComplete = data.PanelCommentsComplete;
         this.PanelCommentsImprove = data.PanelCommentsImprove;
         this.Department = data.Department;
+        this.SlackID = data.SlackID;
     }
 }
 
@@ -581,6 +582,20 @@ async function getAllAssessmentReportAcceptanceData() {
 }
 
 
+//Update the SlackID for an assessment
+async function updateSlackChannelID(assessmentID, slackID) {
+    try {
+        await pool.query(`
+            UPDATE "Assessment"
+            SET "SlackID" = $2
+            WHERE "AssessmentID" = $1
+        `, [assessmentID, slackID]);
+    } catch (error) {
+        console.error('Error in updateSlackChannelID:', error);
+        throw error;
+    }
+}
+
 
 
 
@@ -601,5 +616,6 @@ module.exports = {
     getAllAssessments,
     createReAssessment,
     getAllAssessmentsNotDrafts,
-    getAllAssessmentReportAcceptanceData
+    getAllAssessmentReportAcceptanceData,
+    updateSlackChannelID
 };

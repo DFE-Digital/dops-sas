@@ -2,6 +2,9 @@
 // Global
 var axios = require('axios');
 const { updateSlackChannelID, getAssessmentById } = require('../models/assessmentModel');
+const { assessmentPanel } = require("../models/assessmentPanel");
+const { getAssessorByUserID } = require('../models/assessors');
+const { postMessageToSlack }  = require('../models/slack');
 
 const slackApiUrl = 'https://slack.com/api';
 const token = process.env.SLACK_TOKEN;
@@ -14,7 +17,7 @@ exports.p_create_channel = async function (req, res) {
 
     const assessment = await getAssessmentById(AssessmentID);
 
-    const channelName = "sas-panel-" + assessment.Name.toLowerCase()
+    const channelName = "sas-" + assessment.Name.toLowerCase()
         .replace(/[\s\W-]+/g, '-')
         .replace(/^-|-$/g, '');
 
@@ -30,6 +33,45 @@ exports.p_create_channel = async function (req, res) {
     console.log('response from create channel')
     console.log(channelID)
 
+    // Get assessors and add them to the channel as members
+
+    const assessors = await assessmentPanel(AssessmentID);
+
+    console.log('Assessors:')
+    console.log(assessors)
+
+    // For each assessor, invite them to the channel
+    try {
+        for (const assessor of assessors) {
+            // Get the user email for the assessor
+
+            let assessorInfo = await getAssessorByUserID(assessor.UserID);
+
+            const assessorID = await getUserIDByEmail(assessorInfo.EmailAddress);
+            await axios.post(
+                `${slackApiUrl}/conversations.invite`,
+                {
+                    channel: channelID,
+                    users: assessorID
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+        }
+    } catch (error) {
+        console.error('Error inviting user:', error);
+    }
+
+    // Post a message to the channel
+
+    const updateMessage = 'View more details in the Service assessment service: '+ process.env.serviceURL +'/assess/overview/' + AssessmentID;
+    await postMessageToSlack(channelID, updateMessage);
+
+
+
     if (channelID !== undefined) {
         await updateSlackChannelID(AssessmentID, channelID);
     }
@@ -42,27 +84,31 @@ exports.p_create_channel = async function (req, res) {
 
 async function getUserIDByEmail(email) {
     try {
-        const response = await axios.get(`${slackApiUrl}/users.lookupByEmail`, {
-            params: {
-                email: email
-            },
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+        console.log('Looking up email:', email);
+        let response = await axios.get(`${slackApiUrl}/users.lookupByEmail`, {
+            params: { email },
+            headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (response.data.ok) {
-            const userId = response.data.user.id;
-            console.log(`User ID for ${email}: ${userId}`);
-            return userId;
+        if (response?.data?.ok) {
+            return response.data.user.id;
         } else {
-            console.error('Error retrieving user ID:', response);
+            console.log(`Email ${email} not found, trying fallback...`);
+            const newEmail = email.replace('@education.gov.uk', '@digital.education.gov.uk');
+            response = await axios.get(`${slackApiUrl}/users.lookupByEmail`, {
+                params: { email: newEmail },
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (response?.data?.ok) {
+                return response.data.user.id;
+            }
+            console.error('Fallback email also failed:', response?.data?.error || 'Unknown error');
         }
     } catch (error) {
-        console.error('Error retrieving user ID:', error.data.error);
+        console.error('Error retrieving user ID:', error?.response?.data?.error || error.message);
     }
 }
-
 
 async function createPrivateChannel(channelName, userId, ownerId, message) {
 
@@ -83,7 +129,6 @@ async function createPrivateChannel(channelName, userId, ownerId, message) {
             }
         );
 
-        console.log(createChannelResponse);
         channelId = createChannelResponse.data.channel.id;
 
     } catch (error) {

@@ -1,0 +1,64 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Create slack channel" %}
+
+{% set view = 'overview' %}
+
+{% block hero %}
+
+{% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+{% if error.path === 'Type' %}
+{% set hasError = true %}
+{% endif %}
+{% endfor %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+
+
+
+        <h2 class="govuk-heading-m">Create Slack channel</h2>
+
+
+        {% if assessment.SlackID %}
+
+        <p>The slack channel has been created for this {{assessment.Type | lower }}.</p>
+        <p><a href="slack://ukgovernmentdfe.slack.com/messages/{{assessment.SlackID}}">Go to the Slack channel</a>.</p>
+
+        <h3 class="govuk-heading-s">Information</h3>
+        <p>Only member of the assessor panel will be added to the channel if they are Slack users.</p>
+
+
+
+            {% else %} 
+            
+            <form method="post" action="/admin/create-slack-channel">
+            <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+            <p>This will create a private slack channel for this assessment.</p>
+            <p>Only member of the assessor panel will be added to the channel if they are Slack users.</p>
+
+
+
+
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button">Create channel</button>
+                <a class="govuk-link govuk-link--no-visited-state"
+                    href="/admin/overview/{{assessment.AssessmentID}}">Cancel and return to tasks</a>
+            </div>
+        </form>
+        {% endif %}
+
+
+
+    </div>
+</div>
+
+{% endblock %}
