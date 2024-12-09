@@ -2,8 +2,21 @@
 
 {% set pageName = "Sign in" %}
 
+{% set hasEmailError = false %}
+{% set errMsg = "" %}
+
+{% if errors %}
+{% for error in errors %}
+{% if error.path == 'EmailAddress' %}
+{% set hasEmailError = true %}
+{% set errMsg = error.msg %}
+{% endif %}
+{% endfor %}
+{% endif %}
 
 {% block content %}
+
+
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -16,7 +29,7 @@
                     <ul class="govuk-list govuk-error-summary__list">
                         {% for error in errors %}
                         <li>
-                            <a href="#{{error.field}}">{{error.message}}</a>
+                            <a href="#{{error.path}}">{{error.msg}}</a>
                         </li>
                         {% endfor %}
 
@@ -41,7 +54,7 @@
                 <label class="govuk-label" for="EmailAddress">Enter your email address</label>
                 {%if hasEmailError%}
                 <p id="event-name-error" class="govuk-error-message">
-                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address
+                    <span class="govuk-visually-hidden">Error:</span>{{errMsg}}
                 </p>
                 {% endif%}
                 <input class="govuk-input {%if hasEmailError%} govuk-input--error{% endif%}" id="EmailAddress"
