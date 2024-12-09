@@ -79,6 +79,11 @@
                                 href="/admin/report/{{assessment.AssessmentID}}">Report</a>
                         </li>
 
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='admin' %} aria-current="page" {% endif %}
+                                href="/admin/management/{{assessment.AssessmentID}}">Admin</a>
+                        </li>
+
                     </ul>
                 </nav>
             </div>

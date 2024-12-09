@@ -170,6 +170,21 @@ exports.g_overview = async function (req, res, next) {
     }
 };
 
+exports.g_admin = async function (req, res, next) {
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const primaryContact = await getBasicUserDetails(assessment.CreatedBy);
+      
+        const primaryContactEmail = primaryContact.EmailAddress;
+        return res.render("admin/entry/admin", { assessment, primaryContactEmail });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
 exports.g_process = async function (req, res, next) {
     try {
         const { assessmentID } = req.params;
@@ -188,6 +203,32 @@ exports.g_process = async function (req, res, next) {
             dmDetails,
             ddDetails,
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.g_change_primary_contact = async function (req, res, next) {
+    try {
+        const { assessmentID } = req.params;
+
+        const assessment = await getAssessmentById(assessmentID);
+        const primaryContact = await getBasicUserDetails(assessment.CreatedBy);
+        const primaryContactEmail = primaryContact.EmailAddress;
+
+        return res.render("admin/entry/change-primary-contact", { assessment, primaryContactEmail });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.g_change_stage = async function (req, res, next) {
+    try {
+        const { assessmentID } = req.params;
+
+        const assessment = await getAssessmentById(assessmentID);
+
+        return res.render("admin/entry/change-stage", { assessment });
     } catch (error) {
         next(error);
     }
@@ -1688,7 +1729,14 @@ exports.p_changeAssessorName = [
 //Save change primary contact email
 exports.p_changePrimaryContact = async function (req, res, next) {
     try {
+
+
         const { AssessmentID, primaryContactEmail } = req.body;
+
+        const ass = await getAssessmentById(AssessmentID);
+        const oldContactEmail = await getBasicUserDetails(ass.CreatedBy);
+
+
         const userID = req.session.data.User.UserID;
         const department = req.session.data.User.Department;
 
@@ -1709,6 +1757,9 @@ exports.p_changePrimaryContact = async function (req, res, next) {
         await changePrimaryContact(AssessmentID, user.UserID);
         const assessment = await getAssessmentById(AssessmentID);
 
+
+        let newContactEmail = user.EmailAddress
+
         // Send notify email to person who is now assigned
 
         const templateParams = {
@@ -1726,7 +1777,9 @@ exports.p_changePrimaryContact = async function (req, res, next) {
             templateParams,
         );
 
-        return res.redirect(`/admin/request/${AssessmentID}`);
+        await addAuditEntry(AssessmentID, "Admin", "Changed primary contact email from: " + oldContactEmail.EmailAddress + " to: " + newContactEmail, req.session.data.User.UserID);
+
+        return res.redirect(`/admin/management/${AssessmentID}`);
     } catch (error) {
         next(error);
     }
@@ -1738,10 +1791,42 @@ exports.p_changeType = async function (req, res, next) {
         const userID = req.session.data.User.UserID;
 
         const assessment = await getAssessmentById(AssessmentID);
+
+        const oldType = assessment.Type;
+
         assessment.Type = Type;
         await updateAssessment(AssessmentID, assessment, userID);
 
+        await addAuditEntry(AssessmentID, "Admin", "Changed type from: " + oldType + " to: " + Type, req.session.data.User.UserID);
+
+
         return res.redirect(`/admin/request/${AssessmentID}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.p_change_stage = async function (req, res, next) {
+
+    console.log(req.session.data.User);
+    try {
+
+        const { AssessmentID, newStage } = req.body;
+        const userID = req.session.data.User.UserID;
+
+        const assessment = await getAssessmentById(AssessmentID);
+
+        const oldStage = assessment.Status;
+
+        assessment.Status = newStage;
+
+        await updateAssessment(AssessmentID, assessment, userID);
+
+        await addAuditEntry(AssessmentID, "Admin", "Changed stage from: " + oldStage + " to: " + newStage, req.session.data.User.UserID);
+
+
+        return res.redirect(`/admin/management/${AssessmentID}`);
+
     } catch (error) {
         next(error);
     }

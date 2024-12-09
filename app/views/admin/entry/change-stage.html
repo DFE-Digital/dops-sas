@@ -1,0 +1,99 @@
+{% extends "layouts/auth.html" %}
+
+{% set selectedNav = "Admin" %}
+{% set pageName = "Change stage" %}
+
+{% set view = 'admin' %}
+
+{% block hero %}
+
+    {% include './_header.html' %}
+{% endblock %}
+
+{% set hasError = false %}
+{% for error in errors %}
+    {% if error.path === 'Type' %}
+        {% set hasError = true %}
+    {% endif %}
+{% endfor %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+
+            <form action="/admin/change-stage" method="post">
+                <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
+
+              <div class="govuk-form-group">
+  <fieldset class="govuk-fieldset">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+      <h2 class="govuk-fieldset__heading">
+        Stage
+      </h2>
+    </legend>
+      <div id="signIn-hint" class="govuk-hint">
+     <p>The current stage is already selected.</p> <p>Select and save a different stage to change it. No notifications will be sent if you change the stage here.</p>
+    </div>
+    <div class="govuk-radios" data-module="govuk-radios">
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="newStage" name="newStage" type="radio" value="Active" aria-describedby="newStage-item-hint" {% if assessment.Status === 'Active' %}checked{% endif %}>
+        <label class="govuk-label govuk-radios__label" for="newStage">
+          With assessors
+        </label>
+         <div id="newStage-item-hint" class="govuk-hint govuk-radios__hint">
+          Enables assessors to complete the report
+        </div>
+      </div>
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="newStage-2" name="newStage" type="radio" value="SA Review" aria-describedby="newStage-2-item-hint" {% if assessment.Status === 'SA Review' %}checked{% endif %}>
+        <label class="govuk-label govuk-radios__label" for="newStage-2">
+          SA+ review
+        </label>
+          <div id="newStage-2-item-hint" class="govuk-hint govuk-radios__hint">
+         SA+ team to send on to the delivery team
+        </div>
+      </div>
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="newStage-3" name="newStage" type="radio" value="Team Review" aria-describedby="newStage-3-item-hint" {% if assessment.Status === 'Team Review' %}checked{% endif %}>
+        <label class="govuk-label govuk-radios__label" for="newStage-3">
+          Team review
+        </label>
+          <div id="newStage-3-item-hint" class="govuk-hint govuk-radios__hint">
+          Enables the delivery team to review and accept the report
+        </div>
+      </div>
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="newStage-4" name="newStage" type="radio" value="SA Publish" aria-describedby="newStage-4-item-hint" {% if assessment.Status === 'SA Publish' %}checked{% endif %}>
+        <label class="govuk-label govuk-radios__label" for="newStage-4">
+          SA+ publish
+        </label>
+          <div id="newStage-4-item-hint" class="govuk-hint govuk-radios__hint">
+         Enables the SA+ team to publish the report
+        </div>
+      </div>
+       <div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="newStage-5" name="newStage" type="radio" value="Published" aria-describedby="newStage-5-item-hint" {% if assessment.Status === 'Published' %}checked{% endif %}>
+        <label class="govuk-label govuk-radios__label" for="newStage-5">
+          Published
+        </label>
+          <div id="newStage-5-item-hint" class="govuk-hint govuk-radios__hint">
+        Sets the report to published state
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</div>
+
+                <div class="govuk-button-group">
+                    <button type="submit" class="govuk-button" data-module="govuk-button">
+                Change stage
+            </button>
+                    <a class="govuk-link govuk-link--no-visited-state" href="/admin/management/{{assessment.AssessmentID}}">Cancel and return to management</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

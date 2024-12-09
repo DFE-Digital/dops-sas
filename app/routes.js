@@ -250,7 +250,10 @@ router.post("/manage/accept-report", isAuthenticated, manageController.p_acceptR
 router.get('/admin', isAuthenticated, isAdmin, adminController.g_index);
 router.get('/admin/tasks/:filter', isAuthenticated, isAdmin, adminController.g_index);
 router.get("/admin/overview/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_overview);
+router.get("/admin/management/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_admin);
 router.get("/admin/process/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_process);
+router.get("/admin/change-primary-contact/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_change_primary_contact);
+router.get("/admin/change-stage/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_change_stage);
 router.get("/admin/request/confirm-delete/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_confirmDelete);
 router.get("/admin/request/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_process);
 router.get("/admin/panel/:assessmentID", isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_panel);
@@ -319,6 +322,7 @@ router.post('/admin/assessor-change-role', isAuthenticated, isAdmin, adminContro
 router.post('/admin/assessor-change-external', isAuthenticated, isAdmin, adminController.p_changeAssessorExternal);
 router.post('/admin/assessor-change-name', isAuthenticated, isAdmin, adminController.p_changeAssessorName);
 router.post("/admin/change-primary-contact", isAuthenticated, isAdmin, adminController.p_changePrimaryContact);
+router.post("/admin/change-stage", isAuthenticated, isAdmin, adminController.p_change_stage);
 router.post("/admin/add-artefact", isAuthenticated, isAdmin, adminController.p_addartefact);
 router.post("/admin/remove-artefact", isAuthenticated, isAdmin, adminController.p_removeartefact);
 router.post("/admin/change-type", isAuthenticated, isAdmin, adminController.p_changeType);

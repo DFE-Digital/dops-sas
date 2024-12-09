@@ -245,44 +245,9 @@
 
                     </dl>
 
-                    <h2 class="govuk-heading-l">Change primary contact</h2>
-                    <p>The primary contact will be notified of all significant tasks that are required for the {{assessment.Type | lower }}.</p>
 
-                    <p>Current primary contact email: {{primaryContactEmail}}</p>
 
-                    <form action="/admin/change-primary-contact" method="post">
-                        <input type="hidden" name="AssessmentID" value="{{assessment.AssessmentID}}">
 
-                        <div class="govuk-form-group {%if hasEmailError%}govuk-form-group--error{% endif%} govuk-!-margin-top-5">
-
-                            <label class="govuk-label" for="primaryContactEmail">New primary contact email</label>
-                            {%if hasEmailError %}
-                                <p id="event-name-error" class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span>Enter a valid email address</p>
-                            {% endif %}
-                            <input class="govuk-input govuk-!-width-one-half {%if hasEmailError%} govuk-input--error{% endif%}" id="primaryContactEmail" name="primaryContactEmail" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
-                        </div>
-
-                        <button type="submit" class="govuk-button" data-module="govuk-button">
-                Change primary contact
-            </button>
-
-                    </form>
-
-                    {% if assessment.Status === 'Active' %}
-                        <form action="/admin/confirm-delete" method="post">
-                            <h2 class="govuk-heading-l">Delete this booking request</h2>
-                            <input type="hidden" name="assessmentID" value="{{assessment.AssessmentID}}">
-                            <input type="hidden" name="process" value="Reject">
-
-                            <div class="govuk-button-group">
-                                <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
-                    Delete
-                </button>
-                               
-                            </div>
-                        </form>
-                    {% endif %}
 
                 </div>
             </div>
