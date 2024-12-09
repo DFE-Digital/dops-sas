@@ -38,7 +38,7 @@
                                 {% else %}Date not set{% endif %}
                             </td>
                               {% if assessment.SlackID %}
-                               <td class="govuk-table__cell"><a href="https://ukgovernmentdfe.slack.com/archives/{{assessment.SlackID}}" target="_blank">Go to channel</a></td>
+                               <td class="govuk-table__cell"><a href="{{slackURL}}archives/{{assessment.SlackID}}" target="_blank">Go to channel</a></td>
                             {% endif %}
                         </tr>
                     </tbody>
