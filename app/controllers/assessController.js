@@ -227,7 +227,8 @@ exports.g_volunteer = async function (req, res, next) {
 
         return res.render('assess/volunteer', {
             assessments: assessments,
-            assessmentPanels: assessmentPanels
+            assessmentPanels: assessmentPanels,
+            today: new Date()
         });
     }
     catch (error) {

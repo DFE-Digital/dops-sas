@@ -92,6 +92,7 @@
         <hr class="govuk-section-break  govuk-section-break--visible ">
         <ul class="dfe-items-list govuk-!-margin-top-2">
             {% for assessment in assessments %}
+            {% if assessment.AssessmentDateTime > today %}
             <li class="row dfe-items-list--{{assessment.Outcome | lower}}" data-phase="{{assessment.Phase}}"
                 data-type="{{assessment.Type}}" data-month="{{assessment.AssessmentDateTime | date('MMMM')}}">
                 <div>
@@ -121,6 +122,7 @@
                     </div>
                 </div>
             </li>
+            {% endif %}
             {% endfor %}
         </ul>
         <div id="noResultsMessage" style="display: none;">
