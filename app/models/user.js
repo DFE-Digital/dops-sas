@@ -2,7 +2,8 @@ const pool = require('./pool.js');
 
 /**
  * Checks for a user by email and updates or sets their token and token expiry if they exist.
- * If the user does not exist, creates a new user with the given details and additional default fields.
+ * If the user does not exist, creates a new user with the given details and additional default fields,
+ * but only if the email domain is allowed as per the environment variable.
  * @param {string} emailAddress The email address of the user.
  * @param {string} token The new token for the user.
  * @param {Date} tokenExpiry The expiry date and time for the new token.
@@ -13,17 +14,33 @@ async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
   try {
     await client.query('BEGIN');
 
+    // Extract the domain from the email address
+    const parts = emailAddress.split('@');
+    const domain = parts[parts.length - 1];
+
+    // Get the allowed domain(s) from the environment variable
+    const allowedDomains = process.env.allowRegistrationFrom
+      ? process.env.allowRegistrationFrom.split(',')
+      : [];
+
+    // Ensure the domain is in the allowed list before proceeding
+    if (!allowedDomains.includes(domain)) {
+      return -1;
+    }
+
+    // Check if the user exists
     let res = await client.query('SELECT "UserID" FROM public."User" WHERE "EmailAddress" = $1', [emailAddress]);
     let userId;
 
-    const parts = emailAddress.split('@');
-    let domain = parts[parts.length - 1];
-
-    let dept = await client.query('SELECT "DepartmentID" FROM public."Department" WHERE "Domain" = $1', [domain]);
-    let departmentID = dept.rows[0].DepartmentID
-
     if (res.rows.length === 0) {
-      // User does not exist, create a new user with additional fields
+      // Retrieve the department ID based on the domain
+      let dept = await client.query('SELECT "DepartmentID" FROM public."Department" WHERE "Domain" = $1', [domain]);
+      if (dept.rows.length === 0) {
+        throw new Error('No department found for the given domain');
+      }
+      const departmentID = dept.rows[0].DepartmentID;
+
+      // Insert the new user
       const query = `
         INSERT INTO public."User"(
           "EmailAddress", 
@@ -55,6 +72,7 @@ async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
     client.release();
   }
 }
+
 
 
 /**

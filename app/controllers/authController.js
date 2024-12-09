@@ -133,6 +133,14 @@ exports.p_signin = [
 
             const userId = await checkAndSetUserToken(email, token, formattedTokenExpiry);
 
+            if (userId === -1) {
+
+                let errors = [];
+                errors.push({ msg: 'Unable to register email address. Contact support.', path: 'EmailAddress' });
+
+                return res.render('auth/sign-in', { errors });
+            }
+
             if (userId != 0) {
 
                 // Send the user an email with the token using GOV.UK Notify    

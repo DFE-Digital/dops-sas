@@ -21,7 +21,7 @@ exports.validateSignIn = [
       // Only allow emails which end with whitelisted domains from process.env.domainWhileList comma separated list
       
       if (!domainWhiteList.some((domain) => value.endsWith(domain))) {
-        throw new Error('Your email is not from an approved domain. Please contact us for help.');
+        throw new Error('Unable to register, please contact support.');
       }
       if (value.endsWith('digital.education.gov.uk')) {
         throw new Error('Use education.gov.uk instead of digital.education.gov.uk');
