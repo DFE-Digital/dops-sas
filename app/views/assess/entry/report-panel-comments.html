@@ -61,12 +61,13 @@
                         <div class="govuk-form-group">
                             <h2 class="govuk-label-wrapper">
                                 <label class="govuk-label govuk-label--l" for="with-hint">
-        {{pageName}}
-      </label>
+                                    {{pageName}}
+                                </label>
                             </h2>
                             <div id="with-hint-hint" class="govuk-hint">
-      This should be completed by the lead assessor. 
-    </div>
+                                <p>This should be completed by the lead assessor.</p>
+                                <p>You can also add comments against each standard for what the team has done well.</p>
+                            </div>
                             <textarea class="govuk-textarea govuk-js-character-count" id="with-hint" name="PanelComments" rows="40" aria-describedby="with-hint-info with-hint-hint">{{assessment.PanelComments}}</textarea>
                         </div>
                         <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
@@ -83,11 +84,10 @@
 
             {% else %}
 
-            <h2 class="govuk-heading-l">Panel comments</h2>
+                <h2 class="govuk-heading-l">Panel comments</h2>
 
                 <p>{{assessment.PanelComments}}</p>
 
-             
             {% endif %}
         </div>
 

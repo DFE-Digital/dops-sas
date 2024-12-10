@@ -38,7 +38,7 @@
                                 {% else %}Date not set{% endif %}
                             </td>
                               {% if assessment.SlackID %}
-                               <td class="govuk-table__cell"><a href="{{slackURL}}archives/{{assessment.SlackID}}" target="_blank">Go to channel</a></td>
+                               <td class="govuk-table__cell"><a href="{{slackURL}}/archives/{{assessment.SlackID}}" target="_blank">Go to channel</a></td>
                             {% endif %}
                         </tr>
                     </tbody>
@@ -66,7 +66,12 @@
                             <a class="app-sub-navigation__link" {% if view==='report' %} aria-current="page" {% endif %}
                                 href="/assess/report/{{assessment.AssessmentID}}">Report</a>
                         </li>
-                       
+                       {% if assessment.Status == 'Active' %}
+                        <li class="app-sub-navigation__item">
+                            <a class="app-sub-navigation__link" {% if view==='preview' %} aria-current="page" {% endif %}
+                                href="/assess/report-preview/{{assessment.AssessmentID}}">Preview report</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>

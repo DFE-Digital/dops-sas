@@ -26,6 +26,19 @@ exports.validateAddAction = [
         })
 ];
 
+exports.validateAddComment = [
+    check('comment')
+        .trim()
+        .custom((value, { req }) => {
+            if (value === '') {
+                throw new Error('Enter a comment');
+            }
+            return true;
+        })
+];
+
+
+
 exports.validateAddComments = [
     check('PanelComments')
         .trim()

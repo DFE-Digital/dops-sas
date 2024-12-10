@@ -1,13 +1,66 @@
 const { check, validationResult } = require('express-validator');
-const { getAssessmentPanelByUserID, getRequestsByMixedStatus, getAssessmentById, updateReportComments, updateAssessment, checkSubmitStatus } = require('../models/assessmentModel');
-const { getServiceStandards, getServiceStandardOutcomesByAssessmentID, countOutcomesByStandard, getAssessmentDetailsByYear, updateServiceStandardOutcome, canSubmit } = require('../models/standards');
-const { getActionsForAssessmentID, addAction, getActionByUniqueID, updateAction, deleteAction, getActionsForAssessmentIDAndStandard } = require('../models/actions');
-const { assessmentPanel, assessmentPanelExtended, getActiveAssessors, addPanelMember, findAssessmentPanelByIdAndUniqueID, deleteAssessmentPanelMember } = require('../models/assessmentPanel');
+
+// Assessment Model
+const {
+    getAssessmentPanelByUserID,
+    getRequestsByMixedStatus,
+    getAssessmentById,
+    updateReportComments,
+    updateAssessment,
+    checkSubmitStatus,
+} = require('../models/assessmentModel');
+
+// Standards Model
+const {
+    getServiceStandards,
+    getServiceStandardOutcomesByAssessmentID,
+    countOutcomesByStandard,
+    getAssessmentDetailsByYear,
+    updateServiceStandardOutcome,
+    canSubmit,
+} = require('../models/standards');
+
+// Actions Model
+const {
+    getActionsForAssessmentID,
+    addAction,
+    getActionByUniqueID,
+    updateAction,
+    deleteAction,
+    getActionsForAssessmentIDAndStandard,
+} = require('../models/actions');
+
+// Comments Model
+const {
+    getCommentsForAssessmentID,
+    addComment,
+    getCommentByUniqueID,
+    updateComment,
+    deleteComment,
+    getCommentsForAssessmentIDAndPoint,
+} = require('../models/comments');
+
+// Assessment Panel Model
+const {
+    assessmentPanel,
+    assessmentPanelExtended,
+    getActiveAssessors,
+    addPanelMember,
+    findAssessmentPanelByIdAndUniqueID,
+    deleteAssessmentPanelMember,
+} = require('../models/assessmentPanel');
+
+// Artefacts Model
 const { getArtefactsForAssessment } = require('../models/artefacts');
+
+// Team Model
 const { getTeamForAssessmentExtended } = require('../models/team');
+
+// Audit Model
 const { addAuditEntry } = require('../models/audit');
 
-const { validateAddRating, validateAddAction, validateAddComments } = require('../validation/assess');
+
+const { validateAddRating, validateAddAction, validateAddComments, validateAddComment } = require('../validation/assess');
 const { sendNotifyEmail } = require('../middleware/notify');
 
 exports.g_index = async function (req, res, next) {
@@ -175,6 +228,23 @@ exports.g_reportSectionActions = async function (req, res, next) {
     }
 }
 
+exports.g_reportSectionComments = async function (req, res, next) {
+    try {
+        const { assessmentID, standard } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const comments = await getCommentsForAssessmentIDAndPoint(assessmentID, standard);
+        return res.render('assess/entry/report-section-comments', {
+            assessment, ratings, serviceStandards, comments, standard
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
 exports.g_reportSectionActionsAdd = async function (req, res, next) {
     try {
         const { assessmentID, standard } = req.params;
@@ -190,6 +260,24 @@ exports.g_reportSectionActionsAdd = async function (req, res, next) {
         next(error)
     }
 }
+
+exports.g_reportSectionCommentsAdd = async function (req, res, next) {
+    try {
+        const { assessmentID, standard } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const comments = await getCommentsForAssessmentID(assessmentID);
+        return res.render('assess/entry/report-section-comment-add', {
+            assessment, ratings, serviceStandards, comments, standard
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
 
 exports.g_reportSectionActionsManage = async function (req, res, next) {
     try {
@@ -207,6 +295,66 @@ exports.g_reportSectionActionsManage = async function (req, res, next) {
         next(error)
     }
 }
+
+
+exports.g_reportSectionCommentManage = async function (req, res, next) {
+    try {
+        const { assessmentID, standard, uniqueID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+        const serviceStandards = await getServiceStandards();
+        const comment = await getCommentByUniqueID(uniqueID);
+
+        return res.render('assess/entry/report-section-comment-manage', {
+            assessment, ratings, serviceStandards, comment, standard
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
+exports.g_reportPreview = async function (req, res, next) {
+    try {
+        const user = req.session.data.User;
+        const assessmentID = req.params.assessmentID;
+        const assessment = await getAssessmentById(assessmentID);
+
+        if (assessment.Status === 'Published') {
+            return res.redirect('/reports/report/' + assessment.AssessmentID)
+        }
+
+
+        if (assessment.Type == 'Service assessment') {
+
+            const ratings = await getServiceStandardOutcomesByAssessmentID(assessmentID);
+            const serviceStandards = await getServiceStandards();
+            const actions = await getActionsForAssessmentID(assessmentID);
+            const comments = await getCommentsForAssessmentID(assessmentID);
+            const panel = await assessmentPanel(assessmentID);
+            const submitStatus = await checkSubmitStatus(assessmentID)
+            const canSubmitReport = await canSubmit(assessmentID, user.UserID);
+
+            return res.render('assess/entry/report-preview', {
+                assessment, ratings, panel,
+                serviceStandards, actions, submitStatus, canSubmitReport, comments
+            })
+        }
+        else {
+
+            return res.render('assess/entry/pr-report', {
+                assessment
+
+            })
+        }
+    }
+    catch (error) {
+        next(error)
+    }
+
+}
+
 
 exports.g_volunteer = async function (req, res, next) {
     try {
@@ -444,6 +592,38 @@ exports.p_reportSectionActionsAdd = [
     }
 ]
 
+exports.p_reportSectionCommentAdd = [
+    validateAddComment,
+    async (req, res, next) => {
+        try {
+            const { AssessmentID, Standard, comment } = req.body;
+            const user = req.session.data.User;
+
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                const assessment = await getAssessmentById(AssessmentID);
+                const serviceStandards = await getServiceStandards();
+                const comments = await getCommentsForAssessmentID(AssessmentID);
+
+                return res.render('assess/entry/report-section-comment-add', {
+                    assessment, serviceStandards, comments, standard: Standard,
+                    errors: errors.array()
+                });
+            }
+
+
+            await addComment(AssessmentID, comment, Standard, user.UserID);
+
+            return res.redirect('/assess/report-section-comments/' + AssessmentID + '/' + Standard);
+
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+]
+
 
 /**
  * Update an action for a given UniqueID
@@ -476,6 +656,41 @@ exports.p_reportSectionActionsManage = [
             }
 
             return res.redirect('/assess/report-section-actions/' + AssessmentID + '/' + Standard);
+
+        }
+        catch (error) {
+            next(error)
+        }
+    }
+]
+
+exports.p_reportSectionCommentManage = [
+    validateAddComment,
+    async (req, res, next) => {
+        try {
+            const { AssessmentID, Standard, UniqueID, comment, action } = req.body;
+            const user = req.session.data.User;
+
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                const assessment = await getAssessmentById(AssessmentID);
+                const serviceStandards = await getServiceStandards();
+                const comments = await getCommentsForAssessmentID(AssessmentID);
+
+                return res.render('assess/entry/report-section-comment-manage', {
+                    assessment, serviceStandards, comments, standard: Standard,
+                    errors: errors.array()
+                });
+            }
+
+            if (action === 'save') {
+                await updateComment(UniqueID, comment);
+            } else if (action === 'delete') {
+                await deleteComment(UniqueID);
+            }
+
+            return res.redirect('/assess/report-section-comments/' + AssessmentID + '/' + Standard);
 
         }
         catch (error) {

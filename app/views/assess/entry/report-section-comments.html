@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% set selectedNav = "Assess" %}
-{% set pageName = 'Actions for the team' %}
+{% set pageName = 'Comments for the team' %}
 {% set view = 'report' %}
 
 {% block hero %}
@@ -40,11 +40,11 @@
           <a class="dfe-vertical-nav__link"
             href="/assess/report-section/{{assessment.AssessmentID}}/{{standard}}">Rating</a>
         </li>
-        <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+        <li class="dfe-vertical-nav__section-item ">
           <a class="dfe-vertical-nav__link"
             href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{standard}}">Actions</a>
         </li>
-         <li class="dfe-vertical-nav__section-item">
+         <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
           <a class="dfe-vertical-nav__link"
             href="/assess/report-section-comments/{{assessment.AssessmentID}}/{{standard}}">General comments</a>
         </li>
@@ -56,19 +56,26 @@
       <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
       <span class="govuk-caption-l">Point {{standardFromStandards.Point}}</span>
       <h2 class="govuk-heading-l">{{standardFromStandards.Title}}</h2>
-      <h2 class="govuk-heading-m">Actions for the team</h2>
-      <p>You should add actions one at a time to the list so they can be managed by the team.</p>
-      {% if redOrAmber == true and actions | length == 0 %}
+      <h2 class="govuk-heading-m">Comments for the team</h2>
+      <p>You can add general comments about what the team did well against this standard.</p>
+
+      {% if redOrAmber == true %}
+<p>Do not use general comments for things the team need to action given as a result of a {{rating.Outcome | lower}} rating for this standard. use the  <a class="govuk-link"
+            href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{standard}}">actions</a> option instead.</p>
+      {% endif %}
+
+
+      {% if comments | length == 0 %}
       <div class="govuk-inset-text">
-        <p>No actions have been added.</p>
+        <p>No comments have been added.</p>
         <p>
-          <a href="/assess/report-section-actions-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
-            an action</a>
+          <a href="/assess/report-section-comment-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
+            a comment</a>
         </p>
       </div>
 
 
-      {% elseif redOrAmber == true and actions | length > 0 %}
+      {% elseif comments | length > 0 %}
 
       <table class="govuk-table">
         <thead class="govuk-table__head">
@@ -78,15 +85,15 @@
           </tr>
         </thead>
         <tbody class="govuk-table__body">
-          {% for action in actions %}
+          {% for comment in comments %}
           <tr class="govuk-table__row">
             <td class="govuk-table__cell">
-              {{action.Comments}}
+              {{comment.Comments}}
             </td>
             <td class="govuk-table__cell">
-              <a href="/assess/report-section-actions-manage/{{assessment.AssessmentID}}/{{standard}}/{{action.UniqueID}}"
-                class="govuk-link">Edit or remove action <span
-                  class="govuk-visually-hidden">{{action.Comments}}</span></a>
+              <a href="/assess/report-section-comment-manage/{{assessment.AssessmentID}}/{{standard}}/{{comment.UniqueID}}"
+                class="govuk-link">Edit or remove comment<span
+                  class="govuk-visually-hidden">{{comment.Comments}}</span></a>
             </td>
           </tr>
           {% endfor %}
@@ -94,12 +101,11 @@
       </table>
 
       <p>
-        <a href="/assess/report-section-actions-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
-          another action</a> or    <a href="/assess/report/{{assessment.AssessmentID}}" class="govuk-link">Return to standards</a>
+        <a href="/assess/report-section-comment-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
+          another comment</a> or    <a href="/assess/report/{{assessment.AssessmentID}}" class="govuk-link">Return to standards</a>
       </p>
 
-      {% elseif redOrAmber == false %}
-      <p>No actions are required to be added.</p>
+     
       {% endif %}
     </form>
   </div>

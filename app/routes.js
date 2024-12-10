@@ -355,12 +355,18 @@ router.get("/assess/report-section/:assessmentID/:standard", isAuthenticated, is
 router.get("/assess/report-section-actions/:assessmentID/:standard", isAuthenticated, isAssessor, canAccessAsAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionActions);
 router.get("/assess/report-section-actions-add/:assessmentID/:standard", isAuthenticated, isAssessor, canAccessAsAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionActionsAdd);
 router.get("/assess/report-section-actions-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, isAssessor, canAccessAsAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionActionsManage);
+router.get("/assess/report-section-comments/:assessmentID/:standard", isAuthenticated, isAssessor, canAccessAsAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionComments);
+router.get("/assess/report-section-comment-add/:assessmentID/:standard", isAuthenticated, isAssessor, canAccessAsAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionCommentsAdd);
+router.get("/assess/report-section-comment-manage/:assessmentID/:standard/:uniqueID", isAuthenticated, isAssessor, canAccessAsAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportSectionCommentManage);
+router.get("/assess/report-preview/:assessmentID", isAuthenticated, isAssessor, canAccessAsAssessor, validateParamIsInteger('assessmentID'), assessController.g_reportPreview);
 router.post("/assess/report-section", isAuthenticated, isAssessor, assessController.p_reportSection);
 router.post("/assess/report-section-actions-add", isAuthenticated, isAssessor, assessController.p_reportSectionActionsAdd);
 router.post("/assess/report-section-actions-manage", isAuthenticated, isAssessor, assessController.p_reportSectionActionsManage);
 router.post("/assess/report-panel-comments", isAuthenticated, isAssessor, assessController.p_reportPanelComments);
 router.post("/assess/submit-report", isAuthenticated, isAssessor, assessController.p_submitReport);
 router.post("/assess/pr-report", isAuthenticated, isAssessor, assessController.p_submitPRReport);
+router.post("/assess/report-section-comment-add", isAuthenticated, isAssessor, assessController.p_reportSectionCommentAdd);
+router.post("/assess/report-section-comment-manage", isAuthenticated, isAssessor, assessController.p_reportSectionCommentManage);
 
 // REPORTS ROUTES
 router.get('/reports', isAuthenticated, reportsController.g_index);

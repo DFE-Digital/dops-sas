@@ -3,7 +3,7 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 {% endblock %}
 {% set selectedNav = "Assess" %}
-{% set pageName = 'Add an action' %}
+{% set pageName = 'Add a comment' %}
 {% set view = 'report' %}
 {% block hero %}
 {% include './_header.html' %}
@@ -26,11 +26,11 @@
           <a class="dfe-vertical-nav__link"
             href="/assess/report-section/{{assessment.AssessmentID}}/{{standard}}">Rating</a>
         </li>
-        <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+        <li class="dfe-vertical-nav__section-item">
           <a class="dfe-vertical-nav__link"
             href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{standard}}">Actions</a>
         </li>
-         <li class="dfe-vertical-nav__section-item">
+         <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
           <a class="dfe-vertical-nav__link"
             href="/assess/report-section-comments/{{assessment.AssessmentID}}/{{standard}}">General comments</a>
         </li>
@@ -38,31 +38,33 @@
     </nav>
   </div>
   <div class="govuk-grid-column-three-quarters">
-    <form action="/assess/report-section-actions-add" method="post">
+    <form action="/assess/report-section-comment-manage" method="post">
       <input type="hidden" name="Standard" value="{{ standardFromStandards.Point}}">
       <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+      <input type="hidden" name="UniqueID" value="{{ comment.UniqueID }}">
       <span class="govuk-caption-l">Point {{standardFromStandards.Point}}</span>
       <h2 class="govuk-heading-l">{{standardFromStandards.Title}}</h2>
       <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
         <div class="govuk-form-group">
-          <label class="govuk-label  govuk-label--m" for="actionPlanItem">
-            What action does the team need to take?
+          <label class="govuk-label  govuk-label--m" for="comment">
+            What comment do you want to add
           </label>
           <div id="with-hint-hint" class="govuk-hint">
-            You should add an entry for each action the team needs to take.
+            You should add an entry for each comment you want to give the team.
           </div>
-          <textarea class="govuk-textarea govuk-js-character-count" id="actionPlanItem" name="actionPlanItem" rows="5"
-            aria-describedby="actionPlanItem-info"></textarea>
+          <textarea class="govuk-textarea govuk-js-character-count" id="comment" name="comment" rows="5"
+            aria-describedby="comment-info">{{comment.Comments}}</textarea>
         </div>
-        <div id="actionPlanItem-info" class="govuk-hint govuk-character-count__message">
+        <div id="comment-info" class="govuk-hint govuk-character-count__message">
           You can enter up to 1,000 characters
         </div>
       </div>
-      <div class="govuk-button-group">
-        <button class="govuk-button" data-module="govuk-button">Save and return to actions</button>
+       <div class="govuk-button-group">
+        <button class="govuk-button" name="action" value="save" data-module="govuk-button">Save changes</button>
+        <button class="govuk-button govuk-button--warning" name="action" value="delete" data-module="govuk-button">Delete comment</button>
         <a class="govuk-link govuk-link--no-visited-state"
-          href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{ standardFromStandards.Point}}">Cancel and
-          return to actions</a>
+          href="/assess/report-section-comments/{{assessment.AssessmentID}}/{{ standardFromStandards.Point}}">Cancel and
+          return to comments</a>
       </div>
     </form>
   </div>
