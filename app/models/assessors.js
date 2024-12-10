@@ -2,7 +2,7 @@ const pool = require('./pool.js');
 
 /**
  * Gets assessors
- * @param {number} departmentID The depaertment ID to filter assessors by.
+ * @param {number} departmentID The department ID to filter assessors by.
  * @returns {Promise<Array>} An array of assessors, or an empty array if no assessors are found.
  */
 async function getAllAssessors(departmentID) {
@@ -11,7 +11,7 @@ async function getAllAssessors(departmentID) {
         SELECT a.*, u."FirstName", u."LastName", u."EmailAddress"
         FROM public."Assessor" a
         INNER JOIN public."User" u ON a."UserID" = u."UserID"
-        WHERE a."DepartmentID" = $1
+        WHERE a."DepartmentID" = $1 AND a."Deleted" = false
         ORDER BY a."PrimaryRole", u."FirstName";        
         `, [departmentID]);
 
@@ -24,26 +24,34 @@ async function getAllAssessors(departmentID) {
 
 
 /**
- * Adds an assessor to the database
+ * Adds an assessor to the database or reactivates an existing one by setting Deleted to false.
  * 
  * @param {*} UserID 
  * @param {*} Role 
  * @param {*} CrossGovAssessor 
  * @param {*} LeadAssessor 
  * @param {*} ExternalAssessor 
+ * @param {*} DepartmentID 
  */
 async function createAssessor(UserID, Role, CrossGovAssessor, LeadAssessor, ExternalAssessor, DepartmentID) {
-
     try {
         await pool.query(`
-            INSERT INTO public."Assessor" ("UserID", "PrimaryRole", "Active","CrossGovAssessor", "LeadAssessor", "ExternalAssessor", "DepartmentID")
-            VALUES ($1, $2, true, $3, $4, $5, $6)
+            INSERT INTO public."Assessor" ("UserID", "PrimaryRole", "Active", "CrossGovAssessor", "LeadAssessor", "ExternalAssessor", "DepartmentID", "Deleted")
+            VALUES ($1, $2, true, $3, $4, $5, $6, false)
+            ON CONFLICT ("UserID") 
+            DO UPDATE SET 
+                "Deleted" = false,
+                "PrimaryRole" = $2,
+                "Active" = true,
+                "CrossGovAssessor" = $3,
+                "LeadAssessor" = $4,
+                "ExternalAssessor" = $5,
+                "DepartmentID" = $6;
         `, [UserID, Role, CrossGovAssessor, LeadAssessor, ExternalAssessor, DepartmentID]);
     } catch (error) {
         console.error('Error in createAssessor:', error);
         throw error;
     }
-
 }
 
 
@@ -180,6 +188,24 @@ async function updateAssessor(assessorID, Status) {
 }
 
 /**
+ * Mark assessor as deleted
+ * @param {number} assessorID The unique assessor ID
+ * @param {boolean} isDeleted True to mark as deleted, false otherwise
+ */
+async function updateAssessorDeleted(assessorID, isDeleted) {
+    try {
+        await pool.query(`
+            UPDATE public."Assessor"
+            SET "Deleted" = $2
+            WHERE "AssessorID" = $1
+        `, [assessorID, isDeleted]);
+    } catch (error) {
+        console.error('Error in updateAssessorDeleted:', error);
+        throw error;
+    }
+}
+
+/**
  * Update assessor
  * @param {number} assessorID The unique
  * @param {boolean} Status The status
@@ -254,5 +280,5 @@ async function updateAssessorExternal(assessorID, Status) {
 
 
 module.exports = {
-    getAllAssessors, createAssessor, getAssessor, getAssessorByUserID, getTrainingForUser, createTraining, getTrainingByUniqueID, deleteTraining, updateAssessor, updateAssessorXGov, updateAssessorLead, updateAssessorRole, updateAssessorExternal
+    getAllAssessors, createAssessor, getAssessor, getAssessorByUserID, getTrainingForUser, createTraining, getTrainingByUniqueID, deleteTraining, updateAssessor, updateAssessorXGov, updateAssessorLead, updateAssessorRole, updateAssessorExternal, updateAssessorDeleted
 };

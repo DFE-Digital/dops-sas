@@ -11,6 +11,7 @@
 // crate a variable for assessors where active exits and another for inactive assessors
 {% set activeAssessors = assessors | filterByProperty('Active', true) %}
 {% set inactiveAssessors = assessors | filterByProperty('Active', false) %}
+{% set deletedAssessors = assessors | filterByProperty('Deleted', true) %}
 
 
 {% block content %}

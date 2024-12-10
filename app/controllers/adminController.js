@@ -38,6 +38,7 @@ const {
     getAssessorByUserID,
     deleteTraining,
     updateAssessor,
+    updateAssessorDeleted,
     updateAssessorXGov,
     updateAssessorLead,
     updateAssessorRole,
@@ -354,6 +355,7 @@ exports.g_changeAssessorStatus = async (req, res, next) => {
         next(error);
     }
 };
+
 
 exports.g_changeAssessorCrossgov = async (req, res, next) => {
     try {
@@ -1471,9 +1473,16 @@ exports.p_removeTraining = async (req, res, next) => {
 
 exports.p_changeAssessorStatus = async (req, res, next) => {
     try {
-        const { AssessorID, changeStatus } = req.body;
-        const status = changeStatus === 'true' ? 1 : 0;
-        await updateAssessor(AssessorID, status);
+        const { AssessorID, action, changeStatus } = req.body;
+
+        if (action === 'remove') {
+            // Set the Deleted column to true
+            await updateAssessorDeleted(AssessorID, true);
+        } else if (action === 'save') {
+            // Update the Active status
+            const status = changeStatus === 'true' ? 1 : 0;
+            await updateAssessor(AssessorID, status);
+        }
 
         return res.redirect(`/admin/assessor/${AssessorID}`);
     } catch (error) {
