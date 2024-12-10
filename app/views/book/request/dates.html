@@ -49,6 +49,7 @@
         {% endif %}
 
         <form action="/book/request/dates" method="post">
+        <input type="hidden" name="hasDates" value="{{ dates.length }}">
             {% if dates.length %}
             <div class="govuk-form-group {%if err%}govuk-form-group--error{% endif%}">
                 <fieldset class="govuk-fieldset" aria-describedby="reviewWeek-hint">

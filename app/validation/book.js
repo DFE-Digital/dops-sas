@@ -175,16 +175,26 @@ exports.validateEndDate = [
         }),
 ];
 
+
+
 exports.validateEndDates = [
     check('ReviewWeek')
         .trim()
         .custom((value, { req }) => {
+            // Skip validation if hasDates is 0
+            if (req.body.hasDates === '0') {
+                return true; // No validation needed
+            }
+
+            // Perform validation if hasDates is not 0
             if (value === '') {
                 throw new Error('Select all weeks that are suitable');
             }
+
             return true;
         })
 ];
+
 
 
 exports.validatePortfolio = [
