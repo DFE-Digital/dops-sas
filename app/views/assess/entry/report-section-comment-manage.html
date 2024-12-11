@@ -44,7 +44,7 @@
       <input type="hidden" name="UniqueID" value="{{ comment.UniqueID }}">
       <span class="govuk-caption-l">Point {{standardFromStandards.Point}}</span>
       <h2 class="govuk-heading-l">{{standardFromStandards.Title}}</h2>
-      <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
+      <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
         <div class="govuk-form-group">
           <label class="govuk-label  govuk-label--m" for="comment">
             What comment do you want to add
@@ -56,7 +56,7 @@
             aria-describedby="comment-info">{{comment.Comments}}</textarea>
         </div>
         <div id="comment-info" class="govuk-hint govuk-character-count__message">
-          You can enter up to 1,000 characters
+          You can enter up to 500 characters
         </div>
       </div>
        <div class="govuk-button-group">

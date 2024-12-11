@@ -1,7 +1,7 @@
 {% extends "layouts/auth.html" %}
 
 {% block head %}
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 {% endblock %}
 
 {% set selectedNav = "Assess" %}
@@ -9,105 +9,102 @@
 {% set view = 'report' %}
 
 {% block hero %}
-{% include './_header.html' %}
+  {% include './_header.html' %}
 {% endblock %}
 
 {% set standardFromStandards = {} %}
 {% for standardx in serviceStandards %}
-{% if standardx.Point == standard %}
-{% set standardFromStandards = standardx %}
-{% endif %}
+  {% if standardx.Point == standard %}
+    {% set standardFromStandards = standardx %}
+  {% endif %}
 {% endfor %}
 
 {% set redOrAmber = false %}
 {% for rating in ratings %}
-{% if rating.Standard === standardFromStandards.Point %}
-{% if rating.Outcome == 'Red' or rating.Outcome == 'Amber'%}
-{% set redOrAmber = true %}
-{% endif %}
-{% endif %}
+  {% if rating.Standard === standardFromStandards.Point %}
+    {% if rating.Outcome == 'Red' or rating.Outcome == 'Amber'%}
+      {% set redOrAmber = true %}
+    {% endif %}
+  {% endif %}
 {% endfor %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <nav class="dfe-vertical-nav">
-      <a href="/assess/report/{{assessment.AssessmentID}}"
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+      <nav class="dfe-vertical-nav">
+        <a href="/assess/report/{{assessment.AssessmentID}}"
         class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-9">Back to tasks</a>
-      <h2 class="dfe-vertical-nav--section-header">Standard point</h2>
-      <ul class="dfe-vertical-nav__section">
-        <li class="dfe-vertical-nav__section-item ">
-          <a class="dfe-vertical-nav__link"
+        <h2 class="dfe-vertical-nav--section-header">Standard point</h2>
+        <ul class="dfe-vertical-nav__section">
+          <li class="dfe-vertical-nav__section-item ">
+            <a class="dfe-vertical-nav__link"
             href="/assess/report-section/{{assessment.AssessmentID}}/{{standard}}">Rating</a>
-        </li>
-        <li class="dfe-vertical-nav__section-item ">
-          <a class="dfe-vertical-nav__link"
+          </li>
+          <li class="dfe-vertical-nav__section-item ">
+            <a class="dfe-vertical-nav__link"
             href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{standard}}">Actions</a>
-        </li>
-         <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
-          <a class="dfe-vertical-nav__link"
+          </li>
+          <li class="dfe-vertical-nav__section-item dfe-vertical-nav__section-item--current">
+            <a class="dfe-vertical-nav__link"
             href="/assess/report-section-comments/{{assessment.AssessmentID}}/{{standard}}">General comments</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <form method="/assess/report-panel-comments" action="post">
-      <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
-      <span class="govuk-caption-l">Point {{standardFromStandards.Point}}</span>
-      <h2 class="govuk-heading-l">{{standardFromStandards.Title}}</h2>
-      <h2 class="govuk-heading-m">Comments for the team</h2>
-      <p>You can add general comments about what the team did well against this standard.</p>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+      <form method="/assess/report-panel-comments" action="post">
+        <input type="hidden" name="AssessmentID" value="{{ assessment.AssessmentID }}">
+        <span class="govuk-caption-l">Point {{standardFromStandards.Point}}</span>
+        <h2 class="govuk-heading-l">{{standardFromStandards.Title}}</h2>
+        <h2 class="govuk-heading-m">Comments for the team</h2>
+        <p>You can add general comments about what the team did well against this standard.</p>
 
-      {% if redOrAmber == true %}
-<p>Do not use general comments for things the team need to action given as a result of a {{rating.Outcome | lower}} rating for this standard. use the  <a class="govuk-link"
+        {% if redOrAmber == true %}
+          <p>Do not use general comments for things the team need to action as a result of a red or amber outcome.  Use the  <a class="govuk-link"
             href="/assess/report-section-actions/{{assessment.AssessmentID}}/{{standard}}">actions</a> option instead.</p>
-      {% endif %}
+        {% endif %}
 
-
-      {% if comments | length == 0 %}
-      <div class="govuk-inset-text">
-        <p>No comments have been added.</p>
-        <p>
-          <a href="/assess/report-section-comment-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
+        {% if comments | length == 0 %}
+          <div class="govuk-inset-text">
+            <p>No comments have been added.</p>
+            <p>
+              <a href="/assess/report-section-comment-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
             a comment</a>
-        </p>
-      </div>
+            </p>
+          </div>
 
+        {% elseif comments | length > 0 %}
 
-      {% elseif comments | length > 0 %}
-
-      <table class="govuk-table">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Item</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Manage</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          {% for comment in comments %}
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell">
-              {{comment.Comments}}
-            </td>
-            <td class="govuk-table__cell">
-              <a href="/assess/report-section-comment-manage/{{assessment.AssessmentID}}/{{standard}}/{{comment.UniqueID}}"
+          <table class="govuk-table">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Item</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Manage</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+              {% for comment in comments %}
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">
+                    {{comment.Comments}}
+                  </td>
+                  <td class="govuk-table__cell">
+                    <a href="/assess/report-section-comment-manage/{{assessment.AssessmentID}}/{{standard}}/{{comment.UniqueID}}"
                 class="govuk-link">Edit or remove comment<span
                   class="govuk-visually-hidden">{{comment.Comments}}</span></a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
-      <p>
-        <a href="/assess/report-section-comment-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
+          <p>
+            <a href="/assess/report-section-comment-add/{{assessment.AssessmentID}}/{{standard}}" class="govuk-link">Add
           another comment</a> or    <a href="/assess/report/{{assessment.AssessmentID}}" class="govuk-link">Return to standards</a>
-      </p>
+          </p>
 
-     
-      {% endif %}
-    </form>
+        {% endif %}
+      </form>
+    </div>
   </div>
-</div>
 {% endblock %}

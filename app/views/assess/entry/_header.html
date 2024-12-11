@@ -69,7 +69,7 @@
                        {% if assessment.Status == 'Active' %}
                         <li class="app-sub-navigation__item">
                             <a class="app-sub-navigation__link" {% if view==='preview' %} aria-current="page" {% endif %}
-                                href="/assess/report-preview/{{assessment.AssessmentID}}">Preview report</a>
+                                target="_blank" href="/assess/report-preview/{{assessment.AssessmentID}}">Preview report <img src="/assets/images/new-window-blue.png" alt="" style="height: 16px; color"/></a>
                         </li>
                         {% endif %}
                     </ul>
