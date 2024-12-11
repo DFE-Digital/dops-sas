@@ -8,6 +8,9 @@
                 <table class="govuk-table  govuk-!-margin-bottom-3">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
+                               {% if assessment.Status === 'Published' %}
+                            <th class="govuk-table__header" scope="col">Status</th>
+                            {% endif %}
                             {% if assessment.Type === 'Service assessment' %}
                             <th class="govuk-table__header" scope="col">Rating</th>
                             {% endif %}
@@ -21,6 +24,13 @@
                     </thead>
                     <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
+                               {% if assessment.Status === 'Published' %}
+                          <td class="govuk-table__cell">
+                                <strong
+                                    class="govuk-tag govuk-tag--blue">Published</strong>
+                              
+                            </td> 
+                            {% endif %}
                             {% if assessment.Type === 'Service assessment' %}
                             <td class="govuk-table__cell">{% if assessment.Status == "Team Review" or assessment.Status
                                 == "SA Publish" or assessment.Status == "Published" %}

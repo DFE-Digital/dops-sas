@@ -49,6 +49,11 @@
 {% endfor %}
 
 {% block content %}
+
+{% if assessment.Status === 'Published' %}
+{% include 'partials/_reporttemplate.html' %}
+{% else %}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
         <h2 class="govuk-heading-l">Assessment report</h2>
@@ -241,5 +246,5 @@
             </ul>
         </aside>
     </div>
-</div>
+</div>  {% endif %}
 {% endblock %}

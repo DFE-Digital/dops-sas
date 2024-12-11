@@ -94,9 +94,9 @@ exports.g_report = async function (req, res, next) {
         const assessmentID = req.params.assessmentID;
         const assessment = await getAssessmentById(assessmentID);
 
-        if (assessment.Status === 'Published') {
-            return res.redirect('/reports/report/' + assessment.AssessmentID)
-        }
+        // if (assessment.Status === 'Published') {
+        //     return res.redirect('/reports/report/' + assessment.AssessmentID)
+        // }
 
 
         if (assessment.Type == 'Service assessment') {
