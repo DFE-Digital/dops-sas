@@ -85,21 +85,28 @@ async function canAccessAsAssessor(req, res, next) {
     if (req.session && req.session.UserId && req.session.data.User) {
         const userID = parseInt(req.session.data.User.UserID);
 
+        // Check if user is admin by fetching roles
+        const userRoles = await getRolesByUserID(userID);
+        const userRolesList = userRoles.map(role => role.UserRole);
+
+        // If user is admin, allow access right away
+        if (userRolesList.some(role => rolesToCheck.includes(role))) {
+            return next();
+        }
+
         const assessmentID = parseInt(req.params.assessmentID, 10);
         const panel = await assessmentPanel(assessmentID);
 
         if (panel) {
             if (panel.some(member => member.UserID === userID)) {
                 return next();
-            }
-            else{
+            } else {
                 return res.redirect('/assess');
             }
-        }
-        else{
+        } else {
             return res.redirect('/assess');
         }
-    }else{
+    } else {
         return res.redirect('/sign-out');
     }
 }
