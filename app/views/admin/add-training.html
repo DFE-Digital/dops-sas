@@ -5,15 +5,15 @@
 view = "assessors" %} 
 {%
 block hero %} {% include './_header.html'%} {% endblock %} {% set trainingError = false %} {% for error in errors %} {%
-if error.field === 'Training'
+if error.path === 'Training'
 %} {% set trainingError = true %} {% endif %} {% endfor %} {% set providerError = false %} {% for error in errors %} {%
-if error.field === 'Provider'
+if error.path === 'Provider'
 %} {% set providerError = true %} {% endif %} {% endfor %} {% set Trainingday = false %} {% for error in errors %} {% if
-error.field === 'Trainingday'
+error.path === 'Trainingday'
 %} {% set Trainingday = true %} {% endif %} {% endfor %} {% set Trainingmonth = false %} {% for error in errors %} {% if
-error.field ===
+error.path ===
 'Trainingmonth' %} {% set Trainingmonth = true %} {% endif %} {% endfor %} {% set Trainingyear = false %} {% for error
-in errors %} {% if error.field
+in errors %} {% if error.path
 === 'Trainingyear' %} {% set Trainingyear = true %} {% endif %} {% endfor %} {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
@@ -30,7 +30,7 @@ in errors %} {% if error.field
                         <ul class="govuk-list govuk-error-summary__list">
                             {% for error in errors %}
                             <li>
-                                <a href="#{{error.field}}">{{error.message}}</a>
+                                <a href="#{{error.path}}">{{error.msg}}</a>
                             </li>
                             {% endfor %}
                         </ul>
