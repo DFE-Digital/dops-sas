@@ -121,6 +121,9 @@ console.log(req.session)
 
 function validateParamIsInteger(paramName) {
     return function(req, res, next) {
+
+        // Where a string is entered we need to make sure that is redirected out asap
+
         const value = parseInt(req.params[paramName], 10); 
 
         console.log(req.params[paramName])
@@ -145,33 +148,45 @@ function validateParamIsInteger(paramName) {
 // Middleware function to check access to the assessment by createdBy, DD, PM or DM or are in the service team
 
 async function canAccess(req, res, next) {
-    if (req.session && req.session.UserId && req.session.data.User) {
-        const userID = parseInt(req.session.data.User.UserID);
+    try {
+        if (!req.session || !req.session.UserId || !req.session.data.User) {
+            return res.redirect('/login');
+        }
 
-        const assessmentID = parseInt(req.params.assessmentID, 10);
-        console.log(assessmentID)
+        const userID = parseInt(req.session.data.User.UserID);
+        const assessmentID = req.params.assessmentID;
+
+        // Validate assessment ID
+        if (!assessmentID || isNaN(parseInt(assessmentID, 10))) {
+            console.error('Invalid assessment ID:', assessmentID);
+            return res.redirect('/manage');
+        }
+
         const assessment = await getAssessmentById(assessmentID);
+        
+        if (!assessment) {
+            console.error('Assessment not found:', assessmentID);
+            return res.redirect('/manage');
+        }
+
         const team = await getTeamForAssessmentExtended(assessmentID);
 
-        console.log(team)
-
-        if(assessment.Status === "Rejected"){
+        if (assessment.Status === "Rejected") {
             return res.redirect('/manage');
         }
 
-        if (assessment) {
-            if (assessment.CreatedBy == userID || assessment.DD == userID || assessment.PM == userID || assessment.DM == userID || team.some(member => member.UserID === userID)) {
-                return next();
-            }
-            else{
-                return res.redirect('/manage');
-            }
-        }
-        else{
+        if (assessment.CreatedBy == userID || 
+            assessment.DD == userID || 
+            assessment.PM == userID || 
+            assessment.DM == userID || 
+            team.some(member => member.UserID === userID)) {
+            return next();
+        } else {
             return res.redirect('/manage');
         }
-    }else{
-        return res.redirect('/sign-out');
+    } catch (error) {
+        console.error('Error in canAccess middleware:', error);
+        return res.redirect('/manage');
     }
 }
        

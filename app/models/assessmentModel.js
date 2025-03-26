@@ -105,10 +105,16 @@ async function createReAssessment(assessmentId) {
 
 async function getAssessmentById(id) {
     try {
+        // Validate that id is a valid number
+        const numericId = parseInt(id, 10);
+        if (isNaN(numericId)) {
+            throw new Error('Invalid assessment ID: must be a valid number');
+        }
+
         const { rows } = await pool.query(`
             SELECT * FROM "Assessment"
             WHERE "AssessmentID" = $1
-        `, [id]);
+        `, [numericId]);
 
         if (rows.length > 0) {
             return new AssessmentModel(rows[0]);
