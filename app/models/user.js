@@ -23,6 +23,11 @@ async function checkAndSetUserToken(emailAddress, token, tokenExpiry) {
       ? process.env.allowRegistrationFrom.split(',')
       : [];
 
+    console.log('Email:' + emailAddress)
+    console.log('Domain:' + domain)
+    console.log('Allowed domains:' + allowedDomains)
+    console.log('Allowed?:' + allowedDomains.includes(domain))
+
     // Ensure the domain is in the allowed list before proceeding
     if (!allowedDomains.includes(domain)) {
       return -1;

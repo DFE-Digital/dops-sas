@@ -82,8 +82,13 @@ async function isAssessor(req, res, next) {
 }
 
 async function canAccessAsAssessor(req, res, next) {
+
+console.log(req.session)
+
     if (req.session && req.session.UserId && req.session.data.User) {
         const userID = parseInt(req.session.data.User.UserID);
+
+        
 
         // Check if user is admin by fetching roles
         const userRoles = await getRolesByUserID(userID);
@@ -117,6 +122,8 @@ async function canAccessAsAssessor(req, res, next) {
 function validateParamIsInteger(paramName) {
     return function(req, res, next) {
         const value = parseInt(req.params[paramName], 10); 
+
+        console.log(req.params[paramName])
 
         // Check if value is an integer and within the int range
         if (!Number.isInteger(value) || value < -2147483648 || value > 2147483647) {
