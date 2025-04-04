@@ -166,9 +166,9 @@
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {% if assessment.DMYN === "Yes" %}
-                    {{pmDetails.FirstName}}
-                    {{pmDetails.LastName}}<br />
-                    {{pmDetails.EmailAddress}}
+                    {{dmDetails.FirstName}}
+                    {{dmDetails.LastName}}<br />
+                    {{dmDetails.EmailAddress}}
                     {%elseif assessment.DMYN === "No" %} No delivery manager {% else%}
                     {% endif %}
                 </dd>
