@@ -31,13 +31,6 @@
 
 
 
-                        {# {% for i in range(1, 2) %}
-
-                        <li class="app-sub-navigation__item">
-                            <a class="app-sub-navigation__link" {% if year==(currentYear -i) %} aria-current="page" {%
-                                endif %}href="/analysis/{{ currentYear -i}}">{{ currentYear -i}}</a>
-                        </li>
-                        {% endfor %} #}
                     </ul>
                 </nav>
             </div>
@@ -66,7 +59,7 @@
     <caption class="govuk-table__caption govuk-table__caption--m">Assessments and their outcomes by Service Standard</caption>
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header govuk-!-width-one-third">Service</th>
+        <th scope="col" class="govuk-table__header">Service</th>
         {% for i in range(1, 15) %}
         <th scope="col" class="govuk-table__header"><a class="govuk-link headercell" target="_blank" href="/redirector/service-standard/{{i}}"><span class="govuk-visually-hidden">Service Standard </span> {{ i }}</a></th>
         {% endfor %}
@@ -74,12 +67,19 @@
     </thead>
     <tbody class="govuk-table__body">
 
-        {% for item, group in heatmap %}
+      
+
+        {% for item, group in sortedHeatmapEntries %}
 
 
       <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">  <a href="/reports/report/{{ item }}" class="govuk-link"
-            title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a></th>
+        <th scope="row" class="govuk-table__header">
+          <a href="/reports/report/{{ item }}" class="govuk-link"
+            title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a>
+          {% if group[0].AssessmentDateTime %}
+          <br><span class="govuk-body-s">Assessed: {{ group[0].AssessmentDateTime | date('DD MMM YYYY') }}</span>
+          {% endif %}
+        </th>
 
             {% for item in group %}
         <td class="govuk-table__cell">
@@ -105,10 +105,21 @@
 
 
     thead > tr > th.govuk-govuk-table__header, tbody > tr > td.govuk-table__cell{
-        min-width: 42px;
+        min-width: 50px;
         text-align: center !important;
+        vertical-align: middle;
 
     }
+
+    .govuk-table__cell, .govuk-table__header {
+    padding: 10px 2px 10px 0;
+}
+
+    .govuk-table__cell, .govuk-table__header a {
+   font-size: 16px;
+}
+
+
 
     .headercell{
         background-color: #505a5f;
@@ -167,11 +178,22 @@
     .cell:focus {
         color: #0b0c0b !important;
     }
+
+    .govuk-caption-s {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.25;
+        margin-top: 4px;
+        display: block;
+    }
 </style>
 
 <script>
 
     const data = {{ results | dump | safe}};
+    
+    // Debug: Log the heatmap data to see the structure
+    console.log('Heatmap data:', {{ heatmap | dump | safe }});
 
     const ctx = document
         .getElementById('outcomeChart')

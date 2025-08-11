@@ -99,7 +99,7 @@ async function countOutcomesByStandard(department) {
 async function getAssessmentDetailsByYear(department) {
     try {
         const query = `
-            SELECT sso."AssessmentID", sso."Standard", sso."Outcome", a."Name"
+            SELECT sso."AssessmentID", sso."Standard", sso."Outcome", a."Name", a."AssessmentDateTime"
             FROM "ServiceStandardOutcomes" sso
             INNER JOIN "Assessment" a ON sso."AssessmentID" = a."AssessmentID"
             WHERE a."Status" = 'Published'

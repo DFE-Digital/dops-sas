@@ -29,9 +29,17 @@ exports.g_index = async function (req, res, next) {
             return acc;
         }, {});
 
+        // Sort assessments by AssessmentDateTime in descending order
+        const sortedHeatmapEntries = Object.entries(heatmap)
+            .sort(([, a], [, b]) => {
+                // All items in a group have the same AssessmentDateTime, so use the first one
+                const dateA = new Date(a[0].AssessmentDateTime || 0);
+                const dateB = new Date(b[0].AssessmentDateTime || 0);
+                return dateB - dateA; // Descending order (newest first)
+            });
 
         return res.render('analysis/index', {
-            results, standards, heatmap, year, currentYear
+            results, standards, heatmap, sortedHeatmapEntries, year, currentYear
         })
     }
     catch (error) {
