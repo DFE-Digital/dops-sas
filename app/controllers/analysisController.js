@@ -22,6 +22,9 @@ exports.g_index = async function (req, res, next) {
 
         const standards = await countOutcomesByStandard(department);
         const data = await getAssessmentDetailsByYear(department);
+        
+        // Debug: Log the raw data to see what we're getting
+        console.log('Raw data from getAssessmentDetailsByYear:', data.slice(0, 2));
 
         let heatmap = data.reduce((acc, item) => {
             acc[item.AssessmentID] = acc[item.AssessmentID] || [];

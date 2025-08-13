@@ -34,6 +34,7 @@ class AssessmentModel {
         this.PanelCommentsImprove = data.PanelCommentsImprove;
         this.Department = data.Department;
         this.SlackID = data.SlackID;
+        this.DepartmentName = data.DepartmentName;
     }
 }
 
@@ -112,7 +113,9 @@ async function getAssessmentById(id) {
         }
 
         const { rows } = await pool.query(`
-            SELECT * FROM "Assessment"
+            SELECT a.*, d."Name" as "DepartmentName"
+            FROM "Assessment" a
+            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
             WHERE "AssessmentID" = $1
         `, [numericId]);
 
@@ -259,9 +262,11 @@ async function getRequestsByMixedStatus(statuses) {
         // Use ANY($1) to match any of the statuses in the array
         // Use ANY($2) to match any department in the allowed departments list
         const result = await pool.query(
-            `SELECT * FROM "Assessment"
-            WHERE "Status" = ANY($1) AND "Department" = ANY($2)
-            ORDER BY "AssessmentDateTime" ASC;`,
+            `SELECT a.*, d."Name" as "DepartmentName"
+            FROM "Assessment" a
+            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+            WHERE a."Status" = ANY($1) AND a."Department" = ANY($2)
+            ORDER BY a."AssessmentDateTime" ASC;`,
             [statuses, canManageDepartments]
         );
 

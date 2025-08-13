@@ -65,9 +65,12 @@
         {% endfor %}
       </tr>
     </thead>
-    <tbody class="govuk-table__body">
+          <tbody class="govuk-table__body">
 
-      
+        <!-- Debug: Show the first group data to see what fields are available -->
+        {% if sortedHeatmapEntries.length > 0 %}
+        <!-- First group data: {{ sortedHeatmapEntries[0][1][0] | dump | safe }} -->
+        {% endif %}
 
         {% for item, group in sortedHeatmapEntries %}
 
@@ -78,6 +81,9 @@
             title="{{ group[0].Name}}" aria-label="{{ group[0].Name}}">{{ group[0].Name | truncate(40)}}</a>
           {% if group[0].AssessmentDateTime %}
           <br><span class="govuk-body-s">Assessed: {{ group[0].AssessmentDateTime | date('DD MMM YYYY') }}</span>
+          {% endif %}
+          {% if group[0].DepartmentName %}
+          <br><span class="govuk-body-s">{{ group[0].DepartmentName }} ({{ group[0].Department }})</span>
           {% endif %}
         </th>
 
@@ -194,6 +200,12 @@
     
     // Debug: Log the heatmap data to see the structure
     console.log('Heatmap data:', {{ heatmap | dump | safe }});
+    console.log('Sorted entries:', {{ sortedHeatmapEntries | dump | safe }});
+    
+    // Log the first group to see what fields are available
+    if ({{ sortedHeatmapEntries | dump | safe }}.length > 0) {
+        console.log('First group data:', {{ sortedHeatmapEntries | dump | safe }}[0][1][0]);
+    }
 
     const ctx = document
         .getElementById('outcomeChart')
