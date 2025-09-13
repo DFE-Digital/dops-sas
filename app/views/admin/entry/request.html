@@ -151,6 +151,21 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                    FIPS ID
+                </dt>
+                        <dd class="govuk-summary-list__value">
+                            {% if assessment.FIPS_ID %}
+                                {{assessment.FIPS_ID}}
+                            {% else %}
+                                Not set
+                            {% endif %}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="/admin/manage-fips-id/{{assessment.AssessmentID}}">Change<span class="govuk-visually-hidden"> FIPS ID</span></a>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
                     Phase start date
                 </dt>
                         <dd class="govuk-summary-list__value">

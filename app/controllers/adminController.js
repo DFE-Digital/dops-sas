@@ -17,6 +17,9 @@ const {
     createReAssessment,
     getAllAssessmentsNotDrafts,
     getAllAssessmentReportAcceptanceData,
+    updateFIPSID,
+    getAssessmentByFIPSID,
+    getAssessmentsWithoutFipsId,
 } = require('../models/assessmentModel');
 
 const {
@@ -136,6 +139,7 @@ exports.g_index = async (req, res, next) => {
     try {
         const department = req.session.data.User.Department;
         const requests = await getAllAssessments(department);
+        const assessmentsWithoutFipsId = await getAssessmentsWithoutFipsId();
         let { filter } = req.params;
 
         if (!filter) {
@@ -153,16 +157,20 @@ exports.g_index = async (req, res, next) => {
         const noDateRequests = requests.filter(
             (request) => request.Status === 'Active' && !request.AssessmentDateTime
         );
+        const noFipsIdRequests = assessmentsWithoutFipsId;
 
         const combinedRequests = [...priority, ...noDateRequests];
 
         if (filter === 'priority') {
             filteredData = combinedRequests;
+        } else if (filter === 'no-fips-id') {
+            filteredData = noFipsIdRequests;
         }
 
         return res.render('admin/index', {
             filteredData,
             priority,
+            noFipsIdRequests,
         });
     } catch (error) {
         next(error);
@@ -600,7 +608,7 @@ exports.g_exportAssessmentReport = async (req, res, next) => {
             const row = worksheet.addRow({
                 service: {
                     text: assessment.Name,
-                    hyperlink: `https://localhost:3000/volunteer/detail/${assessment.AssessmentID}`,
+                    hyperlink: `https://localhost:3921/volunteer/detail/${assessment.AssessmentID}`,
                 },
                 description: assessment.Description,
                 phase: assessment.Phase,
@@ -839,6 +847,16 @@ exports.g_changeCode = async (req, res, next) => {
         const { assessmentID } = req.params;
         const assessment = await getAssessmentById(assessmentID);
         return res.render('admin/entry/change-code', { assessment });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.g_manageFipsId = async (req, res, next) => {
+    try {
+        const { assessmentID } = req.params;
+        const assessment = await getAssessmentById(assessmentID);
+        return res.render('admin/entry/manage-fips-id', { assessment });
     } catch (error) {
         next(error);
     }
@@ -1716,6 +1734,35 @@ exports.p_changeCode = async (req, res, next) => {
         const assessment = await getAssessmentById(AssessmentID);
         assessment.ProjectCode = ProjectCode;
         await updateAssessment(AssessmentID, assessment, userID);
+
+        return res.redirect(`/admin/request/${AssessmentID}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.p_manageFipsId = async (req, res, next) => {
+    try {
+        const { AssessmentID, FIPS_ID } = req.body;
+        const userID = req.session.data.User.UserID;
+
+        // Basic validation
+        if (FIPS_ID && FIPS_ID.length > 100) {
+            const assessment = await getAssessmentById(AssessmentID);
+            return res.render('admin/entry/manage-fips-id', { 
+                assessment, 
+                fipsIdError: 'FIPS ID must be 100 characters or less' 
+            });
+        }
+
+        await updateFIPSID(AssessmentID, FIPS_ID);
+
+        await addAuditEntry(
+            AssessmentID,
+            'Admin',
+            'Updated FIPS ID to: ' + (FIPS_ID || 'Not set'),
+            userID
+        );
 
         return res.redirect(`/admin/request/${AssessmentID}`);
     } catch (error) {

@@ -326,6 +326,7 @@ router.get('/admin/change-phase/:assessmentID', isAuthenticated, isAdmin, valida
 router.get('/admin/change-name/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeName);
 router.get('/admin/change-description/:assessmentID', isAuthenticated, validateParamIsInteger('assessmentID'), isAdmin, adminController.g_changeDescription);
 router.get('/admin/change-code/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeCode);
+router.get('/admin/manage-fips-id/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_manageFipsId);
 router.get('/admin/change-portfolio/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changePortfolio);
 router.get('/admin/change-dd/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeDD);
 router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changePM);
@@ -360,6 +361,7 @@ router.post("/admin/change-phase", isAuthenticated, isAdmin, adminController.p_c
 router.post("/admin/change-name", isAuthenticated, isAdmin, adminController.p_changeName);
 router.post("/admin/change-description", isAuthenticated, isAdmin, adminController.p_changeDescription);
 router.post("/admin/change-code", isAuthenticated, isAdmin, adminController.p_changeCode);
+router.post("/admin/manage-fips-id", isAuthenticated, isAdmin, adminController.p_manageFipsId);
 router.post("/admin/change-portfolio", isAuthenticated, isAdmin, adminController.p_changePortfolio);
 router.post("/admin/change-dd", isAuthenticated, isAdmin, adminController.p_changeDD);
 router.post("/admin/change-pm", isAuthenticated, isAdmin, adminController.p_changePM);
@@ -428,6 +430,10 @@ router.post('/profile/change-email', isAuthenticated, profileController.p_change
 // Slack routes
 router.get("/admin/create-slack-channel/:assessmentID", isAuthenticated, isAdmin, adminController.g_createSlackChannel);
 router.post("/admin/create-slack-channel", isAuthenticated, isAdmin, slackController.p_create_channel);
+
+// API routes
+const apiController = require('./controllers/apiController');
+router.get("/api/product/:fips_id", apiController.authenticateApiToken, apiController.getProductByFipsId);
 
 
 module.exports = router;

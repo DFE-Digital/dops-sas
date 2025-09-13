@@ -34,6 +34,7 @@ class AssessmentModel {
         this.PanelCommentsImprove = data.PanelCommentsImprove;
         this.Department = data.Department;
         this.SlackID = data.SlackID;
+        this.FIPS_ID = data.FIPS_ID;
         this.DepartmentName = data.DepartmentName;
     }
 }
@@ -81,8 +82,8 @@ async function createReAssessment(assessmentId) {
                 "RequestedWeeks", "Portfolio", "DD", "SRO", "PMYN", "PM", "DMYN", "DM",
                 "CreatedBy", "CreatedDate", "AssessmentDateTime", "SubStatusCode",
                 "PanelComments", "PanelCommentsImprove", "PanelCommentsComplete", "AssessmentTime",
-                "Department"
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
+                "Department", "FIPS_ID"
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)
             RETURNING "AssessmentID"
         `;
         const values = [
@@ -92,7 +93,7 @@ async function createReAssessment(assessmentId) {
             originalAssessment.Portfolio, originalAssessment.DD, originalAssessment.SRO, originalAssessment.PMYN, originalAssessment.PM,
             originalAssessment.DMYN, originalAssessment.DM, originalAssessment.CreatedBy, new Date(), originalAssessment.AssessmentDateTime,
             originalAssessment.SubStatusCode, originalAssessment.PanelComments, originalAssessment.PanelCommentsImprove,
-            originalAssessment.PanelCommentsComplete, originalAssessment.AssessmentTime, originalAssessment.Department
+            originalAssessment.PanelCommentsComplete, originalAssessment.AssessmentTime, originalAssessment.Department, originalAssessment.FIPS_ID
         ];
         const res = await pool.query(query, values);
         return res.rows[0].AssessmentID;
@@ -607,6 +608,79 @@ async function updateSlackChannelID(assessmentID, slackID) {
     }
 }
 
+//Update the FIPS_ID for an assessment
+async function updateFIPSID(assessmentID, fipsID) {
+    try {
+        await pool.query(`
+            UPDATE "Assessment"
+            SET "FIPS_ID" = $2
+            WHERE "AssessmentID" = $1
+        `, [assessmentID, fipsID]);
+    } catch (error) {
+        console.error('Error in updateFIPSID:', error);
+        throw error;
+    }
+}
+
+//Get assessment by FIPS_ID
+async function getAssessmentByFIPSID(fipsID) {
+    try {
+        const { rows } = await pool.query(`
+            SELECT a.*, d."Name" as "DepartmentName"
+            FROM "Assessment" a
+            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+            WHERE a."FIPS_ID" = $1
+        `, [fipsID]);
+
+        if (rows.length > 0) {
+            return new AssessmentModel(rows[0]);
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error('Error in getAssessmentByFIPSID:', error);
+        throw error;
+    }
+}
+
+//Get all assessments by FIPS_ID
+async function getAssessmentsByFIPSID(fipsID) {
+    try {
+        const { rows } = await pool.query(`
+            SELECT a.*, d."Name" as "DepartmentName"
+            FROM "Assessment" a
+            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+            WHERE a."FIPS_ID" = $1
+            ORDER BY a."CreatedDate" DESC
+        `, [fipsID]);
+
+        return rows.map(row => new AssessmentModel(row));
+    } catch (error) {
+        console.error('Error in getAssessmentsByFIPSID:', error);
+        throw error;
+    }
+}
+
+//Get assessments without FIPS ID for departments the user can manage
+async function getAssessmentsWithoutFipsId() {
+    try {
+        const result = await pool.query(
+            `SELECT a.*, d."Name" as "DepartmentName"
+            FROM "Assessment" a
+            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+            WHERE a."FIPS_ID" IS NULL AND a."Status" != 'Draft' AND a."Status" != 'Rejected'
+            AND a."Department" = ANY($1)
+            ORDER BY a."CreatedDate" DESC;`,
+            [canManageDepartments]
+        );
+
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getAssessmentsWithoutFipsId:', error);
+        throw error;
+    }
+}
+
 
 
 
@@ -628,5 +702,9 @@ module.exports = {
     createReAssessment,
     getAllAssessmentsNotDrafts,
     getAllAssessmentReportAcceptanceData,
-    updateSlackChannelID
+    updateSlackChannelID,
+    updateFIPSID,
+    getAssessmentByFIPSID,
+    getAssessmentsByFIPSID,
+    getAssessmentsWithoutFipsId
 };

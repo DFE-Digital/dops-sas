@@ -36,7 +36,7 @@ The Service Assessment Service is a web application designed to facilitate the a
 
 ## Usage
 
-1. Open your web browser and navigate to `http://localhost:3000`
+1. Open your web browser and navigate to `http://localhost:3921`
 2. Register a new user account or log in with an existing one
 3. Explore the available services and assess them based on your experience
 4. Use the search functionality to find specific services

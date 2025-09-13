@@ -10,6 +10,24 @@
         </div>
     </li>
 
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            {% if assessment.FIPS_ID %}
+            <a class="govuk-link govuk-task-list__link" href="/admin/manage-fips-id/{{assessment.AssessmentID}}"
+                aria-describedby="fips-id-status">Manage FIPS ID</a>
+            {% else %}
+            <a class="govuk-link govuk-task-list__link" href="/admin/manage-fips-id/{{assessment.AssessmentID}}"
+                aria-describedby="fips-id-status">Add FIPS ID</a>
+            {% endif %}
+        </div>
+        <div class="govuk-task-list__status" id="fips-id-status">
+            {% if assessment.FIPS_ID %}
+            Completed
+            {% else %}
+            <strong class="govuk-tag govuk-tag--blue">To do</strong>
+            {% endif %}
+        </div>
+    </li>
 
     <li class="govuk-task-list__item govuk-task-list__item--with-link">
         <div class="govuk-task-list__name-and-hint">
