@@ -9,34 +9,6 @@
 {% endblock %}
 
 {% block content %}
-{# Loop the filteredData JSON array and create a new array where the Status parameter contains each of these statuses
-{% set statuses = ['New', 'Team Review', 'SA Review', 'SA Publish', 'Active'] %}
-#}
-
-{% set statuses = ['New', 'Team Review', 'SA Review', 'SA Publish', 'Active'] %}
-{% set newRequests = [] %}
-{% set teamReviewRequests = [] %}
-{% set saReviewRequests = [] %}
-{% set saPublishRequests = [] %}
-{% set activeRequests = [] %}
-
-{% for record in filteredData %}
-{% if record.Status == 'New' %}
-{% set newRequests = newRequests.concat(record) %}
-{% endif %}
-{% if record.Status == 'Team Review' %}
-{% set teamReviewRequests = teamReviewRequests.concat(record) %}
-{% endif %}
-{% if record.Status == 'SA Review' %}
-{% set saReviewRequests = saReviewRequests.concat(record) %}
-{% endif %}
-{% if record.Status == 'SA Publish' %}
-{% set saPublishRequests = saPublishRequests.concat(record) %}
-{% endif %}
-{% if record.Status == 'Active' and not record.AssessmentDateTime %}
-{% set activeRequests = activeRequests.concat(record) %}
-{% endif %}
-{% endfor %}
 
 
 <div class="govuk-grid-row">
@@ -63,6 +35,7 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">
                                 <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                                {% if record.DepartmentName %}<br/><span class="govuk-body-s">{{ record.DepartmentName }}</span>{% endif %}
                             </th>
                             <td class="govuk-table__cell">{{ record.Phase }}</td>
                             <td class="govuk-table__cell">{{ record.Type }}</td>
@@ -135,6 +108,7 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">
                                 <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                                {% if record.DepartmentName %}<br/><span class="govuk-body-s">{{ record.DepartmentName }}</span>{% endif %}
                             </th>
                             <td class="govuk-table__cell">{{ record.Phase }}</td>
                             <td class="govuk-table__cell">{{ record.Type }}</td>
@@ -171,6 +145,7 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">
                                 <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                                {% if record.DepartmentName %}<br/><span class="govuk-body-s">{{ record.DepartmentName }}</span>{% endif %}
                             </th>
                             <td class="govuk-table__cell">{{ record.Phase }}</td>
                             <td class="govuk-table__cell">{{ record.Type }}</td>
@@ -206,6 +181,7 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">
                                 <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                                {% if record.DepartmentName %}<br/><span class="govuk-body-s">{{ record.DepartmentName }}</span>{% endif %}
                             </th>
                             <td class="govuk-table__cell">{{ record.Phase }}</td>
                             <td class="govuk-table__cell">{{ record.Type }}</td>
@@ -223,7 +199,7 @@
         <div class="govuk-summary-card">
             <div class="govuk-summary-card__title-wrapper">
                 <h2 class="govuk-summary-card__title">
-                    Assessments without FIPS ID
+                    Assessments without FIPS ID (Ignore this Mike)
                 </h2>
             </div>
             <div class="govuk-summary-card__content">
@@ -241,6 +217,7 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">
                                 <a href="/admin/overview/{{ record.AssessmentID }}">{{ record.Name }}</a>
+                                {% if record.DepartmentName %}<br/><span class="govuk-body-s">{{ record.DepartmentName }}</span>{% endif %}
                             </th>
                             <td class="govuk-table__cell">{{ record.Phase }}</td>
                             <td class="govuk-table__cell">{{ record.Type }}</td>
@@ -254,6 +231,7 @@
 
             </div>
         </div>
+
 
 
     </div>

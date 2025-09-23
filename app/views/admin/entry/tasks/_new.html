@@ -10,6 +10,7 @@
         </div>
     </li>
 
+    {% if assessment.Department == 1 %}
     <li class="govuk-task-list__item govuk-task-list__item--with-link">
         <div class="govuk-task-list__name-and-hint">
             {% if assessment.FIPS_ID %}
@@ -28,6 +29,7 @@
             {% endif %}
         </div>
     </li>
+    {% endif %}
 
     <li class="govuk-task-list__item govuk-task-list__item--with-link">
         <div class="govuk-task-list__name-and-hint">

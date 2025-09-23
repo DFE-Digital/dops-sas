@@ -502,6 +502,28 @@ async function getAllAssessments(departmentID) {
 }
 
 /** 
+ * Get all assessments for departments the user can manage (not published)
+ */
+async function getAllAssessmentsForManagedDepartments() {
+    try {
+        const result = await pool.query(
+            `
+            SELECT a.*, d."Name" as "DepartmentName"
+            FROM "Assessment" a
+            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+            WHERE a."Department" = ANY($1) AND a."Status" != 'Published'
+            ORDER BY a."CreatedDate" DESC
+            `,
+            [canManageDepartments]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getAllAssessmentsForManagedDepartments:', error);
+        throw error;
+    }
+}
+
+/** 
  * Get all assessments for a department that aren't published
  * @param {number} departmentID The ID of the department
  */
@@ -662,18 +684,36 @@ async function getAssessmentsByFIPSID(fipsID) {
 }
 
 //Get assessments without FIPS ID for departments the user can manage
-async function getAssessmentsWithoutFipsId() {
+async function getAssessmentsWithoutFipsId(department = null) {
     try {
-        const result = await pool.query(
-            `SELECT a.*, d."Name" as "DepartmentName"
-            FROM "Assessment" a
-            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
-            WHERE a."FIPS_ID" IS NULL AND a."Status" != 'Draft' AND a."Status" != 'Rejected'
-            AND a."Department" = ANY($1)
-            ORDER BY a."CreatedDate" DESC;`,
-            [canManageDepartments]
-        );
+        let query;
+        let params;
 
+        if (department) {
+            // Use specific department if provided, but only if it's DfE (department ID 1)
+            query = `
+                SELECT a.*, d."Name" as "DepartmentName"
+                FROM "Assessment" a
+                INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+                WHERE a."FIPS_ID" IS NULL AND a."Status" != 'Draft' AND a."Status" != 'Rejected'
+                AND a."Department" = $1 AND a."Department" = 1
+                ORDER BY a."CreatedDate" DESC;
+            `;
+            params = [department];
+        } else {
+            // Only return DfE (department ID 1) assessments for FIPS ID tasks
+            query = `
+                SELECT a.*, d."Name" as "DepartmentName"
+                FROM "Assessment" a
+                INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+                WHERE a."FIPS_ID" IS NULL AND a."Status" != 'Draft' AND a."Status" != 'Rejected'
+                AND a."Department" = 1
+                ORDER BY a."CreatedDate" DESC;
+            `;
+            params = [];
+        }
+
+        const result = await pool.query(query, params);
         return result.rows;
     } catch (error) {
         console.error('Error in getAssessmentsWithoutFipsId:', error);
@@ -699,6 +739,7 @@ module.exports = {
     getActiveAssessmentsWithAssessorData,
     changePrimaryContact,
     getAllAssessments,
+    getAllAssessmentsForManagedDepartments,
     createReAssessment,
     getAllAssessmentsNotDrafts,
     getAllAssessmentReportAcceptanceData,

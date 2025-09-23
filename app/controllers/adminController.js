@@ -14,6 +14,7 @@ const {
     getAssessmentPanelByUserID,
     changePrimaryContact,
     getAllAssessments,
+    getAllAssessmentsForManagedDepartments,
     createReAssessment,
     getAllAssessmentsNotDrafts,
     getAllAssessmentReportAcceptanceData,
@@ -138,7 +139,7 @@ function calculateSurveyAverages(surveys) {
 exports.g_index = async (req, res, next) => {
     try {
         const department = req.session.data.User.Department;
-        const requests = await getAllAssessments(department);
+        const requests = await getAllAssessmentsForManagedDepartments();
         const assessmentsWithoutFipsId = await getAssessmentsWithoutFipsId();
         let { filter } = req.params;
 
@@ -147,6 +148,14 @@ exports.g_index = async (req, res, next) => {
         }
 
         let filteredData = [];
+        
+        // Create individual status arrays for the template
+        const newRequests = requests.filter(request => request.Status === 'New');
+        const teamReviewRequests = requests.filter(request => request.Status === 'Team Review');
+        const saReviewRequests = requests.filter(request => request.Status === 'SA Review');
+        const saPublishRequests = requests.filter(request => request.Status === 'SA Publish');
+        const activeRequests = requests.filter(request => request.Status === 'Active' && !request.AssessmentDateTime);
+        
         const priority = requests.filter(
             (request) =>
                 request.Status === 'New' ||
@@ -171,6 +180,11 @@ exports.g_index = async (req, res, next) => {
             filteredData,
             priority,
             noFipsIdRequests,
+            newRequests,
+            teamReviewRequests,
+            saReviewRequests,
+            saPublishRequests,
+            activeRequests
         });
     } catch (error) {
         next(error);
