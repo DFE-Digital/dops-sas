@@ -106,6 +106,19 @@ exports.getPublishedAssessmentsSummary = async (req, res, next) => {
             ORDER BY a."AssessmentDateTime" DESC
         `);
 
+        // Get service standards to get titles (once for all assessments)
+        const { rows: standards } = await pool.query(`
+            SELECT "Point", "Title"
+            FROM "ServiceStandards"
+            ORDER BY "Point" ASC
+        `);
+        
+        // Create a lookup map for standard titles
+        const standardTitles = {};
+        standards.forEach(standard => {
+            standardTitles[standard.Point] = standard.Title;
+        });
+
         // Get additional data for each assessment (ratings and actions)
         const assessmentsWithData = await Promise.all(
             rows.map(async (assessment) => {
@@ -119,12 +132,16 @@ exports.getPublishedAssessmentsSummary = async (req, res, next) => {
                     actionsByStandard[standard] = (actionsByStandard[standard] || 0) + 1;
                 });
 
-                // Add ActionsCount to each rating
+                // Add ActionsCount and Title to each rating, then sort by standard number
                 const ratingsWithActionCount = ratings.map(rating => ({
                     Standard: rating.Standard,
+                    Title: standardTitles[rating.Standard] || null,
                     Outcome: rating.Outcome,
                     ActionsCount: actionsByStandard[rating.Standard] || 0
-                }));
+                })).sort((a, b) => {
+                    // Sort by standard number
+                    return a.Standard - b.Standard;
+                });
 
                 return {
                     AssessmentID: assessment.AssessmentID,
@@ -274,6 +291,268 @@ exports.getPublishedAssessmentsByPortfolioAndDD = async (req, res, next) => {
         });
     } catch (error) {
         console.error('Error in getPublishedAssessmentsByPortfolioAndDD:', error);
+        next(error);
+    }
+};
+
+// GET /api/assessments/{assessmentID}/actions
+exports.getActionsByAssessmentId = async (req, res, next) => {
+    try {
+        const { assessmentID } = req.params;
+
+        if (!assessmentID || isNaN(parseInt(assessmentID, 10))) {
+            return res.status(400).json({ error: 'Valid assessment ID is required' });
+        }
+
+        // Get actions for the assessment
+        const actions = await getActionsForAssessmentID(parseInt(assessmentID, 10));
+
+        // Get service standards to get titles
+        const { rows: standards } = await pool.query(`
+            SELECT "Point", "Title"
+            FROM "ServiceStandards"
+            ORDER BY "Point" ASC
+        `);
+        
+        // Create a lookup map for standard titles
+        const standardTitles = {};
+        standards.forEach(standard => {
+            standardTitles[standard.Point] = standard.Title;
+        });
+
+        // Get ratings for the assessment to get standard outcomes
+        const ratings = await getServiceStandardOutcomesByAssessmentID(parseInt(assessmentID, 10));
+        
+        // Create a lookup map for standard outcomes
+        const standardOutcomes = {};
+        ratings.forEach(rating => {
+            standardOutcomes[rating.Standard] = rating.Outcome;
+        });
+
+        // Enhance actions with standard titles and outcomes
+        const actionsWithDetails = actions.map(action => ({
+            ActionID: action.ActionID,
+            AssessmentID: action.AssessmentID,
+            Standard: action.Point,
+            StandardTitle: standardTitles[action.Point] || null,
+            StandardOutcome: standardOutcomes[action.Point] || null,
+            Comments: action.Comments,
+            Status: action.Status,
+            CreatedBy: action.CreatedBy,
+            Created: action.Created,
+            AssignedTo: action.AssignedTo,
+            UniqueID: action.UniqueID,
+            EstimatedResolutionDate: action.EstimatedResolutionDate
+        }));
+
+        // Group actions by standard
+        const actionsByStandard = {};
+        actionsWithDetails.forEach(action => {
+            const standard = action.Standard;
+            if (!actionsByStandard[standard]) {
+                actionsByStandard[standard] = {
+                    Standard: standard,
+                    StandardTitle: action.StandardTitle,
+                    StandardOutcome: action.StandardOutcome,
+                    Actions: []
+                };
+            }
+            actionsByStandard[standard].Actions.push(action);
+        });
+
+        // Convert to array and sort by standard number
+        const groupedActions = Object.values(actionsByStandard).sort((a, b) => a.Standard - b.Standard);
+
+        res.json({
+            assessmentID: parseInt(assessmentID, 10),
+            actionsByStandard: groupedActions,
+            totalActions: actionsWithDetails.length,
+            totalStandards: groupedActions.length
+        });
+    } catch (error) {
+        console.error('Error in getActionsByAssessmentId:', error);
+        next(error);
+    }
+};
+
+// GET /api/assessments/actions/all
+exports.getAllActionsGroupedByAssessment = async (req, res, next) => {
+    try {
+        // Get all actions from all assessments
+        const { rows: actions } = await pool.query(`
+            SELECT a.*, ass."Name" as "AssessmentName", ass."Status" as "AssessmentStatus", 
+                   ass."Type" as "AssessmentType", ass."Outcome" as "AssessmentOutcome", 
+                   ass."Phase" as "AssessmentPhase"
+            FROM "Actions" a
+            INNER JOIN "Assessment" ass ON a."AssessmentID" = ass."AssessmentID"
+            ORDER BY a."AssessmentID" ASC, a."Point" ASC
+        `);
+
+        // Get service standards to get titles
+        const { rows: standards } = await pool.query(`
+            SELECT "Point", "Title"
+            FROM "ServiceStandards"
+            ORDER BY "Point" ASC
+        `);
+        
+        // Create a lookup map for standard titles
+        const standardTitles = {};
+        standards.forEach(standard => {
+            standardTitles[standard.Point] = standard.Title;
+        });
+
+        // Get all ratings to get standard outcomes for all assessments
+        const { rows: ratings } = await pool.query(`
+            SELECT "AssessmentID", "Standard", "Outcome"
+            FROM "ServiceStandardOutcomes"
+            ORDER BY "AssessmentID" ASC, "Standard" ASC
+        `);
+        
+        // Create a lookup map for standard outcomes by assessment
+        const standardOutcomes = {};
+        ratings.forEach(rating => {
+            if (!standardOutcomes[rating.AssessmentID]) {
+                standardOutcomes[rating.AssessmentID] = {};
+            }
+            standardOutcomes[rating.AssessmentID][rating.Standard] = rating.Outcome;
+        });
+
+        // Group actions by assessment, then by standard
+        const actionsByAssessment = {};
+        
+        actions.forEach(action => {
+            const assessmentID = action.AssessmentID;
+            const standard = action.Point;
+            
+            // Initialize assessment if not exists
+            if (!actionsByAssessment[assessmentID]) {
+                actionsByAssessment[assessmentID] = {
+                    AssessmentID: assessmentID,
+                    AssessmentName: action.AssessmentName,
+                    AssessmentStatus: action.AssessmentStatus,
+                    AssessmentType: action.AssessmentType,
+                    AssessmentOutcome: action.AssessmentOutcome,
+                    AssessmentPhase: action.AssessmentPhase,
+                    ActionsByStandard: {}
+                };
+            }
+            
+            // Initialize standard if not exists
+            if (!actionsByAssessment[assessmentID].ActionsByStandard[standard]) {
+                actionsByAssessment[assessmentID].ActionsByStandard[standard] = {
+                    Standard: standard,
+                    StandardTitle: standardTitles[standard] || null,
+                    StandardOutcome: standardOutcomes[assessmentID]?.[standard] || null,
+                    Actions: []
+                };
+            }
+            
+            // Add action to the appropriate group
+            actionsByAssessment[assessmentID].ActionsByStandard[standard].Actions.push({
+                ActionID: action.ActionID,
+                AssessmentID: action.AssessmentID,
+                Standard: action.Point,
+                StandardTitle: standardTitles[action.Point] || null,
+                StandardOutcome: standardOutcomes[assessmentID]?.[action.Point] || null,
+                Comments: action.Comments,
+                Status: action.Status,
+                CreatedBy: action.CreatedBy,
+                Created: action.Created,
+                AssignedTo: action.AssignedTo,
+                UniqueID: action.UniqueID,
+                EstimatedResolutionDate: action.EstimatedResolutionDate
+            });
+        });
+
+        // Convert to array format and sort
+        const result = Object.values(actionsByAssessment).map(assessment => ({
+            AssessmentID: assessment.AssessmentID,
+            AssessmentName: assessment.AssessmentName,
+            AssessmentStatus: assessment.AssessmentStatus,
+            AssessmentType: assessment.AssessmentType,
+            AssessmentOutcome: assessment.AssessmentOutcome,
+            AssessmentPhase: assessment.AssessmentPhase,
+            ActionsByStandard: Object.values(assessment.ActionsByStandard).sort((a, b) => a.Standard - b.Standard)
+        })).sort((a, b) => a.AssessmentID - b.AssessmentID);
+
+        // Calculate totals
+        const totalActions = actions.length;
+        const totalAssessments = result.length;
+        const totalStandards = new Set(actions.map(a => a.Point)).size;
+
+        res.json({
+            assessments: result,
+            summary: {
+                totalActions,
+                totalAssessments,
+                totalStandards
+            }
+        });
+    } catch (error) {
+        console.error('Error in getAllActionsGroupedByAssessment:', error);
+        next(error);
+    }
+};
+
+// PUT /api/assessments/{assessmentID}/fips-id
+exports.updateAssessmentFipsId = async (req, res, next) => {
+    try {
+        const { assessmentID } = req.params;
+        const { fips_id } = req.body;
+
+        // Validate assessment ID
+        if (!assessmentID || isNaN(parseInt(assessmentID, 10))) {
+            return res.status(400).json({ error: 'Valid assessment ID is required' });
+        }
+
+        // Validate FIPS ID
+        if (!fips_id || typeof fips_id !== 'string' || fips_id.trim() === '') {
+            return res.status(400).json({ error: 'FIPS ID is required and must be a non-empty string' });
+        }
+
+        const assessmentIdNum = parseInt(assessmentID, 10);
+        const trimmedFipsId = fips_id.trim();
+
+        // Check if assessment exists
+        const { rows: existingAssessment } = await pool.query(`
+            SELECT "AssessmentID", "FIPS_ID", "Name", "Status"
+            FROM "Assessment"
+            WHERE "AssessmentID" = $1
+        `, [assessmentIdNum]);
+
+        if (existingAssessment.length === 0) {
+            return res.status(404).json({ error: 'Assessment not found' });
+        }
+
+        // Check if FIPS ID is already in use by another assessment
+        const { rows: conflictingAssessment } = await pool.query(`
+            SELECT "AssessmentID", "Name"
+            FROM "Assessment"
+            WHERE "FIPS_ID" = $1 AND "AssessmentID" != $2
+        `, [trimmedFipsId, assessmentIdNum]);
+
+        if (conflictingAssessment.length > 0) {
+            return res.status(409).json({ 
+                error: 'FIPS ID already in use', 
+                details: `FIPS ID '${trimmedFipsId}' is already assigned to assessment ${conflictingAssessment[0].AssessmentID} (${conflictingAssessment[0].Name})`
+            });
+        }
+
+        // Update the assessment with the new FIPS ID
+        const { rows: updatedAssessment } = await pool.query(`
+            UPDATE "Assessment"
+            SET "FIPS_ID" = $2
+            WHERE "AssessmentID" = $1
+            RETURNING "AssessmentID", "FIPS_ID", "Name", "Status", "Department"
+        `, [assessmentIdNum, trimmedFipsId]);
+
+        res.json({
+            success: true,
+            message: 'FIPS ID updated successfully',
+            assessment: updatedAssessment[0]
+        });
+    } catch (error) {
+        console.error('Error in updateAssessmentFipsId:', error);
         next(error);
     }
 };

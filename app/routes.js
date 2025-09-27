@@ -437,6 +437,9 @@ router.get("/api/product/:fips_id", apiController.authenticateApiToken, apiContr
 router.get("/api/assessments/published/summary", apiController.authenticateApiToken, apiController.getPublishedAssessmentsSummary);
 router.get("/api/assessments/published/actions-by-standard", apiController.authenticateApiToken, apiController.getActionsByStandardForPublished);
 router.get("/api/assessments/published/by-portfolio-dd", apiController.authenticateApiToken, apiController.getPublishedAssessmentsByPortfolioAndDD);
+router.get("/api/assessments/:assessmentID/actions", apiController.authenticateApiToken, apiController.getActionsByAssessmentId);
+router.get("/api/assessments/actions/all", apiController.authenticateApiToken, apiController.getAllActionsGroupedByAssessment);
+router.put("/api/assessments/:assessmentID/fips-id", apiController.authenticateApiToken, apiController.updateAssessmentFipsId);
 
 
 module.exports = router;
