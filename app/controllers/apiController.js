@@ -524,19 +524,8 @@ exports.updateAssessmentFipsId = async (req, res, next) => {
             return res.status(404).json({ error: 'Assessment not found' });
         }
 
-        // Check if FIPS ID is already in use by another assessment
-        const { rows: conflictingAssessment } = await pool.query(`
-            SELECT "AssessmentID", "Name"
-            FROM "Assessment"
-            WHERE "FIPS_ID" = $1 AND "AssessmentID" != $2
-        `, [trimmedFipsId, assessmentIdNum]);
-
-        if (conflictingAssessment.length > 0) {
-            return res.status(409).json({ 
-                error: 'FIPS ID already in use', 
-                details: `FIPS ID '${trimmedFipsId}' is already assigned to assessment ${conflictingAssessment[0].AssessmentID} (${conflictingAssessment[0].Name})`
-            });
-        }
+        // Note: FIPS ID is not unique - multiple assessments can share the same FIPS ID
+        // as it represents a product identifier and products can have multiple assessments
 
         // Update the assessment with the new FIPS ID
         const { rows: updatedAssessment } = await pool.query(`
