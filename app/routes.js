@@ -333,6 +333,7 @@ router.get('/admin/change-pm/:assessmentID', isAuthenticated, isAdmin, validateP
 router.get('/admin/change-dm/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_changeDM);
 router.get('/admin/create-reassessment/:assessmentID', isAuthenticated, isAdmin, validateParamIsInteger('assessmentID'), adminController.g_createReassessment);
 router.get("/admin/surveys", isAuthenticated, isAdmin, adminController.g_surveys);
+router.get("/admin/surveys/download", isAuthenticated, isAdmin, adminController.g_exportSurveys);
 router.get("/admin/survey/:surveyID", isAuthenticated, isAdmin, adminController.g_surveyResponse);
 router.post("/admin/process/", isAuthenticated, isAdmin, adminController.p_process);
 router.post("/admin/confirm-delete", isAuthenticated, isAdmin, adminController.p_confirmDelete);

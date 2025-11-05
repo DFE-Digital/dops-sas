@@ -981,6 +981,66 @@ exports.g_surveyResponse = async (req, res, next) => {
     }
 };
 
+exports.g_exportSurveys = async (req, res, next) => {
+    try {
+        const departmentID = req.session.data.User.Department;
+
+        if (!departmentID) {
+            const error = new Error('Department ID is required but was not found in the session.');
+            error.status = 400;
+            throw error;
+        }
+
+        const surveys = await getSurveyData(departmentID);
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Survey Responses');
+
+        worksheet.columns = [
+            { header: 'Assessment', key: 'assessmentName', width: 30 },
+            { header: 'Outcome', key: 'outcome', width: 15 },
+            { header: 'Pre-assessment', key: 'preAssessmentCall', width: 15 },
+            { header: 'Organisation', key: 'organisationOfServiceAssessment', width: 15 },
+            { header: 'Assessment', key: 'runningOfAssessment', width: 15 },
+            { header: 'Rating feedback', key: 'feedbackOnLowScores', width: 50 },
+            { header: 'Assessor feedback', key: 'specificFeedbackForAssessor', width: 50 },
+            { header: 'Other feedback', key: 'furtherComments', width: 50 },
+        ];
+
+        surveys.forEach((survey) => {
+            worksheet.addRow({
+                assessmentName: survey.Name || '-',
+                outcome: survey.Outcome || 'Not rated',
+                preAssessmentCall: survey.preAssessmentCall || '-',
+                organisationOfServiceAssessment: survey.organisationOfServiceAssessment || '-',
+                runningOfAssessment: survey.runningOfAssessment || '-',
+                feedbackOnLowScores: survey.feedbackOnLowScores || '-',
+                specificFeedbackForAssessor: survey.specificFeedbackForAssessor || '-',
+                furtherComments: survey.furtherComments || '-',
+            });
+        });
+
+        const filename = `survey_responses_${Date.now()}.xlsx`;
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+
+        workbook.xlsx
+            .writeBuffer()
+            .then((buffer) => {
+                res.send(buffer);
+            })
+            .catch((error) => {
+                console.error('Error writing Excel to buffer', error);
+                res.status(500).send('Error generating Excel file');
+            });
+    } catch (error) {
+        next(error);
+    }
+};
+
 // POST handlers
 exports.p_addartefact = [
     validateAddArtefact,
