@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Flows - Service Assessment Service Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: #1d70b8;
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        header h1 {
+            margin-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #003078;
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar nav {
+            padding: 0 1rem;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+        }
+        
+        .sidebar nav li {
+            margin: 0.25rem 0;
+        }
+        
+        .sidebar nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: block;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar nav a.active {
+            background: #1d70b8;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1000px;
+        }
+        
+        
+        h1, h2, h3, h4 {
+            color: #1d70b8;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 0;
+            border-bottom: 3px solid #1d70b8;
+            padding-bottom: 0.75rem;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid #1d70b8;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        h3 {
+            font-size: 1.35rem;
+            margin-top: 1.5rem;
+            color: #1d70b8;
+        }
+        
+        h4 {
+            font-size: 1.15rem;
+            color: #003078;
+            margin-top: 1rem;
+        }
+        
+        
+        a {
+            color: #1d70b8;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        table th, table td {
+            padding: 0.875rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table th {
+            background: #1d70b8;
+            color: white;
+            font-weight: 600;
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d4351c;
+        }
+        
+        pre {
+            background: #f4f4f4;
+            padding: 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 4px solid #1d70b8;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 0.75rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+            line-height: 1.7;
+        }
+        
+        p {
+            margin: 1rem 0;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+            
+            .content-wrapper {
+                padding: 1rem;
+            }
+            
+            
+        }
+    </style>
+</head>
+<body>
+        <header>
+        <h1>Service Assessment Service</h1>
+        <p>User Flow Documentation</p>
+    </header>
+    
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="data-models.html">Data Models</a></li>
+                    <li><a href="data-dictionary.html">Data Dictionary</a></li>
+                    <li><a href="user-flows.html" class="active">User Flows</a></li>
+                    <li><a href="models.html">Application Models</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="roadmap.html">Roadmap</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="content-wrapper">
+                <div class="content"><h1>User Flow Documentation</h1>
+            
+            <p>This document describes the user flows for different user types and their interactions with the Service Assessment Service.</p>
+            
+            
+                <h2>Table of Contents</h2>
+                <ul>
+                    <li><a href="#authentication-flow">Authentication Flow</a></li>
+                    <li><a href="#booking-flow">Booking an Assessment Flow</a></li>
+                    <li><a href="#managing-flow">Managing an Assessment Flow</a></li>
+                    <li><a href="#assessing-flow">Assessing a Service Flow</a></li>
+                    <li><a href="#admin-flow">Administrator Flow</a></li>
+                    <li><a href="#volunteer-flow">Volunteering for Assessment Flow</a></li>
+                </ul>
+            
+            
+            <section id="authentication-flow" >
+                <h2>Authentication Flow</h2>
+                
+                
+                    <h4>Step 1: Access Sign-In Page</h4>
+                    <p>User navigates to <code>/sign-in</code></p>
+                    <p>If already authenticated, redirects to <code>/manage</code></p>
+                
+                
+                
+                    <h4>Step 2: Enter Email Address</h4>
+                    <p>User enters their email address on the sign-in form</p>
+                    <p>Email is validated:
+                        <ul>
+                            <li>Must be a valid email format</li>
+                            <li>Domain must be in allowed domains list (<code>allowRegistrationFrom</code> environment variable)</li>
+                        </ul>
+                    </p>
+                
+                
+                <p><strong>Decision:</strong>
+                    <strong>Decision:</strong> Is email domain allowed?
+                
+                
+                
+                    <h4>Step 3a: Domain Not Allowed</h4>
+                    <p>Show error message: "Unable to register email address. Contact support."</p>
+                    <p>User remains on sign-in page</p>
+                
+                
+                
+                    <h4>Step 3b: Domain Allowed - Generate Magic Link</h4>
+                    <p>System:
+                        <ul>
+                            <li>Generates UUID token</li>
+                            <li>Sets token expiry (30 minutes from now)</li>
+                            <li>Checks if user exists in database</li>
+                            <li>If user exists: Updates token and expiry</li>
+                            <li>If user doesn't exist: Creates new user (if domain allowed)</li>
+                            <li>Sends magic link email via GOV.UK Notify</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 4: Check Email Page</h4>
+                    <p>User is redirected to <code>/check-email</code></p>
+                    <p>User instructed to check their email for magic link</p>
+                
+                
+                
+                    <h4>Step 5: Click Magic Link</h4>
+                    <p>User clicks magic link in email</p>
+                    <p>Link format: <code>/auth/t/:token</code></p>
+                
+                
+                
+                    <h4>Step 6: Token Validation</h4>
+                    <p>System validates token:
+                        <ul>
+                            <li>Checks if token exists in database</li>
+                            <li>Checks if token has not expired</li>
+                        </ul>
+                    </p>
+                
+                
+                <p><strong>Decision:</strong>
+                    <strong>Decision:</strong> Is token valid?
+                
+                
+                
+                    <h4>Step 7a: Invalid Token</h4>
+                    <p>Redirect to <code>/sign-out</code> (clears session)</p>
+                
+                
+                
+                    <h4>Step 7b: Valid Token - Create Session</h4>
+                    <p>System:
+                        <ul>
+                            <li>Creates user session</li>
+                            <li>Stores user ID in session</li>
+                            <li>Fetches user roles (Admin check)</li>
+                            <li>Fetches assessor status</li>
+                            <li>Fetches department information</li>
+                        </ul>
+                    </p>
+                
+                
+                <p><strong>Decision:</strong>
+                    <strong>Decision:</strong> Does user have first name and last name?
+                
+                
+                
+                    <h4>Step 8a: Missing Name</h4>
+                    <p>Redirect to <code>/profile/change-name</code> to complete profile</p>
+                
+                
+                
+                    <h4>Step 8b: Profile Complete</h4>
+                    <p>Check if <code>originalUrl</code> exists in session (user was redirected to sign-in from protected route)</p>
+                    <p>If exists: Redirect to original URL</p>
+                    <p>Otherwise: Redirect to <code>/manage</code></p>
+                
+            </section>
+            
+            <section id="booking-flow" >
+                <h2>Booking an Assessment Flow</h2>
+                
+                
+                    <h4>Step 1: Access Booking Page</h4>
+                    <p>Authenticated user navigates to <code>/book</code></p>
+                    <p>System displays:
+                        <ul>
+                            <li>List of existing draft assessments</li>
+                            <li>Option to start new assessment</li>
+                        </ul>
+                    </p>
+                
+                
+                <p><strong>Decision:</strong>
+                    <strong>Decision:</strong> Start new or edit draft?
+                
+                
+                
+                    <h4>Step 2a: Edit Draft</h4>
+                    <p>User clicks on draft assessment</p>
+                    <p>System loads draft data into session</p>
+                    <p>Redirects to assessment tasks page</p>
+                
+                
+                
+                    <h4>Step 2b: Start New Assessment</h4>
+                    <p>User clicks "Start new assessment"</p>
+                    <p>System creates new assessment record with:
+                        <ul>
+                            <li>Status: "Draft"</li>
+                            <li>CreatedBy: Current user ID</li>
+                            <li>Department: User's department</li>
+                            <li>CreatedDate: Current timestamp</li>
+                        </ul>
+                    </p>
+                    <p>Stores AssessmentID in session</p>
+                    <p>Redirects to Phase selection</p>
+                
+                
+                
+                    <h4><span class="step-number">3</span>Select Phase</h4>
+                    
+                        <strong>User Action:</strong> User navigates to phase selection page and selects a service phase from radio buttons
+                    
+                    <p><strong>Route:</strong> GET <code>/book/request/phase</code> - Displays phase selection form</p>
+                    <p><strong>Available Options:</strong></p>
+                    <ul>
+                        <li>Discovery</li>
+                        <li>Alpha</li>
+                        <li>Private Beta</li>
+                        <li>Public Beta</li>
+                        <li>Live</li>
+                    </ul>
+                    <p><strong>Form Submission:</strong> POST to <code>/book/request/phase</code></p>
+                    
+                    
+                        <h5>Validation Rules (validatePhase)</h5>
+                        <ul>
+                            <li><strong>Required:</strong> Phase field must not be empty</li>
+                            <li><strong>Error Message:</strong> "Select an phase" if empty</li>
+                            <li><strong>Allowed Values:</strong> Must be one of: 'Discovery', 'Alpha', 'Private Beta', 'Public Beta', 'Live'</li>
+                            <li><strong>Error Message:</strong> "Invalid phase selected" if not in allowed list</li>
+                            <li>Value is trimmed of whitespace before validation</li>
+                        </ul>
+                    
+                    
+                    <p><strong>Decision:</strong>
+                        <strong>Decision Point:</strong> Validation passes?
+                    
+                    
+                    
+                        <h5>If Validation Fails:</h5>
+                        <ul>
+                            <li>Form is re-rendered with error messages displayed above the form field</li>
+                            <li>User's entered value is preserved in the form</li>
+                            <li>Error message displayed in standard GOV.UK error summary format</li>
+                            <li>User remains on the phase selection page</li>
+                        </ul>
+                    
+                    
+                    
+                        <h5>Database Operations (If Validation Passes):</h5>
+                        <ul>
+                            <li>Calls <code>updateAssessment()</code> in <code>assessmentModel.js</code></li>
+                            <li>SQL UPDATE: Sets <code>Assessment.Phase</code> to selected value</li>
+                            <li>Updates <code>Assessment</code> table where <code>AssessmentID</code> matches session stored ID</li>
+                            <li>Assessment status remains "Draft"</li>
+                        </ul>
+                    
+                    
+                    
+                        <strong>Next Action:</strong> System redirects to <code>/book/request/type</code> for type selection
+                    
+                
+                
+                
+                    <h4><span class="step-number">4</span>Select Type</h4>
+                    
+                        <strong>User Action:</strong> User selects assessment type from radio buttons
+                    
+                    <p><strong>Route:</strong> GET <code>/book/request/type</code> - Displays type selection form</p>
+                    <p><strong>Available Options:</strong></p>
+                    <ul>
+                        <li>Peer review</li>
+                        <li>Service assessment</li>
+                    </ul>
+                    <p><strong>Form Submission:</strong> POST to <code>/book/request/type</code></p>
+                    
+                    
+                        <h5>Validation Rules (validateType)</h5>
+                        <ul>
+                            <li><strong>Required:</strong> Type field must not be empty</li>
+                            <li><strong>Error Message:</strong> "Select an option" if empty</li>
+                            <li><strong>Allowed Values:</strong> Must be 'Peer review' or 'Service assessment'</li>
+                            <li><strong>Error Message:</strong> "Invalid type selected" if not in allowed list</li>
+                        </ul>
+                    
+                    
+                    
+                        <h5>Database Operations:</h5>
+                        <ul>
+                            <li>SQL UPDATE: Sets <code>Assessment.Type</code> to selected value</li>
+                            <li>Updates assessment record in database</li>
+                        </ul>
+                    
+                    
+                    
+                        <strong>Next Action:</strong> System redirects to <code>/book/request/name</code> for service name entry
+                    
+                
+                
+                
+                    <h4><span class="step-number">5</span>Enter Service Name</h4>
+                    
+                        <strong>User Action:</strong> User enters the service name in a text input field
+                    
+                    <p><strong>Route:</strong> GET <code>/book/request/name</code> - Displays name entry form</p>
+                    <p><strong>Form Field:</strong> Single text input for service name</p>
+                    <p><strong>Form Submission:</strong> POST to <code>/book/request/name</code></p>
+                    
+                    
+                        <h5>Validation Rules (validateName)</h5>
+                        <ul>
+                            <li><strong>Required:</strong> Name field must not be empty</li>
+                            <li><strong>Error Message:</strong> "Enter a name" if empty</li>
+                            <li>Value is trimmed of leading/trailing whitespace</li>
+                            <li><strong>Max Length:</strong> 300 characters (database constraint)</li>
+                        </ul>
+                    
+                    
+                    
+                        <h5>Error Handling:</h5>
+                        <ul>
+                            <li>If validation fails, form re-rendered with error message</li>
+                            <li>Entered value preserved for user correction</li>
+                            <li>Error displayed in GOV.UK error summary format</li>
+                        </ul>
+                    
+                    
+                    
+                        <h5>Database Operations:</h5>
+                        <ul>
+                            <li>SQL UPDATE: Sets <code>Assessment.Name</code> to entered value (trimmed)</li>
+                            <li>Value stored in database as entered (preserving case)</li>
+                        </ul>
+                    
+                    
+                    
+                        <strong>Next Action:</strong> System redirects to <code>/book/request/description</code> for description entry
+                    
+                
+                
+                
+                    <h4><span class="step-number">6</span>Enter Description</h4>
+                    
+                        <strong>User Action:</strong> User enters service description in a textarea field
+                    
+                    <p><strong>Route:</strong> GET <code>/book/request/description</code> - Displays description entry form</p>
+                    <p><strong>Form Field:</strong> Textarea for service description (multi-line text)</p>
+                    <p><strong>Form Submission:</strong> POST to <code>/book/request/description</code></p>
+                    
+                    
+                        <h5>Validation Rules (validateDescription)</h5>
+                        <ul>
+                            <li><strong>Required:</strong> Description field must not be empty</li>
+                            <li><strong>Error Message:</strong> "Enter a description" if empty</li>
+                            <li><strong>Max Length:</strong> 750 characters</li>
+                            <li><strong>Error Message:</strong> "Description must be less than 750 characters" if exceeded</li>
+                            <li>Value is trimmed of leading/trailing whitespace</li>
+                        </ul>
+                    
+                    
+                    
+                        <h5>Error Handling:</h5>
+                        <ul>
+                            <li>Character count validation occurs before database insertion</li>
+                            <li>If length exceeded, user shown character count and error message</li>
+                            <li>User's entered text preserved in textarea for editing</li>
+                            <li>Form remains on description page until validation passes</li>
+                        </ul>
+                    
+                    
+                    
+                        <h5>Database Operations:</h5>
+                        <ul>
+                            <li>SQL UPDATE: Sets <code>Assessment.Description</code> to entered value</li>
+                            <li>Description stored as text (up to 750 characters)</li>
+                            <li>Line breaks and formatting preserved</li>
+                        </ul>
+                    
+                    
+                    
+                        <strong>Next Action:</strong> System redirects to <code>/book/request/code</code> for optional project code entry
+                    
+                
+                
+                
+                    <h4>Step 7: Enter Project Code (Optional)</h4>
+                    <p>User indicates if project code exists</p>
+                    <p>If yes, user enters project code</p>
+                    <p>POST to <code>/book/request/code</code></p>
+                    <p>System updates assessment</p>
+                    <p>Redirects to Dates</p>
+                
+                
+                
+                    <h4>Step 8: Enter Dates</h4>
+                    <p>User enters:
+                        <ul>
+                            <li>Start date (required)</li>
+                            <li>End date (optional)</li>
+                            <li>Requested assessment weeks</li>
+                        </ul>
+                    </p>
+                    <p>POST to <code>/book/request/dates</code></p>
+                    <p>System updates assessment</p>
+                    <p>Redirects to Portfolio</p>
+                
+                
+                
+                    <h4>Step 9: Select Portfolio</h4>
+                    <p>User selects portfolio</p>
+                    <p>POST to <code>/book/request/portfolio</code></p>
+                    <p>System updates assessment with Portfolio</p>
+                    <p>Redirects to Delivery Director</p>
+                
+                
+                
+                    <h4>Step 10: Enter Delivery Director</h4>
+                    <p>User enters DD email address</p>
+                    <p>System checks if user exists, creates if needed</p>
+                    <p>POST to <code>/book/request/dd</code></p>
+                    <p>System updates assessment with DD user ID</p>
+                    <p>Redirects to Product Manager (optional)</p>
+                
+                
+                
+                    <h4>Step 11: Enter Product Manager (Optional)</h4>
+                    <p>User indicates if PM exists</p>
+                    <p>If yes, user enters PM email address</p>
+                    <p>POST to <code>/book/request/product</code></p>
+                    <p>System updates assessment</p>
+                    <p>Redirects to Delivery Manager (optional)</p>
+                
+                
+                
+                    <h4>Step 12: Enter Delivery Manager (Optional)</h4>
+                    <p>User indicates if DM exists</p>
+                    <p>If yes, user enters DM email address</p>
+                    <p>POST to <code>/book/request/delivery</code></p>
+                    <p>System updates assessment</p>
+                    <p>Redirects to Review</p>
+                
+                
+                
+                    <h4>Step 13: Review and Submit</h4>
+                    <p>User reviews all entered information</p>
+                    <p>Can navigate back to edit any step</p>
+                    <p>POST to <code>/book/request/submit</code></p>
+                    <p>System:
+                        <ul>
+                            <li>Updates assessment status to "Submitted"</li>
+                            <li>Sets SubmittedDate</li>
+                            <li>Creates audit entry</li>
+                            <li>Sends notification email to administrators</li>
+                        </ul>
+                    </p>
+                    <p>Redirects to confirmation page <code>/book/submitted</code></p>
+                
+            </section>
+            
+            <section id="managing-flow" >
+                <h2>Managing an Assessment Flow</h2>
+                
+                
+                    <h4>Step 1: Access Manage Dashboard</h4>
+                    <p>Authenticated user navigates to <code>/manage</code></p>
+                    <p>System displays assessments user can access:
+                        <ul>
+                            <li>Assessments where user is CreatedBy</li>
+                            <li>Assessments where user is DD, PM, or DM</li>
+                            <li>Assessments where user is in AssessmentTeam</li>
+                            <li>Filtered by user's department</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 2: View Assessment</h4>
+                    <p>User clicks on an assessment</p>
+                    <p>System checks access permissions</p>
+                    <p>Displays assessment overview:
+                        <ul>
+                            <li>Assessment details</li>
+                            <li>Status and outcome</li>
+                            <li>Team members</li>
+                            <li>Panel members</li>
+                            <li>Artefacts</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 3: Manage Team Members</h4>
+                    <p>User navigates to <code>/manage/team/:assessmentID</code></p>
+                    <p>Can add team members:
+                        <ul>
+                            <li>Enter email address</li>
+                            <li>Select role</li>
+                            <li>System creates user if needed</li>
+                        </ul>
+                    </p>
+                    <p>Can remove team members</p>
+                
+                
+                
+                    <h4>Step 4: Manage Artefacts</h4>
+                    <p>User navigates to <code>/manage/artefacts/:assessmentID</code></p>
+                    <p>Can add artefacts:
+                        <ul>
+                            <li>Enter title</li>
+                            <li>Enter description</li>
+                            <li>Enter URL</li>
+                        </ul>
+                    </p>
+                    <p>Can remove artefacts</p>
+                
+                
+                
+                    <h4>Step 5: View Report</h4>
+                    <p>User navigates to <code>/manage/report/:assessmentID</code></p>
+                    <p>If report is complete, user can:
+                        <ul>
+                            <li>View assessment report</li>
+                            <li>Accept report</li>
+                            <li>Download as Word or Excel</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 6: Accept Report</h4>
+                    <p>User accepts assessment report</p>
+                    <p>POST to <code>/manage/accept-report</code></p>
+                    <p>System:
+                        <ul>
+                            <li>Creates audit entry: "Report accepted"</li>
+                            <li>Tracks acceptance time</li>
+                        </ul>
+                    </p>
+                
+            </section>
+            
+            <section id="assessing-flow" >
+                <h2>Assessing a Service Flow</h2>
+                
+                
+                    <h4>Step 1: Access Assess Dashboard</h4>
+                    <p>Authenticated assessor navigates to <code>/assess</code></p>
+                    <p>System checks if user is an assessor</p>
+                    <p>Displays assessments assigned to assessor (via AssessmentPanel)</p>
+                
+                
+                
+                    <h4>Step 2: Select Assessment</h4>
+                    <p>Assessor clicks on an assessment</p>
+                    <p>System verifies assessor is on panel for this assessment</p>
+                    <p>Displays assessment overview</p>
+                
+                
+                
+                    <h4>Step 3: Assess Service Standards</h4>
+                    <p>Assessor navigates to <code>/assess/report-section/:assessmentID/:standard</code></p>
+                    <p>For each of 14 Service Standards:
+                        <ul>
+                            <li>Select outcome (Green, Amber, Red, NA)</li>
+                            <li>Add comments</li>
+                            <li>System saves to ServiceStandardOutcomes table</li>
+                        </ul>
+                    </p>
+                
+                
+                <p><strong>Decision:</strong>
+                    <strong>Decision:</strong> Was standard rated Red or Amber?
+                
+                
+                
+                    <h4>Step 4a: Create Actions (Red/Amber)</h4>
+                    <p>For Red or Amber ratings, assessor must create actions</p>
+                    <p>Navigate to <code>/assess/report-section-actions-add/:assessmentID/:standard</code></p>
+                    <p>Enter:
+                        <ul>
+                            <li>Action description</li>
+                            <li>Assigned to (optional)</li>
+                            <li>Estimated resolution date</li>
+                        </ul>
+                    </p>
+                    <p>System creates action in Actions table</p>
+                
+                
+                
+                    <h4>Step 4b: Continue Assessment</h4>
+                    <p>Continue with next standard</p>
+                
+                
+                
+                    <h4>Step 5: Add Panel Comments</h4>
+                    <p>Assessor navigates to <code>/assess/report-panel-comments/:assessmentID</code></p>
+                    <p>Enter:
+                        <ul>
+                            <li>Overall panel comments</li>
+                            <li>What went well</li>
+                            <li>Areas for improvement</li>
+                        </ul>
+                    </p>
+                    <p>System updates Assessment table</p>
+                
+                
+                
+                    <h4>Step 6: Set Report Rating</h4>
+                    <p>Assessor navigates to <code>/assess/report-rating/:assessmentID</code></p>
+                    <p>Select overall assessment rating (Green, Amber, Red)</p>
+                    <p>System updates Assessment.Outcome</p>
+                
+                
+                
+                    <h4>Step 7: Preview Report</h4>
+                    <p>Assessor navigates to <code>/assess/report-preview/:assessmentID</code></p>
+                    <p>System validates:
+                        <ul>
+                            <li>All 14 standards rated</li>
+                            <li>All Red/Amber ratings have actions</li>
+                            <li>Panel comments complete</li>
+                        </ul>
+                    </p>
+                
+                
+                <p><strong>Decision:</strong>
+                    <strong>Decision:</strong> Is assessment complete?
+                
+                
+                
+                    <h4>Step 8a: Not Complete</h4>
+                    <p>Show validation errors</p>
+                    <p>Assessor must complete missing items</p>
+                
+                
+                
+                    <h4>Step 8b: Submit Report</h4>
+                    <p>POST to <code>/assess/submit-report</code></p>
+                    <p>System:
+                        <ul>
+                            <li>Updates assessment status to "Completed"</li>
+                            <li>Creates audit entry</li>
+                            <li>Sends notification to team</li>
+                        </ul>
+                    </p>
+                    <p>Redirects to confirmation</p>
+                
+            </section>
+            
+            <section id="admin-flow" >
+                <h2>Administrator Flow</h2>
+                
+                
+                    <h4>Step 1: Access Admin Dashboard</h4>
+                    <p>Authenticated administrator navigates to <code>/admin</code></p>
+                    <p>System checks if user has admin role (Administrator, Department lead, Service Administrator)</p>
+                    <p>Displays admin dashboard with:
+                        <ul>
+                            <li>Assessment tasks</li>
+                            <li>Assessors list</li>
+                            <li>Admins list</li>
+                            <li>Reporting options</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 2: Manage Assessment</h4>
+                    <p>Admin selects assessment from tasks</p>
+                    <p>Can:
+                        <ul>
+                            <li>Change status and stage</li>
+                            <li>Edit assessment details</li>
+                            <li>Assign assessment panel</li>
+                            <li>Schedule assessment date</li>
+                            <li>Change primary contact</li>
+                            <li>Manage FIPS ID</li>
+                            <li>Create reassessment</li>
+                            <li>Delete assessment</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 3: Assign Assessment Panel</h4>
+                    <p>Admin navigates to <code>/admin/panel/:assessmentID</code></p>
+                    <p>Can add assessors to panel:
+                        <ul>
+                            <li>Select assessor</li>
+                            <li>Assign role (Lead, Design, Technical, Accessibility, User Research, Performance)</li>
+                        </ul>
+                    </p>
+                    <p>Can remove assessors from panel</p>
+                
+                
+                
+                    <h4>Step 4: Send Report</h4>
+                    <p>When assessment report is complete, admin can send report to team</p>
+                    <p>POST to <code>/admin/send-report</code></p>
+                    <p>System:
+                        <ul>
+                            <li>Sends email notification to team</li>
+                            <li>Creates audit entry: "Report sent to team"</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 5: Publish Report</h4>
+                    <p>Admin can publish assessment report</p>
+                    <p>POST to <code>/admin/publish-report</code></p>
+                    <p>System updates assessment status to "Published"</p>
+                
+                
+                
+                    <h4>Step 6: Manage Assessors</h4>
+                    <p>Admin navigates to <code>/admin/assessors</code></p>
+                    <p>Can:
+                        <ul>
+                            <li>Add new assessors</li>
+                            <li>Edit assessor details</li>
+                            <li>Change assessor status (Active/Inactive)</li>
+                            <li>Manage assessor attributes (CrossGov, Lead, External)</li>
+                            <li>Add/edit training records</li>
+                            <li>View assessment history</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 7: Manage Administrators</h4>
+                    <p>Admin navigates to <code>/admin/admins</code></p>
+                    <p>Can:
+                        <ul>
+                            <li>Add administrators</li>
+                            <li>Remove administrators</li>
+                            <li>Assign Department Lead role</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 8: View Reports and Analytics</h4>
+                    <p>Admin navigates to reporting section</p>
+                    <p>Can:
+                        <ul>
+                            <li>View assessment statistics</li>
+                            <li>Export assessment data</li>
+                            <li>View report acceptance metrics</li>
+                            <li>Download survey responses</li>
+                        </ul>
+                    </p>
+                
+            </section>
+            
+            <section id="volunteer-flow" >
+                <h2>Volunteering for Assessment Flow</h2>
+                
+                
+                    <h4>Step 1: View Available Assessments</h4>
+                    <p>Authenticated assessor navigates to <code>/volunteer</code></p>
+                    <p>System displays assessments needing assessors:
+                        <ul>
+                            <li>Active assessments</li>
+                            <li>Assessments with available roles</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 2: View Assessment Details</h4>
+                    <p>Assessor clicks on assessment to view details</p>
+                    <p>Displays:
+                        <ul>
+                            <li>Service information</li>
+                            <li>Assessment date</li>
+                            <li>Available roles</li>
+                            <li>Current panel members</li>
+                        </ul>
+                    </p>
+                
+                
+                
+                    <h4>Step 3: Volunteer for Role</h4>
+                    <p>Assessor selects a role to volunteer for</p>
+                    <p>POST to <code>/volunteer</code></p>
+                    <p>System:
+                        <ul>
+                            <li>Adds assessor to AssessmentPanel</li>
+                            <li>Assigns selected role</li>
+                            <li>Creates notification</li>
+                        </ul>
+                    </p>
+                    <p>Redirects to confirmation</p>
+                
+            </section>
+            
+            
+                        </div>
+        
+    </div>
+        </main>
+    </div>
+</body>
+</html>
+

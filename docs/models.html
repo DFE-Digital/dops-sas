@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Models - Service Assessment Service Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: #1d70b8;
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        header h1 {
+            margin-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #003078;
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar nav {
+            padding: 0 1rem;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+        }
+        
+        .sidebar nav li {
+            margin: 0.25rem 0;
+        }
+        
+        .sidebar nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: block;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar nav a.active {
+            background: #1d70b8;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1000px;
+        }
+        
+        
+        h1, h2, h3, h4 {
+            color: #1d70b8;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 0;
+            border-bottom: 3px solid #1d70b8;
+            padding-bottom: 0.75rem;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid #1d70b8;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        h3 {
+            font-size: 1.35rem;
+            margin-top: 1.5rem;
+            color: #1d70b8;
+        }
+        
+        h4 {
+            font-size: 1.15rem;
+            color: #003078;
+            margin-top: 1rem;
+        }
+        
+        
+        a {
+            color: #1d70b8;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        table th, table td {
+            padding: 0.875rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table th {
+            background: #1d70b8;
+            color: white;
+            font-weight: 600;
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d4351c;
+        }
+        
+        pre {
+            background: #f4f4f4;
+            padding: 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 4px solid #1d70b8;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 0.75rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+            line-height: 1.7;
+        }
+        
+        p {
+            margin: 1rem 0;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+            
+            .content-wrapper {
+                padding: 1rem;
+            }
+            
+            
+        }
+    </style>
+</head>
+<body>
+        <header>
+        <h1>Service Assessment Service</h1>
+        <p>Application Models Documentation</p>
+    </header>
+    
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="data-models.html">Data Models</a></li>
+                    <li><a href="data-dictionary.html">Data Dictionary</a></li>
+                    <li><a href="user-flows.html">User Flows</a></li>
+                    <li><a href="models.html" class="active">Application Models</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="roadmap.html">Roadmap</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="content-wrapper">
+                <div class="content"><h1>Application Models Documentation</h1>
+            
+            <p>This document describes all application models (data access layer) in the Service Assessment Service, their methods, and usage patterns.</p>
+            
+            <h2>Table of Contents</h2>
+                <ul>
+                    <li><a href="#user-model">User Model</a></li>
+                    <li><a href="#assessment-model">Assessment Model</a></li>
+                    <li><a href="#assessor-model">Assessor Model</a></li>
+                    <li><a href="#department-model">Department Model</a></li>
+                    <li><a href="#userrole-model">UserRole Model</a></li>
+                    <li><a href="#other-models">Other Models</a></li>
+                </ul>
+            
+            <section id="user-model" class="model-section">
+                <h2>User Model (app/models/user.js)</h2>
+                
+                <p>The User model handles all user-related database operations including authentication, profile management, and user creation.</p>
+                
+                <div class="method">
+                    <div class="method-name">checkAndSetUserToken</div>
+                    <div class="method-signature">checkAndSetUserToken(emailAddress: string, token: string, tokenExpiry: Date) → Promise&lt;number&gt;</div>
+                    <p>Checks for a user by email and updates or sets their token and token expiry if they exist. If the user does not exist, creates a new user with the given details, but only if the email domain is allowed.</p>
+                    <div class="param">
+                        <span class="param-name">emailAddress:</span> The email address of the user
+                    </div>
+                    <div class="param">
+                        <span class="param-name">token:</span> The new token for the user (UUID)
+                    </div>
+                    <div class="param">
+                        <span class="param-name">tokenExpiry:</span> The expiry date and time for the new token
+                    </div>
+                    <div class="return">
+                        <strong>Returns:</strong> The user's ID if successful, -1 if domain not allowed, or 0 if an error occurs
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">checkToken</div>
+                    <div class="method-signature">checkToken(token: string) → Promise&lt;object|number&gt;</div>
+                    <p>Checks the validity of a token and returns the user details if the token is valid.</p>
+                    <div class="param">
+                        <span class="param-name">token:</span> The token to check
+                    </div>
+                    <div class="return">
+                        <strong>Returns:</strong> The user's details (UserID, EmailAddress, FirstName, LastName, Department) if the token is valid, or 0 if it is not
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">UpsertUserNoToken</div>
+                    <div class="method-signature">UpsertUserNoToken(emailAddress: string, firstName: string, lastName: string, createdBy: string, createdByProcess: string, departmentID: number) → Promise&lt;number&gt;</div>
+                    <p>Inserts or updates a user's details based on the email address. If FirstName and LastName exist, they are not updated.</p>
+                    <div class="param">
+                        <span class="param-name">emailAddress:</span> The user's email address
+                    </div>
+                    <div class="param">
+                        <span class="param-name">firstName:</span> The user's first name
+                    </div>
+                    <div class="param">
+                        <span class="param-name">lastName:</span> The user's last name
+                    </div>
+                    <div class="param">
+                        <span class="param-name">createdBy:</span> The identifier for what created the user
+                    </div>
+                    <div class="param">
+                        <span class="param-name">createdByProcess:</span> The process by which the user was created
+                    </div>
+                    <div class="param">
+                        <span class="param-name">departmentID:</span> The department ID
+                    </div>
+                    <div class="return">
+                        <strong>Returns:</strong> The ID of the upserted user
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getBasicUserDetails</div>
+                    <div class="method-signature">getBasicUserDetails(userId: number) → Promise&lt;object|null&gt;</div>
+                    <p>Fetches basic details of a user based on their user ID.</p>
+                    <div class="param">
+                        <span class="param-name">userId:</span> The unique identifier of the user
+                    </div>
+                    <div class="return">
+                        <strong>Returns:</strong> Object with UserID, EmailAddress, FirstName, LastName, Department, or null if not found
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateName</div>
+                    <div class="method-signature">updateName(firstName: string, lastName: string, userId: number) → Promise&lt;void&gt;</div>
+                    <p>Updates the first and last name of a user based on their user ID.</p>
+                    <div class="param">
+                        <span class="param-name">firstName:</span> The user's new first name
+                    </div>
+                    <div class="param">
+                        <span class="param-name">lastName:</span> The user's new last name
+                    </div>
+                    <div class="param">
+                        <span class="param-name">userId:</span> The unique identifier of the user
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateEmail</div>
+                    <div class="method-signature">updateEmail(emailAddress: string, userId: number) → Promise&lt;boolean&gt;</div>
+                    <p>Updates the email address of a user based on their user ID, if the new email address does not already exist.</p>
+                    <div class="param">
+                        <span class="param-name">emailAddress:</span> The user's new email address
+                    </div>
+                    <div class="param">
+                        <span class="param-name">userId:</span> The unique identifier of the user
+                    </div>
+                    <div class="return">
+                        <strong>Returns:</strong> Returns true if the update was successful, false if the email address already exists
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getBasicUserDetailsByEmail</div>
+                    <div class="method-signature">getBasicUserDetailsByEmail(emailAddress: string) → Promise&lt;object|null&gt;</div>
+                    <p>Gets user by email address.</p>
+                    <div class="param">
+                        <span class="param-name">emailAddress:</span> The user's email address
+                    </div>
+                    <div class="return">
+                        <strong>Returns:</strong> Object with UserID, EmailAddress, FirstName, LastName, or null if not found
+                    </div>
+                </div>
+            </section>
+            
+            <section id="assessment-model" class="model-section">
+                <h2>Assessment Model (app/models/assessmentModel.js)</h2>
+                
+                <p>The Assessment model handles all assessment-related database operations including creation, updates, queries, and status management.</p>
+                
+                <div class="method">
+                    <div class="method-name">AssessmentModel (Class)</div>
+                    <p>A class representing an assessment with all its properties.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">createAssessment</div>
+                    <div class="method-signature">createAssessment(model: AssessmentModel, userID: number) → Promise&lt;number&gt;</div>
+                    <p>Creates a new assessment in the database.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> The AssessmentID of the newly created assessment
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getAssessmentById</div>
+                    <div class="method-signature">getAssessmentById(id: number|string) → Promise&lt;AssessmentModel|null&gt;</div>
+                    <p>Gets an assessment by its ID, including department name.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> AssessmentModel instance or null if not found
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateAssessment</div>
+                    <div class="method-signature">updateAssessment(id: number, model: AssessmentModel, userID: number) → Promise&lt;void&gt;</div>
+                    <p>Updates an assessment with new data.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getDraftsForUser</div>
+                    <div class="method-signature">getDraftsForUser(userID: number) → Promise&lt;Array&gt;</div>
+                    <p>Gets draft assessments which have been created by the signed in user.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of draft assessment objects
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">deleteAssessment</div>
+                    <div class="method-signature">deleteAssessment(id: number) → Promise&lt;void&gt;</div>
+                    <p>Deletes an assessment entry from the database.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getRequestsByStatus</div>
+                    <div class="method-signature">getRequestsByStatus(status: string, department: number) → Promise&lt;Array&gt;</div>
+                    <p>Gets assessments by status for the department the user belongs to.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of assessment objects
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getRequestsByMixedStatus</div>
+                    <div class="method-signature">getRequestsByMixedStatus(statuses: Array&lt;string&gt;) → Promise&lt;Array&gt;</div>
+                    <p>Gets assessments by multiple statuses for departments the user is allowed to manage.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of assessment objects with department names
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getAssessmentsUserCanAccess</div>
+                    <div class="method-signature">getAssessmentsUserCanAccess(userID: number) → Promise&lt;Array&gt;</div>
+                    <p>Gets assessments that the given user can access (created by, DD, PM, DM, or team member).</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of assessment objects
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getAssessmentPanelByUserID</div>
+                    <div class="method-signature">getAssessmentPanelByUserID(userID: number) → Promise&lt;Array&gt;</div>
+                    <p>Gets assessments the user is a panel member on.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of assessment objects with panel role
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">checkSubmitStatus</div>
+                    <div class="method-signature">checkSubmitStatus(assessmentID: number) → Promise&lt;object&gt;</div>
+                    <p>Checks if an assessment can be submitted (all standards rated, actions created for Red/Amber).</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Object with canSubmit boolean and reason if not ready
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">changePrimaryContact</div>
+                    <div class="method-signature">changePrimaryContact(assessmentID: number, userID: number) → Promise&lt;void&gt;</div>
+                    <p>Changes the primary contact (CreatedBy) for an assessment.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">createReAssessment</div>
+                    <div class="method-signature">createReAssessment(assessmentId: number) → Promise&lt;number&gt;</div>
+                    <p>Creates a reassessment based on an existing assessment, resetting status and outcome.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> The AssessmentID of the newly created reassessment
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateFIPSID</div>
+                    <div class="method-signature">updateFIPSID(assessmentID: number, fipsID: string) → Promise&lt;void&gt;</div>
+                    <p>Updates the FIPS_ID for an assessment.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getAssessmentByFIPSID</div>
+                    <div class="method-signature">getAssessmentByFIPSID(fipsID: string) → Promise&lt;AssessmentModel|null&gt;</div>
+                    <p>Gets assessment by FIPS ID.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> AssessmentModel instance or null if not found
+                    </div>
+                </div>
+            </section>
+            
+            <section id="assessor-model" class="model-section">
+                <h2>Assessor Model (app/models/assessors.js)</h2>
+                
+                <p>The Assessor model handles all assessor-related database operations.</p>
+                
+                <div class="method">
+                    <div class="method-name">getAllAssessors</div>
+                    <div class="method-signature">getAllAssessors(departmentID: number) → Promise&lt;Array&gt;</div>
+                    <p>Gets all assessors for a department.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of assessor objects with user details
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">createAssessor</div>
+                    <div class="method-signature">createAssessor(UserID: number, Role: string, CrossGovAssessor: boolean, LeadAssessor: boolean, ExternalAssessor: boolean, DepartmentID: number) → Promise&lt;void&gt;</div>
+                    <p>Adds an assessor to the database or reactivates an existing one.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getAssessor</div>
+                    <div class="method-signature">getAssessor(assessorID: number) → Promise&lt;object|null&gt;</div>
+                    <p>Get assessor by assessorID.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Assessor object with user details or null if not found
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getAssessorByUserID</div>
+                    <div class="method-signature">getAssessorByUserID(userID: number) → Promise&lt;object|null&gt;</div>
+                    <p>Get assessor by userID.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Assessor object with user details or null if not found
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getTrainingForUser</div>
+                    <div class="method-signature">getTrainingForUser(userID: number) → Promise&lt;Array&gt;</div>
+                    <p>Gets training records for a given userID.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of training records
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">createTraining</div>
+                    <div class="method-signature">createTraining(userID: number, training: string, date: Date, provider: string) → Promise&lt;void&gt;</div>
+                    <p>Creates training record for a user.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">deleteTraining</div>
+                    <div class="method-signature">deleteTraining(uniqueID: string) → Promise&lt;void&gt;</div>
+                    <p>Deletes training by unique ID.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateAssessor</div>
+                    <div class="method-signature">updateAssessor(assessorID: number, Status: boolean) → Promise&lt;void&gt;</div>
+                    <p>Updates assessor active status.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateAssessorXGov</div>
+                    <div class="method-signature">updateAssessorXGov(assessorID: number, Status: boolean) → Promise&lt;void&gt;</div>
+                    <p>Updates assessor cross-government status.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateAssessorLead</div>
+                    <div class="method-signature">updateAssessorLead(assessorID: number, Status: boolean) → Promise&lt;void&gt;</div>
+                    <p>Updates assessor lead assessor status.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateAssessorRole</div>
+                    <div class="method-signature">updateAssessorRole(assessorID: number, Role: string) → Promise&lt;void&gt;</div>
+                    <p>Updates assessor primary role.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">updateAssessorExternal</div>
+                    <div class="method-signature">updateAssessorExternal(assessorID: number, Status: boolean) → Promise&lt;void&gt;</div>
+                    <p>Updates assessor external status.</p>
+                </div>
+            </section>
+            
+            <section id="department-model" class="model-section">
+                <h2>Department Model (app/models/departments.js)</h2>
+                
+                <p>The Department model handles department-related database operations.</p>
+                
+                <div class="method">
+                    <div class="method-name">getDepartments</div>
+                    <div class="method-signature">getDepartments() → Promise&lt;Array&gt;</div>
+                    <p>Gets all departments.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of department objects
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getDepartmentForUser</div>
+                    <div class="method-signature">getDepartmentForUser(departmentID: number) → Promise&lt;object|null&gt;</div>
+                    <p>Gets department information for a user.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Department object with Name or null if not found
+                    </div>
+                </div>
+            </section>
+            
+            <section id="userrole-model" class="model-section">
+                <h2>UserRole Model (app/models/userrole.js)</h2>
+                
+                <p>The UserRole model handles user role and admin-related database operations.</p>
+                
+                <div class="method">
+                    <div class="method-name">getRolesByUserID</div>
+                    <div class="method-signature">getRolesByUserID(userId: number) → Promise&lt;Array&gt;</div>
+                    <p>Fetches all roles for a userID.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of role objects
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">getAllAdmins</div>
+                    <div class="method-signature">getAllAdmins(department: number) → Promise&lt;Array&gt;</div>
+                    <p>Fetches all admins from the UserRole table where UserRole is Administrator or Department lead.</p>
+                    <div class="return">
+                        <strong>Returns:</strong> Array of admin objects with user details
+                    </div>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">addAdmin</div>
+                    <div class="method-signature">addAdmin(firstName: string, lastName: string, emailAddress: string, department: number, createAsLead: string, createdByUserID: number) → Promise&lt;void&gt;</div>
+                    <p>Adds an admin to the UserRole table. Creates user if needed, assigns role.</p>
+                </div>
+                
+                <div class="method">
+                    <div class="method-name">deleteAdmin</div>
+                    <div class="method-signature">deleteAdmin(userRoleID: number, department: number, userID: number) → Promise&lt;void&gt;</div>
+                    <p>Deletes an admin by role ID. Prevents user from deleting themselves.</p>
+                </div>
+            </section>
+            
+            <section id="other-models" class="model-section">
+                <h2>Other Models</h2>
+                
+                <h3>AssessmentPanel Model (app/models/assessmentPanel.js)</h3>
+                <p>Handles assessment panel member assignments.</p>
+                <ul>
+                    <li><code>assessmentPanel(assessmentID)</code> - Gets panel members for assessment</li>
+                    <li><code>assessmentPanelExtended(assessmentID)</code> - Gets extended panel information</li>
+                    <li><code>getActiveAssessors(departmentID)</code> - Gets active assessors for department</li>
+                    <li><code>addPanelMember(assessmentID, userID, role)</code> - Adds member to panel</li>
+                    <li><code>deletePanelMember(assessmentPanelID, uniqueID)</code> - Removes member from panel</li>
+                </ul>
+                
+                <h3>Team Model (app/models/team.js)</h3>
+                <p>Handles assessment team member assignments.</p>
+                <ul>
+                    <li><code>getTeamForAssessmentExtended(assessmentID)</code> - Gets team members for assessment</li>
+                    <li><code>addTeam(assessmentID, userID, role)</code> - Adds team member</li>
+                    <li><code>deleteTeamMemberByID(teamID, uniqueID)</code> - Removes team member</li>
+                </ul>
+                
+                <h3>Artefacts Model (app/models/artefacts.js)</h3>
+                <p>Handles assessment artefacts (documents, links).</p>
+                <ul>
+                    <li>Methods for adding, removing, and listing artefacts for assessments</li>
+                </ul>
+                
+                <h3>Actions Model (app/models/actions.js)</h3>
+                <p>Handles actions created for Red/Amber rated standards.</p>
+                <ul>
+                    <li>Methods for creating, updating, and managing actions</li>
+                </ul>
+                
+                <h3>Comments Model (app/models/comments.js)</h3>
+                <p>Handles comments related to Service Standard points.</p>
+                <ul>
+                    <li>Methods for creating, updating, and managing comments</li>
+                </ul>
+                
+                <h3>Standards Model (app/models/standards.js)</h3>
+                <p>Handles Service Standard definitions.</p>
+                <ul>
+                    <li><code>getServiceStandards()</code> - Gets all 14 Service Standards</li>
+                </ul>
+                
+                <h3>Audit Model (app/models/audit.js)</h3>
+                <p>Handles audit trail entries.</p>
+                <ul>
+                    <li><code>addAuditEntry(assessmentID, action, comments, createdBy)</code> - Creates audit entry</li>
+                </ul>
+                
+                <h3>Survey Model (app/models/survey.js)</h3>
+                <p>Handles post-assessment survey responses.</p>
+                
+                <h3>Slack Model (app/models/slack.js)</h3>
+                <p>Handles Slack integration.</p>
+            </section>
+                        </div>
+        
+    </div>
+        </main>
+    </div>
+</body>
+</html>
+

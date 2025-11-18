@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Assessment Service - Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: #1d70b8;
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        header h1 {
+            margin-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #003078;
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar nav {
+            padding: 0 1rem;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+        }
+        
+        .sidebar nav li {
+            margin: 0.25rem 0;
+        }
+        
+        .sidebar nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: block;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar nav a.active {
+            background: #1d70b8;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1000px;
+        }
+        
+        
+        h1, h2, h3, h4 {
+            color: #1d70b8;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 0;
+            border-bottom: 3px solid #1d70b8;
+            padding-bottom: 0.75rem;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid #1d70b8;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        h3 {
+            font-size: 1.35rem;
+            margin-top: 1.5rem;
+            color: #1d70b8;
+        }
+        
+        h4 {
+            font-size: 1.15rem;
+            color: #003078;
+            margin-top: 1rem;
+        }
+        
+        
+        a {
+            color: #1d70b8;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        table th, table td {
+            padding: 0.875rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table th {
+            background: #1d70b8;
+            color: white;
+            font-weight: 600;
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d4351c;
+        }
+        
+        pre {
+            background: #f4f4f4;
+            padding: 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 4px solid #1d70b8;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 0.75rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+            line-height: 1.7;
+        }
+        
+        p {
+            margin: 1rem 0;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+            
+            .content-wrapper {
+                padding: 1rem;
+            }
+            
+            
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Service Assessment Service</h1>
+        <p>Comprehensive Documentation</p>
+    </header>
+    
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="data-models.html">Data Models</a></li>
+                    <li><a href="data-dictionary.html">Data Dictionary</a></li>
+                    <li><a href="user-flows.html">User Flows</a></li>
+                    <li><a href="models.html">Application Models</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="roadmap.html">Roadmap</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="content-wrapper">
+                <div class="content"><h1>Welcome to the Service Assessment Service Documentation</h1>
+                
+                <p>The Service Assessment Service is a web application designed to facilitate the assessment of government services. It provides a digital service for users to book, manage, assess and view reports, as well as department assurance to administer assessments against the GOV Service Standard.</p>
+                
+                <h2>Documentation Overview</h2>
+                
+                <ul>
+                    <li><strong><a href="features.html">Features</a></strong> - Comprehensive documentation of all features in the Service Assessment Service, including booking assessments, managing services, assessing services, reporting, and administration.</li>
+                    <li><strong><a href="data-models.html">Data Models</a></strong> - Detailed documentation of all data models used in the application, including their structure, relationships, and usage patterns.</li>
+                    <li><strong><a href="data-dictionary.html">Data Dictionary</a></strong> - Complete database schema documentation including all tables, columns, data types, constraints, and relationships.</li>
+                    <li><strong><a href="user-flows.html">User Flows</a></strong> - Detailed user flow documentation for different user types and their interactions with the system, including authentication, booking, managing, and assessing. Includes step-by-step process flows with validation, error handling, and system responses.</li>
+                    <li><strong><a href="models.html">Application Models</a></strong> - Documentation of all application models, their methods, and how they interact with the database layer.</li>
+                    <li><strong><a href="authentication.html">Authentication</a></strong> - Complete documentation of the authentication system, including magic link authentication, session management, role-based access control, and security features.</li>
+                    <li><strong><a href="roadmap.html">Roadmap</a></strong> - Planned features and enhancements for the Service Assessment Service.</li>
+                </ul>
+                
+                <h2>System Overview</h2>
+                
+                <h3>Technology Stack</h3>
+                <ul>
+                    <li><strong>Backend:</strong> Node.js with Express.js</li>
+                    <li><strong>Database:</strong> PostgreSQL</li>
+                    <li><strong>View Engine:</strong> Nunjucks</li>
+                    <li><strong>Authentication:</strong> Magic link via GOV.UK Notify</li>
+                    <li><strong>Session Management:</strong> Express-session with PostgreSQL store</li>
+                    <li><strong>Frontend:</strong> GOV.UK Frontend and DfE Frontend components</li>
+                    <li><strong>Database Migrations:</strong> Knex.js</li>
+                </ul>
+                
+                <h3>Key Components</h3>
+                <ul>
+                    <li><strong>Controllers:</strong> Handle HTTP requests and responses</li>
+                    <li><strong>Models:</strong> Data access layer for database operations</li>
+                    <li><strong>Middleware:</strong> Authentication, authorization, and session management</li>
+                    <li><strong>Validation:</strong> Input validation using express-validator</li>
+                    <li><strong>Routes:</strong> URL routing and middleware configuration</li>
+                </ul>
+                
+                <h3>User Roles</h3>
+                <ul>
+                    <li><strong>Standard User:</strong> Can book and manage their own assessments</li>
+                    <li><strong>Assessor:</strong> Can assess services against the Service Standard</li>
+                    <li><strong>Administrator:</strong> Can manage assessments and users</li>
+                    <li><strong>Department Lead:</strong> Department-level administrator</li>
+                    <li><strong>Service Administrator:</strong> Cross-department administrator</li>
+                </ul>
+                </div>
+        </main>
+    </div>
+</body>
+</html>

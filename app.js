@@ -121,6 +121,11 @@ app.locals.slackURL = process.env.slackURL;
 
 app.use('/assets', express.static('public/assets'));
 
+// Serve documentation files
+app.use('/docs', express.static('docs', { 
+  index: 'index.html'
+}));
+
 
 // Route for handling Yes/No feedback submissions
 app.post('/form-response/helpful', (req, res) => {

@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap - Service Assessment Service Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: #1d70b8;
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        header h1 {
+            margin-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #003078;
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar nav {
+            padding: 0 1rem;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+        }
+        
+        .sidebar nav li {
+            margin: 0.25rem 0;
+        }
+        
+        .sidebar nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: block;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar nav a.active {
+            background: #1d70b8;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1000px;
+        }
+        
+        
+        h1, h2, h3, h4 {
+            color: #1d70b8;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 0;
+            border-bottom: 3px solid #1d70b8;
+            padding-bottom: 0.75rem;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid #1d70b8;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        h3 {
+            font-size: 1.35rem;
+            margin-top: 1.5rem;
+            color: #1d70b8;
+        }
+        
+        h4 {
+            font-size: 1.15rem;
+            color: #003078;
+            margin-top: 1rem;
+        }
+        
+        
+        a {
+            color: #1d70b8;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        table th, table td {
+            padding: 0.875rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table th {
+            background: #1d70b8;
+            color: white;
+            font-weight: 600;
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d4351c;
+        }
+        
+        pre {
+            background: #f4f4f4;
+            padding: 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 4px solid #1d70b8;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 0.75rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+            line-height: 1.7;
+        }
+        
+        p {
+            margin: 1rem 0;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+            
+            .content-wrapper {
+                padding: 1rem;
+            }
+            
+            
+        }
+    </style>
+</head>
+<body>
+        <header>
+        <h1>Service Assessment Service</h1>
+        <p>Product Roadmap</p>
+    </header>
+    
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="data-models.html">Data Models</a></li>
+                    <li><a href="data-dictionary.html">Data Dictionary</a></li>
+                    <li><a href="user-flows.html">User Flows</a></li>
+                    <li><a href="models.html">Application Models</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="roadmap.html" class="active">Roadmap</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="content-wrapper">
+                <div class="content"><h1>Product Roadmap</h1>
+                
+                <p>This document outlines planned features and enhancements for the Service Assessment Service. These roadmap items represent significant improvements to the system's functionality, user experience, and integration capabilities.</p>
+                
+                <section>
+                    <h2>Dynamic Report Updates - Action and Outcome Management</h2>
+                    
+                    <h4>Overview</h4>
+                    <p>This feature will enable teams to manage assessment actions and outcomes after a report has been published. As actions are resolved or mitigated, and as standards improve through revised ratings, these updates will be appended to the existing published report, creating a living document that tracks the ongoing journey of service improvement.</p>
+                    
+                    
+                        <h4>Benefits</h4>
+                        <ul>
+                            <li><strong>Continuous Improvement Tracking:</strong> Published reports become living documents that reflect ongoing service improvements</li>
+                            <li><strong>Transparency:</strong> Stakeholders can see progress on actions and improvements over time</li>
+                            <li><strong>Accountability:</strong> Clear audit trail of when actions were completed and standards improved</li>
+                            <li><strong>Historical Context:</strong> Original assessment remains visible alongside updates, showing the full journey</li>
+                            <li><strong>Reduced Duplication:</strong> No need to create new assessments to track improvements</li>
+                        </ul>
+                    
+                    <h3>Core Functionality</h3>
+                    
+                    <h4>1. Action Management and Resolution</h4>
+                        <p>Teams will be able to manage actions from published assessments:</p>
+                        
+                        <h5>Action Resolution Workflow</h5>
+                            <ol>
+                                <li><strong>View Published Assessment Actions:</strong>
+                                    <ul>
+                                        <li>Navigate to published assessment report</li>
+                                        <li>View all actions with current status (Open, In Progress, Resolved, Closed)</li>
+                                        <li>Filter by standard, status, or assigned user</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Update Action Status:</strong>
+                                    <ul>
+                                        <li>Change status from "Open" to "In Progress" when work begins</li>
+                                        <li>Mark as "Resolved" when action is complete</li>
+                                        <li>Update "Estimated Resolution Date" as needed</li>
+                                        <li>Add progress notes and evidence</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Close Action:</strong>
+                                    <ul>
+                                        <li>When action is fully resolved and verified, mark as "Closed"</li>
+                                        <li>Add completion evidence (links to code, documentation, test results, etc.)</li>
+                                        <li>Record actual resolution date</li>
+                                        <li>Optionally link to related changes or improvements</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Action History:</strong>
+                                    <ul>
+                                        <li>All status changes and updates are logged with timestamps</li>
+                                        <li>User who made each change is recorded</li>
+                                        <li>Complete audit trail visible in action history</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        
+                        <h5>Database Schema Changes</h5>
+                            <h5>Database Schema Changes</h5>
+                            <p><strong>Actions Table Enhancements:</strong></p>
+                            <ul>
+                                <li><code>ResolvedDate</code> - DateTime (nullable) - When action was marked as resolved</li>
+                                <li><code>ClosedDate</code> - DateTime (nullable) - When action was closed</li>
+                                <li><code>ResolutionEvidence</code> - Text (nullable) - Links or references to evidence of resolution</li>
+                                <li><code>ResolutionNotes</code> - Text (nullable) - Detailed notes on how action was resolved</li>
+                                <li><code>VerifiedBy</code> - Integer (nullable) - User ID who verified the resolution</li>
+                                <li><code>VerifiedDate</code> - DateTime (nullable) - When resolution was verified</li>
+                            </ul>
+                            
+                            <p><strong>New Table: ActionHistory</strong></p>
+                            <ul>
+                                <li><code>ActionHistoryID</code> - Primary key</li>
+                                <li><code>ActionID</code> - Foreign key to Actions</li>
+                                <li><code>Status</code> - Previous or new status</li>
+                                <li><code>ChangedBy</code> - User ID who made the change</li>
+                                <li><code>ChangedDate</code> - When change was made</li>
+                                <li><code>Notes</code> - Additional notes about the change</li>
+                                <li><code>UniqueID</code> - UUID for the history entry</li>
+                            </ul>
+                    
+                    <h4>2. Revised Rating Management</h4>
+                        <p>When actions are resolved and standards improve, teams can request rating revisions:</p>
+                        
+                            <h5>Rating Revision Workflow</h5>
+                            <ol>
+                                <li><strong>Request Rating Revision:</strong>
+                                    <ul>
+                                        <li>From published assessment, navigate to the standard that was originally rated Red or Amber</li>
+                                        <li>Click "Request Rating Revision" button</li>
+                                        <li>Provide justification for the revision</li>
+                                        <li>Upload evidence of improvements (optional)</li>
+                                        <li>Select proposed new rating (Amber → Green, Red → Amber, Red → Green)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Revision Review Process:</strong>
+                                    <ul>
+                                        <li>Revision request is sent to assessors for review</li>
+                                        <li>Assessors can view original assessment, all actions, and new evidence</li>
+                                        <li>Assessors can approve, reject, or request more information</li>
+                                        <li>If approved, new rating is recorded with revision date</li>
+                                        <li>If rejected, team can address feedback and resubmit</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Rating Revision Approval:</strong>
+                                    <ul>
+                                        <li>Admin or Lead Assessor reviews revision request</li>
+                                        <li>Can approve directly or assign to specific assessor for review</li>
+                                        <li>Review comments are recorded</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Rating History:</strong>
+                                    <ul>
+                                        <li>All rating changes are preserved with timestamps</li>
+                                        <li>Original rating remains visible</li>
+                                        <li>Revision history shows progression (e.g., Red → Amber → Green)</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        
+                        <h5>Database Schema Changes</h5>
+                            <h5>Database Schema Changes</h5>
+                            <p><strong>New Table: ServiceStandardOutcomeRevisions</strong></p>
+                            <ul>
+                                <li><code>RevisionID</code> - Primary key</li>
+                                <li><code>ServiceStandardOutcomeID</code> - Foreign key to ServiceStandardOutcomes</li>
+                                <li><code>AssessmentID</code> - Foreign key to Assessment</li>
+                                <li><code>Standard</code> - Service Standard point (1-14)</li>
+                                <li><code>PreviousOutcome</code> - The rating before revision (Red, Amber, Green, NA)</li>
+                                <li><code>NewOutcome</code> - The revised rating</li>
+                                <li><code>Justification</code> - Text explaining why rating was revised</li>
+                                <li><code>Evidence</code> - Text field for links/evidence</li>
+                                <li><code>RequestedBy</code> - User ID who requested revision</li>
+                                <li><code>RequestedDate</code> - When revision was requested</li>
+                                <li><code>ReviewedBy</code> - User ID who reviewed/approved revision</li>
+                                <li><code>ReviewedDate</code> - When revision was reviewed</li>
+                                <li><code>Status</code> - Pending, Approved, Rejected, Withdrawn</li>
+                                <li><code>ReviewComments</code> - Comments from reviewer</li>
+                                <li><code>RevisionDate</code> - When revision was applied</li>
+                                <li><code>UniqueID</code> - UUID for the revision</li>
+                            </ul>
+                            
+                            <p><strong>ServiceStandardOutcomes Table Enhancement:</strong></p>
+                            <ul>
+                                <li><code>CurrentOutcome</code> - The current rating (updated when revision approved)</li>
+                                <li><code>OriginalOutcome</code> - The original assessment rating (never changed)</li>
+                                <li><code>LastRevisedDate</code> - DateTime when rating was last revised</li>
+                            </ul>
+                        
+                    
+                        <h4>3. Appended Report Updates</h4>
+                        <p>Updates to published reports are appended as new sections, preserving the original report:</p>
+                        
+                            <h5>Report Update Structure</h5>
+                            <p><strong>Published Report Sections:</strong></p>
+                            <ol>
+                                <li><strong>Original Assessment Report</strong> (unchanged)
+                                    <ul>
+                                        <li>Original assessment date</li>
+                                        <li>Original ratings for all 14 standards</li>
+                                        <li>Original panel comments</li>
+                                        <li>Original actions list</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Update History Section</strong>
+                                    <ul>
+                                        <li>Chronological list of all updates</li>
+                                        <li>Update date and type (Action resolved, Rating revised, etc.)</li>
+                                        <li>Summary of changes</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Resolved Actions Summary</strong>
+                                    <ul>
+                                        <li>List of all resolved/closed actions</li>
+                                        <li>Resolution dates and evidence</li>
+                                        <li>Grouped by standard</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Revised Ratings Summary</strong>
+                                    <ul>
+                                        <li>Standards with revised ratings</li>
+                                        <li>Original → Revised rating progression</li>
+                                        <li>Justification and evidence for each revision</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Current Status Summary</strong>
+                                    <ul>
+                                        <li>Current ratings for all standards</li>
+                                        <li>Open actions remaining</li>
+                                        <li>Overall assessment outcome (may update if all standards become Green)</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        
+                        <h5>Database Schema Changes</h5>
+                            <h5>Database Schema Changes</h5>
+                            <p><strong>New Table: ReportUpdates</strong></p>
+                            <ul>
+                                <li><code>UpdateID</code> - Primary key</li>
+                                <li><code>AssessmentID</code> - Foreign key to Assessment</li>
+                                <li><code>UpdateType</code> - Action Resolved, Rating Revised, Action Closed, Outcome Changed</li>
+                                <li><code>UpdateDate</code> - When update occurred</li>
+                                <li><code>CreatedBy</code> - User ID who created the update</li>
+                                <li><code>Summary</code> - Brief summary of the update</li>
+                                <li><code>Details</code> - Full details of what changed</li>
+                                <li><code>RelatedActionID</code> - If update relates to an action (nullable)</li>
+                                <li><code>RelatedRevisionID</code> - If update relates to a rating revision (nullable)</li>
+                                <li><code>UniqueID</code> - UUID for the update</li>
+                            </ul>
+                            
+                            <p><strong>Assessment Table Enhancements:</strong></p>
+                            <ul>
+                                <li><code>LastUpdatedDate</code> - DateTime (nullable) - When report was last updated</li>
+                                <li><code>UpdateCount</code> - Integer (default 0) - Number of updates since publication</li>
+                                <li><code>CurrentOutcome</code> - String (nullable) - Current overall outcome (may differ from original)</li>
+                                <li><code>OriginalOutcome</code> - String (nullable) - Original assessment outcome (never changes)</li>
+                            </ul>
+                        
+                    
+                        <h4>4. User Interface Changes</h4>
+                        
+                        <h5>Published Report View Enhancements</h5>
+                            <ul>
+                                <li><strong>Update Indicator:</strong> Badge showing number of updates since publication</li>
+                                <li><strong>Update History Tab:</strong> New tab showing chronological update history</li>
+                                <li><strong>Action Status Filter:</strong> Filter actions by status (All, Open, Resolved, Closed)</li>
+                                <li><strong>Rating Comparison View:</strong> Side-by-side view of original vs. current ratings</li>
+                                <li><strong>Progress Timeline:</strong> Visual timeline showing key milestones and updates</li>
+                            </ul>
+                        
+                        <h5>Action Management Interface</h5>
+                            <ul>
+                                <li><strong>Action Detail Page:</strong>
+                                    <ul>
+                                        <li>Current status with visual indicator</li>
+                                        <li>Update status button with dropdown</li>
+                                        <li>Add progress notes text area</li>
+                                        <li>Upload evidence section</li>
+                                        <li>History timeline showing all status changes</li>
+                                        <li>Assigned user and estimated resolution date</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Bulk Action Management:</strong>
+                                    <ul>
+                                        <li>Select multiple actions</li>
+                                        <li>Update status for multiple actions at once</li>
+                                        <li>Add notes to all selected actions</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                        <h5>Rating Revision Interface</h5>
+                            <ul>
+                                <li><strong>Request Revision Button:</strong> On each standard in published report</li>
+                                <li><strong>Revision Request Form:</strong>
+                                    <ul>
+                                        <li>Current rating display (read-only)</li>
+                                        <li>Proposed new rating dropdown</li>
+                                        <li>Justification text area (required)</li>
+                                        <li>Evidence upload/link section</li>
+                                        <li>Submit for review button</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Revision Review Interface (for assessors):</strong>
+                                    <ul>
+                                        <li>View original assessment and rating</li>
+                                        <li>View all actions related to this standard</li>
+                                        <li>View proposed revision and justification</li>
+                                        <li>Review evidence provided</li>
+                                        <li>Approve/Reject/Request More Info buttons</li>
+                                        <li>Review comments text area</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                    
+                        <h4>5. API Endpoints</h4>
+                        
+                        <h5>New API Endpoints</h5>
+                            <ul>
+                                <li><code>PUT /api/assessments/:assessmentID/actions/:actionID/status</code>
+                                    <ul>
+                                        <li>Update action status</li>
+                                        <li>Body: { status, notes, evidence, resolvedDate }</li>
+                                    </ul>
+                                </li>
+                                <li><code>POST /api/assessments/:assessmentID/standards/:standard/revision-request</code>
+                                    <ul>
+                                        <li>Request rating revision</li>
+                                        <li>Body: { newOutcome, justification, evidence }</li>
+                                    </ul>
+                                </li>
+                                <li><code>PUT /api/assessments/:assessmentID/revisions/:revisionID/review</code>
+                                    <ul>
+                                        <li>Review and approve/reject rating revision</li>
+                                        <li>Body: { status, reviewComments }</li>
+                                    </ul>
+                                </li>
+                                <li><code>GET /api/assessments/:assessmentID/updates</code>
+                                    <ul>
+                                        <li>Get all report updates</li>
+                                        <li>Returns chronological list of updates</li>
+                                    </ul>
+                                </li>
+                                <li><code>GET /api/assessments/:assessmentID/actions/:actionID/history</code>
+                                    <ul>
+                                        <li>Get action status change history</li>
+                                        <li>Returns timeline of all changes</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                    
+                    <h3>Implementation Challenges</h4>
+                        <ul>
+                            <li><strong>Data Integrity:</strong> Ensure original report remains unchanged while updates are clearly distinguished</li>
+                            <li><strong>Revision Approval Process:</strong> Define clear workflow for who can approve rating revisions</li>
+                            <li><strong>Report Versioning:</strong> Consider how to handle report exports/downloads - include updates or original only?</li>
+                            <li><strong>Notification System:</strong> Notify relevant stakeholders when actions are resolved or ratings revised</li>
+                            <li><strong>Audit Trail:</strong> Comprehensive logging of all changes for compliance and transparency</li>
+                        </ul>
+                </section>
+                
+                <section>
+                    <h2>FIPS Product Search - Replace Booking Flow</h2>
+                    
+                    <h4>Overview</h4>
+                    <p>This feature will replace the current manual booking flow with a FIPS product search integration. Users will search for and select existing products or delivery entries from the FIPS/COMPASS system, automatically linking the assessment to the product. This eliminates duplicate data entry and ensures assessments are properly linked to the official product registry.</p>
+                    
+                    
+                        <h4>Benefits</h4>
+                        <ul>
+                            <li><strong>Reduced Data Entry:</strong> Pre-populate assessment details from FIPS/COMPASS product data</li>
+                            <li><strong>Data Consistency:</strong> Single source of truth for product information</li>
+                            <li><strong>Better Integration:</strong> Seamless connection between assessment service and product registry</li>
+                            <li><strong>Improved User Experience:</strong> Faster assessment creation with search instead of manual entry</li>
+                            <li><strong>Automatic Linking:</strong> Assessments automatically linked to correct product/delivery entries</li>
+                            <li><strong>Portfolio Management:</strong> Better alignment with organizational structure in COMPASS</li>
+                        </ul>
+                    
+                    <h4>Current State vs. Future State</h4>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Current (Booking Flow)</th>
+                                <th>Future (FIPS Search)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Product Selection</strong></td>
+                                <td>Manual entry of service name, description, phase</td>
+                                <td>Search and select from FIPS/COMPASS product registry</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product Information</strong></td>
+                                <td>User enters all details manually</td>
+                                <td>Auto-populated from FIPS product data</td>
+                            </tr>
+                            <tr>
+                                <td><strong>FIPS ID</strong></td>
+                                <td>Manually added by admin after assessment creation</td>
+                                <td>Automatically set when product is selected</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Team Members</strong></td>
+                                <td>Manually enter email addresses</td>
+                                <td>Pre-populated from product contacts in FIPS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Portfolio</strong></td>
+                                <td>Manual selection from list</td>
+                                <td>Derived from product category/organizational group in COMPASS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Project/Delivery</strong></td>
+                                <td>Separate fields (ProjectCode, DD, PM, DM)</td>
+                                <td>Linked to delivery/project in COMPASS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                        <h4>1. FIPS/COMPASS Integration</h4>
+                        <p>Integration with FIPS and COMPASS systems to search and retrieve product/delivery data:</p>
+                        
+                        
+                            <h4>Integration Architecture</h4>
+                            
+                            <h5>FIPS CMS API Integration</h5>
+                                <p><strong>Purpose:</strong> Search and retrieve product information from FIPS product registry</p>
+                                <p><strong>Endpoints Used:</strong></p>
+                                <ul>
+                                    <li>FIPS CMS API search endpoint for products</li>
+                                    <li>FIPS CMS API product details endpoint</li>
+                                    <li>FIPS CMS API product contacts endpoint</li>
+                                </ul>
+                                <p><strong>Data Retrieved:</strong></p>
+                                <ul>
+                                    <li>Product ID (fips_id)</li>
+                                    <li>Product Title</li>
+                                    <li>Product Phase</li>
+                                    <li>Product URL</li>
+                                    <li>Product Contacts (with roles)</li>
+                                    <li>Service Owners</li>
+                                    <li>Category values (for portfolio determination)</li>
+                                </ul>
+                            
+                            <h5>COMPASS API Integration</h5>
+                                <p><strong>Purpose:</strong> Search and retrieve delivery/project information from COMPASS</p>
+                                <p><strong>Endpoints Used:</strong></p>
+                                <ul>
+                                    <li>COMPASS Projects API search endpoint</li>
+                                    <li>COMPASS Projects API project details endpoint</li>
+                                    <li>COMPASS ProductReporting API for product-delivery relationships</li>
+                                </ul>
+                                <p><strong>Data Retrieved:</strong></p>
+                                <ul>
+                                    <li>Project/Delivery ID</li>
+                                    <li>Project Title</li>
+                                    <li>Project Code</li>
+                                    <li>Primary Contact User</li>
+                                    <li>Delivery Director (DD)</li>
+                                    <li>Project Phase</li>
+                                    <li>Business Area</li>
+                                    <li>Organizational Group</li>
+                                </ul>
+                            
+                        
+                        <h5>New Service Assessment Service API Endpoints</h5>
+                            <ul>
+                                <li><code>GET /api/fips/search?q={query}</code>
+                                    <ul>
+                                        <li>Search FIPS products by name, ID, or keywords</li>
+                                        <li>Returns list of matching products with basic info</li>
+                                        <li>Results include: fips_id, title, phase, state</li>
+                                    </ul>
+                                </li>
+                                <li><code>GET /api/fips/product/:fips_id</code>
+                                    <ul>
+                                        <li>Get full product details from FIPS</li>
+                                        <li>Returns: full product data, contacts, service owners, categories</li>
+                                    </ul>
+                                </li>
+                                <li><code>GET /api/compass/search?q={query}&type={product|project}</code>
+                                    <ul>
+                                        <li>Search COMPASS for products or projects/deliveries</li>
+                                        <li>Returns matching entries with basic info</li>
+                                    </ul>
+                                </li>
+                                <li><code>GET /api/compass/project/:projectId</code>
+                                    <ul>
+                                        <li>Get full project/delivery details from COMPASS</li>
+                                        <li>Returns: project data, contacts, organizational info</li>
+                                    </ul>
+                                </li>
+                                <li><code>GET /api/compass/product/:fipsId/projects</code>
+                                    <ul>
+                                        <li>Get all projects/deliveries associated with a FIPS product</li>
+                                        <li>Helps user select correct delivery for assessment</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                    
+                        <h4>2. New Assessment Creation Flow</h4>
+                        
+                            <h5>Step 1: Search for Product</h5>
+                            <ul>
+                                <li><strong>Route:</strong> GET <code>/book/search</code></li>
+                                <li><strong>User Action:</strong> Navigate to "Book Assessment" which redirects to search page</li>
+                                <li><strong>Search Interface:</strong>
+                                    <ul>
+                                        <li>Search box with autocomplete</li>
+                                        <li>Search across FIPS products and COMPASS deliveries</li>
+                                        <li>Real-time search suggestions as user types</li>
+                                        <li>Filters: Product type, Phase, Status</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Search Results Display:</strong>
+                                    <ul>
+                                        <li>Product/Delivery name</li>
+                                        <li>FIPS ID (for products)</li>
+                                        <li>Project Code (for deliveries)</li>
+                                        <li>Phase</li>
+                                        <li>Status</li>
+                                        <li>Primary contact name</li>
+                                        <li>Link to view full details</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Selection:</strong> User clicks on desired product/delivery</li>
+                            </ul>
+                        
+                            <h5>Step 2: Confirm Product Details</h5>
+                            <ul>
+                                <li><strong>Route:</strong> GET <code>/book/confirm/:type/:id</code></li>
+                                <li><strong>Type:</strong> "product" (from FIPS) or "project" (from COMPASS)</li>
+                                <li><strong>System Action:</strong>
+                                    <ul>
+                                        <li>Fetches full details from FIPS or COMPASS API</li>
+                                        <li>Displays product/delivery information for confirmation</li>
+                                        <li>Pre-populates assessment fields where possible</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Displayed Information:</strong>
+                                    <ul>
+                                        <li>Product/Delivery Name (from FIPS/COMPASS)</li>
+                                        <li>Description/Aim (from source system)</li>
+                                        <li>Phase (from source system)</li>
+                                        <li>FIPS ID (automatically set)</li>
+                                        <li>Project Code (if delivery selected)</li>
+                                        <li>Portfolio/Business Area (derived from categories/organizational group)</li>
+                                        <li>Product Contacts (pre-populated)</li>
+                                        <li>Service Owner (pre-populated as primary contact)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>User Action:</strong> Review information, edit if needed, confirm and continue</li>
+                            </ul>
+                        
+                            <h5>Step 3: Select Delivery/Project (if Product Selected)</h5>
+                            <ul>
+                                <li><strong>Condition:</strong> Only if user selected a FIPS product (not a COMPASS delivery)</li>
+                                <li><strong>System Action:</strong>
+                                    <ul>
+                                        <li>Fetches all projects/deliveries linked to the selected product</li>
+                                        <li>Displays list of available deliveries</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Displayed Information:</strong>
+                                    <ul>
+                                        <li>Project Title</li>
+                                        <li>Project Code</li>
+                                        <li>Phase</li>
+                                        <li>Status</li>
+                                        <li>Primary Contact</li>
+                                        <li>Start/Target dates</li>
+                                    </ul>
+                                </li>
+                                <li><strong>User Action:</strong> Select the delivery/project this assessment relates to, or "Create new delivery" if none exists</li>
+                                <li><strong>Option:</strong> Link to existing assessment for this product/delivery combination</li>
+                            </ul>
+                        
+                            <h5>Step 4: Review and Complete Assessment Details</h5>
+                            <ul>
+                                <li><strong>Pre-populated Fields:</strong>
+                                    <ul>
+                                        <li>Name (from product/delivery)</li>
+                                        <li>Description (from product/delivery)</li>
+                                        <li>Phase (from product/delivery)</li>
+                                        <li>FIPS ID (from product)</li>
+                                        <li>Project Code (from delivery/project)</li>
+                                        <li>Portfolio (derived from organizational structure)</li>
+                                        <li>DD (Delivery Director from project contacts)</li>
+                                        <li>PM (Product Manager from product contacts)</li>
+                                        <li>DM (Delivery Manager from project contacts)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Editable Fields:</strong>
+                                    <ul>
+                                        <li>All fields can be edited if data needs correction</li>
+                                        <li>Additional team members can be added</li>
+                                        <li>Dates can be adjusted</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Assessment Type:</strong> User selects "Service Assessment" or "Peer Review"</li>
+                                <li><strong>Submit:</strong> Create assessment with all linked information</li>
+                            </ul>
+                        
+                        <h5>Database Schema Changes</h5>
+                            <h5>Database Schema Changes</h5>
+                            <p><strong>Assessment Table Enhancements:</strong></p>
+                            <ul>
+                                <li><code>FIPS_ID</code> - Already exists, will be automatically populated</li>
+                                <li><code>COMPASS_ProjectID</code> - Integer (nullable) - Link to COMPASS project/delivery</li>
+                                <li><code>COMPASS_ProductID</code> - Integer (nullable) - Link to COMPASS product (if different from FIPS)</li>
+                                <li><code>SourceSystem</code> - String (50) - "FIPS", "COMPASS", or "Manual"</li>
+                                <li><code>LinkedDate</code> - DateTime (nullable) - When assessment was linked to product/delivery</li>
+                                <li><code>DataSyncEnabled</code> - Boolean (default false) - Whether to sync updates from source system</li>
+                            </ul>
+                            
+                            <p><strong>New Table: ProductSyncHistory</strong></p>
+                            <ul>
+                                <li><code>SyncID</code> - Primary key</li>
+                                <li><code>AssessmentID</code> - Foreign key to Assessment</li>
+                                <li><code>SyncDate</code> - When sync occurred</li>
+                                <li><code>SyncedFields</code> - JSON array of fields that were synced</li>
+                                <li><code>SourceData</code> - JSON snapshot of source data at sync time</li>
+                                <li><code>UniqueID</code> - UUID for the sync record</li>
+                            </ul>
+                        
+                    
+                        <h4>3. User Interface Design</h4>
+                        
+                        <h5>Search Interface</h5>
+                            <ul>
+                                <li><strong>Search Bar:</strong>
+                                    <ul>
+                                        <li>Large, prominent search input with placeholder "Search for a product or delivery..."</li>
+                                        <li>Accessible autocomplete dropdown</li>
+                                        <li>Search icon on left, clear button on right</li>
+                                        <li>Keyboard shortcuts (Enter to search, Escape to clear)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Search Results:</strong>
+                                    <ul>
+                                        <li>Card-based layout showing product/delivery cards</li>
+                                        <li>Each card displays: Name, FIPS ID/Project Code, Phase, Status badge</li>
+                                        <li>Click card to select</li>
+                                        <li>Pagination for large result sets</li>
+                                        <li>"No results found" state with suggestions</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Filters:</strong>
+                                    <ul>
+                                        <li>Filter by source system (FIPS, COMPASS, or Both)</li>
+                                        <li>Filter by phase</li>
+                                        <li>Filter by status</li>
+                                        <li>Clear filters button</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                        <h5>Product/Delivery Confirmation Page</h5>
+                            <ul>
+                                <li><strong>Information Display:</strong>
+                                    <ul>
+                                        <li>Summary card at top with key information</li>
+                                        <li>Expandable sections for detailed information</li>
+                                        <li>Source system badge showing where data came from</li>
+                                        <li>"Last updated in source system" timestamp</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Editable Form:</strong>
+                                    <ul>
+                                        <li>All pre-populated fields shown in editable form</li>
+                                        <li>Fields clearly marked if they came from source system</li>
+                                        <li>Option to "Sync from source" to refresh data</li>
+                                        <li>Validation ensures FIPS ID is not changed (read-only)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Team Members Section:</strong>
+                                    <ul>
+                                        <li>Pre-populated contacts from product/delivery</li>
+                                        <li>Can add additional team members</li>
+                                        <li>Can remove pre-populated contacts (with confirmation)</li>
+                                        <li>Role assignment for each contact</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                        <h5>Delivery Selection Interface</h5>
+                            <ul>
+                                <li><strong>Delivery List:</strong>
+                                    <ul>
+                                        <li>Table or card layout showing all deliveries for selected product</li>
+                                        <li>Sortable by date, name, code</li>
+                                        <li>Filter by phase or status</li>
+                                        <li>"View in COMPASS" link for each delivery</li>
+                                    </ul>
+                                </li>
+                                <li><strong>New Delivery Option:</strong>
+                                    <ul>
+                                        <li>"Create new delivery in COMPASS" button</li>
+                                        <li>Opens COMPASS in new tab (if SSO enabled) or provides instructions</li>
+                                        <li>Refresh button to reload deliveries after creation</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Link to Existing Assessment:</strong>
+                                    <ul>
+                                        <li>If assessment already exists for this product/delivery combination, show link</li>
+                                        <li>"View existing assessment" button</li>
+                                        <li>Prevent duplicate assessments (or allow if intentional)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                    
+                        <h4>4. Data Mapping and Transformation</h4>
+                        
+                        
+                            <h5>FIPS Product → Assessment Mapping</h5>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>FIPS Product Field</th>
+                                        <th>Assessment Field</th>
+                                        <th>Transformation Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>fips_id</code></td>
+                                        <td><code>FIPS_ID</code></td>
+                                        <td>Direct mapping, always set</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>title</code></td>
+                                        <td><code>Name</code></td>
+                                        <td>Direct mapping</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>description</code> or <code>aim</code></td>
+                                        <td><code>Description</code></td>
+                                        <td>Use description if available, otherwise aim</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>phase</code></td>
+                                        <td><code>Phase</code></td>
+                                        <td>Map FIPS phases to Assessment phases (may need mapping table)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>product_contacts</code> (role: "Product Manager")</td>
+                                        <td><code>PM</code></td>
+                                        <td>First Product Manager contact</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>product_contacts</code> (role: "Delivery Director")</td>
+                                        <td><code>DD</code></td>
+                                        <td>First Delivery Director contact</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>service_owner</code></td>
+                                        <td><code>CreatedBy</code></td>
+                                        <td>Primary service owner, create user if needed</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>category_values</code> (portfolio category)</td>
+                                        <td><code>Portfolio</code></td>
+                                        <td>Extract portfolio from category values</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        
+                        <h5>Database Schema Changes</h5>
+                            <h5>COMPASS Project → Assessment Mapping</h5>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>COMPASS Project Field</th>
+                                        <th>Assessment Field</th>
+                                        <th>Transformation Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>Id</code></td>
+                                        <td><code>COMPASS_ProjectID</code></td>
+                                        <td>Store COMPASS project ID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>ProjectCode</code></td>
+                                        <td><code>ProjectCode</code></td>
+                                        <td>Direct mapping</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>Title</code></td>
+                                        <td><code>Name</code></td>
+                                        <td>Direct mapping</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>Aim</code></td>
+                                        <td><code>Description</code></td>
+                                        <td>Use Aim or StrategicObjectives</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>Phase</code></td>
+                                        <td><code>Phase</code></td>
+                                        <td>Map COMPASS phases to Assessment phases</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>PrimaryContactUser</code></td>
+                                        <td><code>CreatedBy</code></td>
+                                        <td>Create user if needed, use as primary contact</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>DeliveryPriority.DeliveryDirector</code> (from related data)</td>
+                                        <td><code>DD</code></td>
+                                        <td>Extract from organizational structure</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>BusinessArea</code></td>
+                                        <td><code>Portfolio</code></td>
+                                        <td>Direct mapping or derived from OrganizationalGroup</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>StartDate</code></td>
+                                        <td><code>StartDate</code></td>
+                                        <td>Direct mapping</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>TargetDeliveryDate</code></td>
+                                        <td><code>EndDate</code></td>
+                                        <td>Direct mapping</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        
+                    
+                        <h4>5. Backward Compatibility and Migration</h4>
+                        
+                            <h5>Migration Strategy</h5>
+                            <ul>
+                                <li><strong>Existing Assessments:</strong>
+                                    <ul>
+                                        <li>All existing assessments remain fully functional</li>
+                                        <li>Assessments without FIPS_ID can be manually linked later</li>
+                                        <li>Option to "Link to FIPS Product" added to assessment management</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Draft Assessments:</strong>
+                                    <ul>
+                                        <li>Existing draft assessments can continue using old flow or switch to new flow</li>
+                                        <li>Option to "Link to FIPS Product" added to draft editing</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Manual Booking Option:</strong>
+                                    <ul>
+                                        <li>Option to "Create assessment manually" remains available</li>
+                                        <li>For products not in FIPS/COMPASS yet</li>
+                                        <li>Or for edge cases where search doesn't work</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                    
+                        <h4>6. Integration Service Implementation</h4>
+                        
+                        <h5>New Service: FIPSIntegrationService</h5>
+                            <p><strong>Location:</strong> <code>app/services/fipsIntegrationService.js</code></p>
+                            <p><strong>Methods:</strong></p>
+                            <ul>
+                                <li><code>searchProducts(query, filters)</code> - Search FIPS products</li>
+                                <li><code>getProductDetails(fipsId)</code> - Get full product details</li>
+                                <li><code>getProductContacts(fipsId)</code> - Get product contacts</li>
+                                <li><code>mapProductToAssessment(productData)</code> - Transform FIPS data to assessment format</li>
+                            </ul>
+                        
+                        <h5>New Service: COMPASSIntegrationService</h5>
+                            <p><strong>Location:</strong> <code>app/services/compassIntegrationService.js</code></p>
+                            <p><strong>Methods:</strong></p>
+                            <ul>
+                                <li><code>searchProjects(query, filters)</code> - Search COMPASS projects</li>
+                                <li><code>getProjectDetails(projectId)</code> - Get full project details</li>
+                                <li><code>getProjectsForProduct(fipsId)</code> - Get projects linked to FIPS product</li>
+                                <li><code>mapProjectToAssessment(projectData)</code> - Transform COMPASS data to assessment format</li>
+                            </ul>
+                        
+                        <h5>Database Schema Changes</h5>
+                            <h5>Configuration Requirements</h5>
+                            <p><strong>Environment Variables:</strong></p>
+                            <ul>
+                                <li><code>FIPS_CMS_API_URL</code> - Base URL for FIPS CMS API</li>
+                                <li><code>FIPS_CMS_API_KEY</code> - API key for FIPS CMS authentication</li>
+                                <li><code>COMPASS_API_URL</code> - Base URL for COMPASS API</li>
+                                <li><code>COMPASS_API_KEY</code> - API key for COMPASS authentication</li>
+                                <li><code>ENABLE_FIPS_SEARCH</code> - Feature flag to enable/disable FIPS search</li>
+                            </ul>
+                        
+                    
+                    <h3>Implementation Challenges</h4>
+                        <ul>
+                            <li><strong>API Authentication:</strong> Ensure secure authentication with both FIPS CMS and COMPASS APIs</li>
+                            <li><strong>Data Mapping:</strong> Handle differences in data structures between systems</li>
+                            <li><strong>User Matching:</strong> Match product contacts from FIPS/COMPASS to users in assessment service</li>
+                            <li><strong>Phase Mapping:</strong> Map phase values between systems (may have different phase names)</li>
+                            <li><strong>Performance:</strong> API calls must be fast enough for good user experience</li>
+                            <li><strong>Error Handling:</strong> Graceful fallback if APIs are unavailable</li>
+                            <li><strong>Data Sync:</strong> Decide if and how often to sync updates from source systems</li>
+                            <li><strong>Search Quality:</strong> Ensure search results are relevant and not overwhelming</li>
+                        </ul>
+                    
+                    <h3>Proposed User Flow Diagram</h4>
+                        <ol>
+                            <li><strong>User clicks "Book Assessment"</strong></li>
+                            <li><strong>Redirected to Search Page</strong> (<code>/book/search</code>)</li>
+                            <li><strong>User searches for product/delivery</strong>
+                                <ul>
+                                    <li>Types query in search box</li>
+                                    <li>Sees autocomplete suggestions</li>
+                                    <li>Views search results</li>
+                                </ul>
+                            </li>
+                            <li><strong>User selects product/delivery</strong></li>
+                            <li><strong>If Product selected:</strong>
+                                <ul>
+                                    <li>System fetches product details from FIPS</li>
+                                    <li>System fetches linked deliveries from COMPASS</li>
+                                    <li>User selects delivery or creates new</li>
+                                </ul>
+                            </li>
+                            <li><strong>If Delivery selected directly:</strong>
+                                <ul>
+                                    <li>System fetches delivery details from COMPASS</li>
+                                    <li>System fetches linked product from FIPS (if applicable)</li>
+                                </ul>
+                            </li>
+                            <li><strong>System pre-populates assessment form</strong></li>
+                            <li><strong>User reviews and edits information</strong></li>
+                            <li><strong>User selects assessment type</strong></li>
+                            <li><strong>User submits to create assessment</strong></li>
+                            <li><strong>Assessment created with all links and data</strong></li>
+                        </ol>
+                </div>
+        </main>
+    </div>
+</body>
+</html>
+

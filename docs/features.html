@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - Service Assessment Service Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: #1d70b8;
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        header h1 {
+            margin-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #003078;
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar nav {
+            padding: 0 1rem;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+        }
+        
+        .sidebar nav li {
+            margin: 0.25rem 0;
+        }
+        
+        .sidebar nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: block;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar nav a.active {
+            background: #1d70b8;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1000px;
+        }
+        
+        
+        h1, h2, h3, h4 {
+            color: #1d70b8;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 0;
+            border-bottom: 3px solid #1d70b8;
+            padding-bottom: 0.75rem;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid #1d70b8;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        h3 {
+            font-size: 1.35rem;
+            margin-top: 1.5rem;
+            color: #1d70b8;
+        }
+        
+        h4 {
+            font-size: 1.15rem;
+            color: #003078;
+            margin-top: 1rem;
+        }
+        
+        
+        a {
+            color: #1d70b8;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        table th, table td {
+            padding: 0.875rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table th {
+            background: #1d70b8;
+            color: white;
+            font-weight: 600;
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d4351c;
+        }
+        
+        pre {
+            background: #f4f4f4;
+            padding: 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 4px solid #1d70b8;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 0.75rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+            line-height: 1.7;
+        }
+        
+        p {
+            margin: 1rem 0;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+            
+            .content-wrapper {
+                padding: 1rem;
+            }
+            
+            
+        }
+    </style>
+</head>
+<body>
+        <header>
+        <h1>Service Assessment Service</h1>
+        <p>Features Documentation</p>
+    </header>
+    
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html" class="active">Features</a></li>
+                    <li><a href="data-models.html">Data Models</a></li>
+                    <li><a href="data-dictionary.html">Data Dictionary</a></li>
+                    <li><a href="user-flows.html">User Flows</a></li>
+                    <li><a href="models.html">Application Models</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="roadmap.html">Roadmap</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="content-wrapper">
+                <div class="content"><h1>Features Documentation</h1>
+            
+            <h2>Table of Contents</h2>
+                <ul>
+                    <li><a href="#authentication">Authentication & User Management</a></li>
+                    <li><a href="#booking">Booking Assessments</a></li>
+                    <li><a href="#managing">Managing Assessments</a></li>
+                    <li><a href="#assessing">Assessing Services</a></li>
+                    <li><a href="#reporting">Reports & Analytics</a></li>
+                    <li><a href="#admin">Administration</a></li>
+                    <li><a href="#api">API Endpoints</a></li>
+                    <li><a href="#integration">Third-Party Integrations</a></li>
+                </ul>
+            
+            <section id="authentication" >
+                <h2>Authentication & User Management</h2>
+                
+                <h3>Magic Link Authentication</h3>
+                <ul>
+                    <li>Passwordless authentication using magic links sent via GOV.UK Notify</li>
+                    <li>Email domain-based registration control</li>
+                    <li>Token-based authentication with 30-minute expiry</li>
+                    <li>Session management using PostgreSQL-backed sessions</li>
+                </ul>
+                
+                <h3>User Profile Management</h3>
+                <ul>
+                    <li>Update name and email address</li>
+                    <li>View assessment history</li>
+                    <li>View training records (for assessors)</li>
+                    <li>Department assignment based on email domain</li>
+                </ul>
+                
+                <h3>Role-Based Access Control</h3>
+                <ul>
+                    <li>Standard users: Can book and manage their own assessments</li>
+                    <li>Assessors: Can assess services against Service Standard</li>
+                    <li>Administrators: Department-level admin access</li>
+                    <li>Department Leads: Enhanced department management</li>
+                    <li>Service Administrators: Cross-department access</li>
+                </ul>
+            </section>
+            
+            <section id="booking" >
+                <h2>Booking Assessments</h2>
+                
+                <h3>Assessment Request Creation</h3>
+                <ul>
+                    <li>Multi-step form for creating assessment requests</li>
+                    <li>Save as draft and continue later</li>
+                    <li>Edit existing drafts</li>
+                    <li>Delete draft assessments</li>
+                </ul>
+                
+                <h3>Assessment Details</h3>
+                <ul>
+                    <li><strong>Phase:</strong> Alpha, Beta, Live, or Other</li>
+                    <li><strong>Type:</strong> Service Assessment or Peer Review</li>
+                    <li><strong>Service Information:</strong> Name, description, project code</li>
+                    <li><strong>Dates:</strong> Start date, end date (optional), requested weeks</li>
+                    <li><strong>Portfolio:</strong> Portfolio assignment</li>
+                    <li><strong>Team Members:</strong>
+                        <ul>
+                            <li>Delivery Director (DD)</li>
+                            <li>Senior Responsible Owner (SRO)</li>
+                            <li>Product Manager (PM) - optional</li>
+                            <li>Delivery Manager (DM) - optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>Submission Process</h3>
+                <ul>
+                    <li>Validation of all required fields</li>
+                    <li>Status change from "Draft" to "Submitted"</li>
+                    <li>Email notification to administrators</li>
+                    <li>Audit trail creation</li>
+                </ul>
+            </section>
+            
+            <section id="managing" >
+                <h2>Managing Assessments</h2>
+                
+                <h3>Assessment Overview</h3>
+                <ul>
+                    <li>View all assessments user can access</li>
+                    <li>Filter by status (Active, Draft, Completed, Published, etc.)</li>
+                    <li>View assessment details and progress</li>
+                    <li>View assessment history</li>
+                </ul>
+                
+                <h3>Team Management</h3>
+                <ul>
+                    <li>Add team members to assessments</li>
+                    <li>Remove team members</li>
+                    <li>View team member roles and details</li>
+                    <li>Team-based access control</li>
+                </ul>
+                
+                <h3>Artefact Management</h3>
+                <ul>
+                    <li>Add artefacts (documents, links, resources) to assessments</li>
+                    <li>Remove artefacts</li>
+                    <li>View all artefacts associated with an assessment</li>
+                    <li>Artefact metadata (title, description, URL, creation date)</li>
+                </ul>
+                
+                <h3>Assessment Panel</h3>
+                <ul>
+                    <li>View assigned assessment panel members</li>
+                    <li>View panel roles (Lead, Design, Technical, Accessibility, etc.)</li>
+                    <li>View panel comments</li>
+                </ul>
+                
+                <h3>Report Management</h3>
+                <ul>
+                    <li>View assessment reports</li>
+                    <li>Accept assessment reports</li>
+                    <li>Download reports as Word documents or Excel spreadsheets</li>
+                </ul>
+            </section>
+            
+            <section id="assessing" >
+                <h2>Assessing Services</h2>
+                
+                <h3>Assessment Dashboard</h3>
+                <ul>
+                    <li>View all assessments assigned to the assessor</li>
+                    <li>Filter by status (Active, Previous)</li>
+                    <li>View assessment overview and details</li>
+                </ul>
+                
+                <h3>Service Standard Assessment</h3>
+                <ul>
+                    <li>14 Service Standard points to assess</li>
+                    <li>Rate each standard as:
+                        <ul>
+                            <li><strong>Green:</strong> Met</li>
+                            <li><strong>Amber:</strong> Partially met (requires action)</li>
+                            <li><strong>Red:</strong> Not met (requires action)</li>
+                            <li><strong>NA:</strong> Not assessed</li>
+                        </ul>
+                    </li>
+                    <li>Add comments for each standard</li>
+                    <li>Requirement to add actions for Red/Amber ratings</li>
+                </ul>
+                
+                <h3>Actions Management</h3>
+                <ul>
+                    <li>Create actions for standards rated Red or Amber</li>
+                    <li>Edit existing actions</li>
+                    <li>Assign actions to team members</li>
+                    <li>Set estimated resolution dates</li>
+                    <li>Track action status</li>
+                    <li>Add comments to actions</li>
+                </ul>
+                
+                <h3>Panel Comments</h3>
+                <ul>
+                    <li>Overall panel comments</li>
+                    <li>What went well (positive feedback)</li>
+                    <li>Areas for improvement</li>
+                    <li>Standard-specific comments</li>
+                </ul>
+                
+                <h3>Report Generation</h3>
+                <ul>
+                    <li>Report rating (overall assessment outcome)</li>
+                    <li>Preview assessment report before submission</li>
+                    <li>Submit assessment report for review</li>
+                    <li>Pull request functionality for collaborative reviewing</li>
+                </ul>
+                
+                <h3>Assessment Validation</h3>
+                <ul>
+                    <li>All 14 standards must be rated before submission</li>
+                    <li>Red/Amber ratings require associated actions</li>
+                    <li>Panel comments must be complete</li>
+                    <li>Pre-submission validation checks</li>
+                </ul>
+                
+                <h3>Volunteer for Assessments</h3>
+                <ul>
+                    <li>View available assessment opportunities</li>
+                    <li>Volunteer for specific assessment roles</li>
+                    <li>View assessment details before volunteering</li>
+                </ul>
+            </section>
+            
+            <section id="reporting" >
+                <h2>Reports & Analytics</h2>
+                
+                <h3>Published Reports</h3>
+                <ul>
+                    <li>View all published assessment reports</li>
+                    <li>Search and filter published reports</li>
+                    <li>Download reports in multiple formats</li>
+                </ul>
+                
+                <h3>Report Generation</h3>
+                <ul>
+                    <li>Generate Word documents (.docx) from assessment data</li>
+                    <li>Generate Excel spreadsheets (.xlsx) for analysis</li>
+                    <li>Export assessment data</li>
+                </ul>
+                
+                <h3>Analytics Dashboard</h3>
+                <ul>
+                    <li>Portfolio-level analysis</li>
+                    <li>Assessment statistics</li>
+                    <li>Trend analysis</li>
+                </ul>
+            </section>
+            
+            <section id="admin" >
+                <h2>Administration</h2>
+                
+                <h3>Assessment Management</h3>
+                <ul>
+                    <li>View all assessments across managed departments</li>
+                    <li>Filter assessments by status</li>
+                    <li>Change assessment status and stage</li>
+                    <li>Edit assessment details (name, description, dates, team members)</li>
+                    <li>Change primary contact</li>
+                    <li>Manage FIPS ID for assessments</li>
+                    <li>Create reassessments</li>
+                    <li>Delete assessments</li>
+                </ul>
+                
+                <h3>Panel Management</h3>
+                <ul>
+                    <li>Assign assessors to assessment panels</li>
+                    <li>Remove assessors from panels</li>
+                    <li>Assign panel roles (Lead, Design, Technical, Accessibility, User Research, Performance)</li>
+                    <li>View panel composition</li>
+                </ul>
+                
+                <h3>Assessor Management</h3>
+                <ul>
+                    <li>Add new assessors</li>
+                    <li>View all assessors in department</li>
+                    <li>Edit assessor details (name, role, status)</li>
+                    <li>Manage assessor attributes:
+                        <ul>
+                            <li>Active/Inactive status</li>
+                            <li>Cross-Government assessor flag</li>
+                            <li>Lead assessor designation</li>
+                            <li>External assessor flag</li>
+                            <li>Primary role</li>
+                        </ul>
+                    </li>
+                    <li>View assessor assessment history</li>
+                    <li>Manage assessor training records</li>
+                </ul>
+                
+                <h3>Administrator Management</h3>
+                <ul>
+                    <li>Add administrators</li>
+                    <li>Remove administrators</li>
+                    <li>View all administrators</li>
+                    <li>Assign Department Lead role</li>
+                </ul>
+                
+                <h3>Reporting & Analytics</h3>
+                <ul>
+                    <li>Assessment and panel reporting</li>
+                    <li>Report acceptance tracking</li>
+                    <li>Export assessment reports</li>
+                    <li>Slack integration reporting</li>
+                    <li>Export all assessment data</li>
+                </ul>
+                
+                <h3>Survey Management</h3>
+                <ul>
+                    <li>View assessment surveys</li>
+                    <li>Download survey responses</li>
+                    <li>View individual survey responses</li>
+                    <li>Survey analytics</li>
+                </ul>
+                
+                <h3>Date Management</h3>
+                <ul>
+                    <li>Schedule assessment dates</li>
+                    <li>Set assessment times</li>
+                    <li>Manage multiple assessment dates</li>
+                </ul>
+                
+                <h3>Report Publishing</h3>
+                <ul>
+                    <li>Send reports to teams</li>
+                    <li>Publish assessment reports</li>
+                    <li>Manage report status</li>
+                </ul>
+            </section>
+            
+            <section id="api" >
+                <h2>API Endpoints</h2>
+                
+                <h3>Product API</h3>
+                <ul>
+                    <li><code>GET /api/product/:fips_id</code> - Get product by FIPS ID</li>
+                </ul>
+                
+                <h3>Assessment API</h3>
+                <ul>
+                    <li><code>GET /api/assessments/published/summary</code> - Get published assessments summary</li>
+                    <li><code>GET /api/assessments/published/actions-by-standard</code> - Get actions by standard for published assessments</li>
+                    <li><code>GET /api/assessments/published/by-portfolio-dd</code> - Get published assessments by portfolio and DD</li>
+                    <li><code>GET /api/assessments/:assessmentID/actions</code> - Get actions for specific assessment</li>
+                    <li><code>GET /api/assessments/actions/all</code> - Get all actions grouped by assessment</li>
+                    <li><code>PUT /api/assessments/:assessmentID/fips-id</code> - Update assessment FIPS ID</li>
+                </ul>
+                
+                <h3>Authentication</h3>
+                <ul>
+                    <li>All API endpoints require authentication via API token</li>
+                    <li>Token-based authentication using <code>authenticateApiToken</code> middleware</li>
+                </ul>
+            </section>
+            
+            <section id="integration" >
+                <h2>Third-Party Integrations</h2>
+                
+                <h3>GOV.UK Notify</h3>
+                <ul>
+                    <li>Email sending service for magic link authentication</li>
+                    <li>Template-based email notifications</li>
+                    <li>Email templates:
+                        <ul>
+                            <li>Magic link email</li>
+                            <li>New request submitted notification</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>Slack Integration</h3>
+                <ul>
+                    <li>Create Slack channels for assessments</li>
+                    <li>Store Slack channel IDs</li>
+                    <li>Integration with assessment workflow</li>
+                </ul>
+                
+                <h3>Airtable</h3>
+                <ul>
+                    <li>Feedback collection</li>
+                    <li>User feedback storage</li>
+                    <li>Service feedback tracking</li>
+                </ul>
+            </section>
+                        </div>
+        
+    </div>
+        </main>
+    </div>
+</body>
+</html>
+
