@@ -721,6 +721,24 @@ async function getAssessmentsWithoutFipsId(department = null) {
     }
 }
 
+//Get all assessments by ProjectCode
+async function getAssessmentsByProjectCode(projectCode) {
+    try {
+        const { rows } = await pool.query(`
+            SELECT a.*, d."Name" as "DepartmentName"
+            FROM "Assessment" a
+            INNER JOIN "Department" d ON a."Department" = d."DepartmentID"
+            WHERE a."ProjectCode" = $1
+            ORDER BY a."CreatedDate" DESC
+        `, [projectCode]);
+
+        return rows.map(row => new AssessmentModel(row));
+    } catch (error) {
+        console.error('Error in getAssessmentsByProjectCode:', error);
+        throw error;
+    }
+}
+
 
 
 
@@ -747,5 +765,6 @@ module.exports = {
     updateFIPSID,
     getAssessmentByFIPSID,
     getAssessmentsByFIPSID,
-    getAssessmentsWithoutFipsId
+    getAssessmentsWithoutFipsId,
+    getAssessmentsByProjectCode
 };

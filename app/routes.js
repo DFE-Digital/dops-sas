@@ -435,6 +435,7 @@ router.post("/admin/create-slack-channel", isAuthenticated, isAdmin, slackContro
 // API routes
 const apiController = require('./controllers/apiController');
 router.get("/api/product/:fips_id", apiController.authenticateApiToken, apiController.getProductByFipsId);
+router.get("/api/product/project-code/:projectCode", apiController.authenticateApiToken, apiController.getAssessmentsByProjectCode);
 router.get("/api/assessments/published/summary", apiController.authenticateApiToken, apiController.getPublishedAssessmentsSummary);
 router.get("/api/assessments/published/actions-by-standard", apiController.authenticateApiToken, apiController.getActionsByStandardForPublished);
 router.get("/api/assessments/published/by-portfolio-dd", apiController.authenticateApiToken, apiController.getPublishedAssessmentsByPortfolioAndDD);

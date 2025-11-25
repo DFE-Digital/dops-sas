@@ -1,4 +1,4 @@
-const { getAssessmentsByFIPSID } = require('../models/assessmentModel');
+const { getAssessmentsByFIPSID, getAssessmentsByProjectCode } = require('../models/assessmentModel');
 const { getServiceStandardOutcomesByAssessmentID } = require('../models/standards');
 const { getActionsForAssessmentID } = require('../models/actions');
 const pool = require('../models/pool');
@@ -76,6 +76,53 @@ exports.getProductByFipsId = async (req, res, next) => {
         });
     } catch (error) {
         console.error('Error in getProductByFipsId:', error);
+        next(error);
+    }
+};
+
+// GET /api/product/project-code/{projectCode}
+exports.getAssessmentsByProjectCode = async (req, res, next) => {
+    try {
+        const { projectCode } = req.params;
+
+        if (!projectCode) {
+            return res.status(400).json({ error: 'Project code is required' });
+        }
+
+        // Get all assessments with the given project code
+        const assessments = await getAssessmentsByProjectCode(projectCode);
+
+        if (!assessments || assessments.length === 0) {
+            return res.status(404).json({ error: 'No assessments found for the provided project code' });
+        }
+
+        // Get action counts for each assessment
+        const assessmentsWithData = await Promise.all(
+            assessments.map(async (assessment) => {
+                const actions = await getActionsForAssessmentID(assessment.AssessmentID);
+                const actionCount = actions ? actions.length : 0;
+
+                return {
+                    AssessmentID: assessment.AssessmentID,
+                    FIPS_ID: assessment.FIPS_ID,
+                    Type: assessment.Type,
+                    Phase: assessment.Phase,
+                    ProjectCode: assessment.ProjectCode,
+                    Outcome: assessment.Outcome,
+                    AssessmentDateTime: assessment.AssessmentDateTime,
+                    Status: assessment.Status,
+                    ActionCount: actionCount
+                };
+            })
+        );
+
+        res.json({
+            project_code: projectCode,
+            assessments: assessmentsWithData,
+            count: assessmentsWithData.length
+        });
+    } catch (error) {
+        console.error('Error in getAssessmentsByProjectCode:', error);
         next(error);
     }
 };
