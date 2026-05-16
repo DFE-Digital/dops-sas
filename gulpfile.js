@@ -95,6 +95,18 @@ gulp.task('watch', function () {
 })
 
 
+// Production build (no watch) — used by Heroku and CI
+gulp.task(
+  'build',
+  gulp.series(
+    'process-scss',
+    'copy-assets',
+    'process-js',
+    'process-images-copy',
+    'process-images',
+  ),
+)
+
 // Set up a default task to process assets and start the watch task
 gulp.task(
   'default',

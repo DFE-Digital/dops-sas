@@ -5,11 +5,17 @@
   "main": "app.js",
   "scripts": {
     "gulp": "gulp",
+    "build": "gulp build",
     "watch": "gulp & nodemon app.js",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "migrate": "knex migrate:latest",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "heroku-postbuild": "npm run build"
+  },
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
   },
   "keywords": [],
   "author": "",
@@ -58,7 +64,6 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "gulp-webp": "^5.0.0",
-    "node-sass-middleware": "^1.1.0",
     "nodemon": "^3.1.0",
     "sass": "^1.72.0"
   }
