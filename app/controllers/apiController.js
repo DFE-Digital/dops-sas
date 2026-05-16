@@ -1,6 +1,7 @@
 const { getAssessmentsByFIPSID, getAssessmentsByProjectCode } = require('../models/assessmentModel');
 const { getServiceStandardOutcomesByAssessmentID } = require('../models/standards');
 const { getActionsForAssessmentID } = require('../models/actions');
+const { getAllPanelAssessorsSummary } = require('../models/assessmentPanel');
 const pool = require('../models/pool');
 
 // Middleware to authenticate API requests using FIPSPK_TOKEN
@@ -537,6 +538,21 @@ exports.getAllActionsGroupedByAssessment = async (req, res, next) => {
         });
     } catch (error) {
         console.error('Error in getAllActionsGroupedByAssessment:', error);
+        next(error);
+    }
+};
+
+// GET /api/assessors/summary
+exports.getAssessorsSummary = async (req, res, next) => {
+    try {
+        const assessors = await getAllPanelAssessorsSummary();
+
+        res.json({
+            assessors,
+            count: assessors.length
+        });
+    } catch (error) {
+        console.error('Error in getAssessorsSummary:', error);
         next(error);
     }
 };

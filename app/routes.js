@@ -99,7 +99,12 @@ console.log(req.session)
             return next();
         }
 
+        // Validate assessmentID is a valid integer
         const assessmentID = parseInt(req.params.assessmentID, 10);
+        if (!req.params.assessmentID || isNaN(assessmentID) || !Number.isInteger(assessmentID)) {
+            return res.redirect('/assess');
+        }
+
         const panel = await assessmentPanel(assessmentID);
 
         if (panel) {
@@ -441,6 +446,7 @@ router.get("/api/assessments/published/actions-by-standard", apiController.authe
 router.get("/api/assessments/published/by-portfolio-dd", apiController.authenticateApiToken, apiController.getPublishedAssessmentsByPortfolioAndDD);
 router.get("/api/assessments/:assessmentID/actions", apiController.authenticateApiToken, apiController.getActionsByAssessmentId);
 router.get("/api/assessments/actions/all", apiController.authenticateApiToken, apiController.getAllActionsGroupedByAssessment);
+router.get("/api/assessors/summary", apiController.authenticateApiToken, apiController.getAssessorsSummary);
 router.put("/api/assessments/:assessmentID/fips-id", apiController.authenticateApiToken, apiController.updateAssessmentFipsId);
 
 
